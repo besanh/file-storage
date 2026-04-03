@@ -1,0 +1,114 @@
+# Generated with protoc-gen-openapi
+# https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
+
+openapi: 3.0.3
+info:
+    title: ""
+    version: 0.0.1
+paths:
+    /helloworld/{name}:
+        get:
+            tags:
+                - Greeter
+            description: Sends a greeting
+            operationId: Greeter_SayHello
+            parameters:
+                - name: name
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/helloworld.v1.HelloReply'
+    /m2m/v1/auth/login:
+        post:
+            tags:
+                - Auth
+            operationId: Auth_Login
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/m2m_auth.v1.LoginRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/m2m_auth.v1.LoginReply'
+    /v1/files/upload:
+        post:
+            tags:
+                - FileService
+            operationId: FileService_CreateFile
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/file.v1.CreateFileRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/file.v1.CreateFileResponse'
+components:
+    schemas:
+        file.v1.CreateFileRequest:
+            type: object
+            properties:
+                name:
+                    type: string
+                parentId:
+                    type: string
+                fileSize:
+                    type: string
+                fileType:
+                    type: string
+                fileExt:
+                    type: string
+                fileMimeType:
+                    type: string
+                fileHash:
+                    type: string
+                fileVideoResolution:
+                    type: string
+                status:
+                    type: string
+        file.v1.CreateFileResponse:
+            type: object
+            properties: {}
+        helloworld.v1.HelloReply:
+            type: object
+            properties:
+                message:
+                    type: string
+            description: The response message containing the greetings
+        m2m_auth.v1.LoginReply:
+            type: object
+            properties:
+                accessToken:
+                    type: string
+                expiresIn:
+                    type: string
+        m2m_auth.v1.LoginRequest:
+            type: object
+            properties:
+                clientId:
+                    type: string
+                clientSecret:
+                    type: string
+tags:
+    - name: Auth
+    - name: FileService
+    - name: Greeter
+      description: The greeting service definition.
