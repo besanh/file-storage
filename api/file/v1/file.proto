@@ -4,53 +4,15 @@ package file.v1;
 
 import "google/api/annotations.proto";
 
-option go_package = "server/api/file/v1";
+option go_package = "file/api/file/v1";
 
 service FileService {
     rpc CreateFile(CreateFileRequest) returns (CreateFileResponse) {
         option (google.api.http) = {
-            post: "/v1/files/upload"
+            post: "/v1/files/create"
             body: "*"
         };
     }
-}
-
-message PhysicalFile {
-    string id = 1;             // UUID
-    string file_hash = 2;      // SHA-256 or similar
-    int64 size_bytes = 3;      
-    string mime_type = 4;
-    string storage_path = 5;
-    int32 reference_count = 6; 
-    string created_at = 7;
-    string updated_at = 8;
-}
-
-message FileNode {
-    string id = 1;             // UUID
-    string owner_id = 2;       // UUID
-    string parent_id = 3;      // UUID (optional)
-    string physical_file_id = 4; // UUID (optional, null if folder)
-    string name = 5;
-    bool is_folder = 6;
-    
-    // File specific metadata
-    string file_hash = 7;
-    int64 file_size = 8;
-    string file_type = 9;
-    string file_ext = 10;
-    string file_mime_type = 11;
-    string file_video_resolution = 12;
-    
-    // Status tracking
-    string recent_accessed_at = 13;
-    bool favorite = 14;
-    string deleted_at = 15;
-    string deleted_by = 16;
-    string status = 17;
-    
-    string created_at = 18;
-    string updated_at = 19;
 }
 
 message CreateFileRequest {
@@ -66,4 +28,5 @@ message CreateFileRequest {
 }
 
 message CreateFileResponse {
+    string id = 1;
 }

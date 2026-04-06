@@ -19,10 +19,37 @@ func NewFileService(uc *biz.FileUsecase) *FileService {
 }
 
 func (s *FileService) CreateFile(ctx context.Context, req *pb.CreateFileRequest) (*pb.CreateFileResponse, error) {
-	parentID, _ := uuid.Parse(req.ParentId)
-	if err := s.uc.CreateFile(ctx, &parentID, req.Name, false, "", req.FileSize, req.FileType, req.FileExt, req.FileMimeType, req.FileVideoResolution, req.Status); err != nil {
+	var parentIDPtr *uuid.UUID
+	if req.ParentId != "" {
+		parsedID, err := uuid.Parse(req.ParentId)
+		if err != nil {
+			return nil, err
+		}
+		parentIDPtr = &parsedID
+	}
+
+	resp, err := s.uc.CreateFile(ctx, &biz.CreateFileRequest{
+		ParentID:            parentIDPtr,
+		Name:                req.Name,
+		IsFolder:            false,
+		FileHash:            req.FileHash,
+		FileSize:            req.FileSize,
+		FileType:            req.FileType,
+		FileExt:             req.FileExt,
+		FileMimeType:        req.FileMimeType,
+		FileVideoResolution: req.FileVideoResolution,
+		Status:              req.Status,
+	})
+	if err != nil {
 		return nil, err
 	}
 
-	return &pb.CreateFileResponse{}, nil
+	idStr := ""
+	if resp.ID != nil {
+		idStr = resp.ID.String()
+	}
+
+	return &pb.CreateFileResponse{
+		Id: idStr,
+	}, nil
 }

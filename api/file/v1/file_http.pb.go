@@ -27,7 +27,7 @@ type FileServiceHTTPServer interface {
 
 func RegisterFileServiceHTTPServer(s *http.Server, srv FileServiceHTTPServer) {
 	r := s.Route("/")
-	r.POST("/v1/files/upload", _FileService_CreateFile0_HTTP_Handler(srv))
+	r.POST("/v1/files/create", _FileService_CreateFile0_HTTP_Handler(srv))
 }
 
 func _FileService_CreateFile0_HTTP_Handler(srv FileServiceHTTPServer) func(ctx http.Context) error {
@@ -66,7 +66,7 @@ func NewFileServiceHTTPClient(client *http.Client) FileServiceHTTPClient {
 
 func (c *FileServiceHTTPClientImpl) CreateFile(ctx context.Context, in *CreateFileRequest, opts ...http.CallOption) (*CreateFileResponse, error) {
 	var out CreateFileResponse
-	pattern := "/v1/files/upload"
+	pattern := "/v1/files/create"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationFileServiceCreateFile))
 	opts = append(opts, http.PathTemplate(pattern))

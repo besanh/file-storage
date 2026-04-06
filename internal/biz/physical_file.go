@@ -9,6 +9,8 @@ import (
 
 type PhysicalFileRepo interface {
 	InsertPhysicalFile(ctx context.Context, file *db.InsertPhysicalFileParams) (*db.PhysicalFile, error)
+	GetPhysicalFileByHash(ctx context.Context, fileHash string) (*db.PhysicalFile, error)
+	UpdatePhysicalFileReferenceCount(ctx context.Context, file *db.UpdatePhysicalFileReferenceCountParams) (*db.PhysicalFile, error)
 }
 
 type PhysicalFileUsecase struct {

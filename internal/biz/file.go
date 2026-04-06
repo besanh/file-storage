@@ -3,7 +3,9 @@ package biz
 import (
 	"context"
 	"database/sql"
+	"file/internal/common"
 	db "file/internal/data/db/generated"
+	"fmt"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/uuid"
@@ -31,49 +33,85 @@ func NewFileUsecase(fileRepo FileRepo, physicalFileRepo PhysicalFileRepo, authRe
 	}
 }
 
-func (uc *FileUsecase) CreateFile(ctx context.Context, parentID *uuid.UUID, name string, isFolder bool, fileHash string, fileSize int64, fileType string, fileExt string, fileMimeType string, fileVideoResolution string, status string) error {
+func (uc *FileUsecase) CreateFile(ctx context.Context, input *CreateFileRequest) (CreateFileResponse, error) {
 	ownerID, err := uuid.Parse(GetUserID(ctx))
 	if err != nil {
-		return err
+		return CreateFileResponse{}, err
 	}
 
+	// Check permission
+	if input.ParentID != nil {
+		permCheck, err := uc.authRepo.CheckPermission(ctx, common.TypeUser.String(), GetUserID(ctx), common.RelationWriter.String(), common.TypeFolder.String(), input.ParentID.String())
+		if err != nil {
+			return CreateFileResponse{}, err
+		}
+		if !permCheck {
+			return CreateFileResponse{}, fmt.Errorf("permission denied")
+		}
+	}
+
+	var fileID uuid.UUID
+
 	if err := uc.tm.ExecTx(ctx, func(ctx context.Context) error {
+		// Physical file
+		var psFile *db.PhysicalFile
+		psFile, err = uc.physicalFileRepo.GetPhysicalFileByHash(ctx, input.FileHash)
+		if err != nil {
+			return err
+		}
+		if psFile != nil {
+			psFile, err = uc.physicalFileRepo.UpdatePhysicalFileReferenceCount(ctx, &db.UpdatePhysicalFileReferenceCountParams{
+				ID:             psFile.ID,
+				ReferenceCount: sql.NullInt32{Int32: psFile.ReferenceCount.Int32 + 1, Valid: true},
+			})
+			if err != nil {
+				return err
+			}
+		} else {
+			psFile, err = uc.physicalFileRepo.InsertPhysicalFile(ctx, &db.InsertPhysicalFileParams{
+				FileHash:       input.FileHash,
+				SizeBytes:      input.FileSize,
+				MimeType:       input.FileMimeType,
+				StoragePath:    "",
+				ReferenceCount: sql.NullInt32{Int32: 1, Valid: true},
+			})
+			if err != nil {
+				return err
+			}
+		}
+
+		// File
+		var parentID uuid.NullUUID
+		if input.ParentID != nil {
+			parentID = uuid.NullUUID{UUID: *input.ParentID, Valid: true}
+		}
 
 		file := &db.InsertFileParams{
-			OwnerID:  ownerID,
-			ParentID: uuid.NullUUID{UUID: *parentID, Valid: parentID != nil},
-			// PhysicalFileID:      uuid.NullUUID{UUID: physicalFileID, Valid: true},
-			Name:                name,
-			IsFolder:            isFolder,
-			FileHash:            sql.NullString{String: fileHash, Valid: fileHash != ""},
-			FileSize:            sql.NullInt64{Int64: fileSize, Valid: fileSize != 0},
-			FileType:            sql.NullString{String: fileType, Valid: fileType != ""},
-			FileExt:             sql.NullString{String: fileExt, Valid: fileExt != ""},
-			FileMimeType:        sql.NullString{String: fileMimeType, Valid: fileMimeType != ""},
-			FileVideoResolution: sql.NullString{String: fileVideoResolution, Valid: fileVideoResolution != ""},
-			Status:              sql.NullString{String: status, Valid: status != ""},
+			OwnerID:             ownerID,
+			ParentID:            parentID,
+			Name:                input.Name,
+			IsFolder:            input.IsFolder,
+			PhysicalFileID:      uuid.NullUUID{UUID: psFile.ID, Valid: true},
+			FileHash:            sql.NullString{String: input.FileHash, Valid: input.FileHash != ""},
+			FileSize:            sql.NullInt64{Int64: input.FileSize, Valid: input.FileSize != 0},
+			FileType:            sql.NullString{String: input.FileType, Valid: input.FileType != ""},
+			FileExt:             sql.NullString{String: input.FileExt, Valid: input.FileExt != ""},
+			FileMimeType:        sql.NullString{String: input.FileMimeType, Valid: input.FileMimeType != ""},
+			FileVideoResolution: sql.NullString{String: input.FileVideoResolution, Valid: input.FileVideoResolution != ""},
+			Status:              sql.NullString{String: input.Status, Valid: input.Status != ""},
 		}
-		_, err := uc.fileRepo.InsertFile(ctx, file)
+		fileNode, err := uc.fileRepo.InsertFile(ctx, file)
 		if err != nil {
 			return err
 		}
-
-		physicalFile := &db.InsertPhysicalFileParams{
-			FileHash:       fileHash,
-			SizeBytes:      fileSize,
-			MimeType:       fileMimeType,
-			StoragePath:    "",
-			ReferenceCount: sql.NullInt32{Int32: 1, Valid: true},
-		}
-		_, err = uc.physicalFileRepo.InsertPhysicalFile(ctx, physicalFile)
-		if err != nil {
-			return err
-		}
+		fileID = fileNode.ID
 
 		return nil
 	}); err != nil {
-		return err
+		return CreateFileResponse{}, err
 	}
 
-	return nil
+	return CreateFileResponse{
+		ID: &fileID,
+	}, nil
 }

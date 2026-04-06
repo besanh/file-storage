@@ -139,3 +139,7 @@ docker-push: docker-build docker-login
 swagger:
 	@$(DOCKER_COMPOSE_BIN) up swagger-ui -d
 	@echo "Swagger UI is running at http://localhost:8080"
+
+# regenerate wire
+wire:
+	go run -mod=mod github.com/google/wire/cmd/wire ./cmd/server/

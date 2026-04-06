@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package m2m_auth.v1;
 
-option go_package = "server/api/m2m_auth/v1;m2mv1";
+option go_package = "file/api/m2m_auth/v1;m2mv1";
 
 import "google/api/annotations.proto";
 

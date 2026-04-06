@@ -140,7 +140,7 @@ const file_m2m_auth_v1_auth_proto_rawDesc = "" +
 	"\n" +
 	"expires_in\x18\x02 \x01(\x03R\texpiresIn2b\n" +
 	"\x04Auth\x12Z\n" +
-	"\x05Login\x12\x19.m2m_auth.v1.LoginRequest\x1a\x17.m2m_auth.v1.LoginReply\"\x1d\x82\xd3\xe4\x93\x02\x17:\x01*\"\x12/m2m/v1/auth/loginB\x1eZ\x1cserver/api/m2m_auth/v1;m2mv1b\x06proto3"
+	"\x05Login\x12\x19.m2m_auth.v1.LoginRequest\x1a\x17.m2m_auth.v1.LoginReply\"\x1d\x82\xd3\xe4\x93\x02\x17:\x01*\"\x12/m2m/v1/auth/loginB\x1cZ\x1afile/api/m2m_auth/v1;m2mv1b\x06proto3"
 
 var (
 	file_m2m_auth_v1_auth_proto_rawDescOnce sync.Once

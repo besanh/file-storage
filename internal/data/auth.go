@@ -3,6 +3,7 @@ package data
 import (
 	"context"
 	m2mv1 "file/api/m2m_auth/v1"
+	permissionV1 "file/api/permission/v1"
 	"file/internal/biz"
 	"file/internal/conf"
 	"fmt"
@@ -13,10 +14,11 @@ import (
 )
 
 type authRepo struct {
-	m2mClient    m2mv1.AuthClient
-	clientID     string
-	clientSecret string
-	kid          string
+	m2mClient        m2mv1.AuthClient
+	clientID         string
+	clientSecret     string
+	kid              string
+	permissionClient permissionV1.PermissionClient
 }
 
 func NewAuthRepo(c *conf.Data) (biz.AuthRepo, error) {
@@ -44,11 +46,21 @@ func NewAuthRepo(c *conf.Data) (biz.AuthRepo, error) {
 	}
 
 	r.m2mClient = m2mv1.NewAuthClient(conn)
+	r.permissionClient = permissionV1.NewPermissionClient(conn)
 
 	return r, nil
 }
 
 func (r *authRepo) CheckPermission(ctx context.Context, subjectType, subjectID, relation, objectType, objectID string) (bool, error) {
-	// For now, return true to allow debugging
-	return true, nil
+	resp, err := r.permissionClient.CheckPermission(ctx, &permissionV1.CheckPermissionRequest{
+		SubjectType:  subjectType,
+		SubjectId:    subjectID,
+		Relation:     relation,
+		ResourceType: objectType,
+		ResourceId:   objectID,
+	})
+	if err != nil {
+		return false, err
+	}
+	return resp.Allowed, nil
 }

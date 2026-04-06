@@ -28,10 +28,9 @@ INSERT INTO file_nodes (
     recent_accessed_at,
     favorite,
     status,
-    created_at,
-    updated_at
+    created_at
 ) VALUES (
-    $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16
+    $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, now()
 ) RETURNING id, owner_id, parent_id, physical_file_id, name, is_folder, file_hash, file_size, file_type, file_ext, file_mime_type, file_video_resolution, recent_accessed_at, favorite, deleted_at, deleted_by, status, created_at, updated_at
 `
 
@@ -50,8 +49,6 @@ type InsertFileParams struct {
 	RecentAccessedAt    sql.NullTime   `json:"recent_accessed_at"`
 	Favorite            bool           `json:"favorite"`
 	Status              sql.NullString `json:"status"`
-	CreatedAt           sql.NullTime   `json:"created_at"`
-	UpdatedAt           sql.NullTime   `json:"updated_at"`
 }
 
 func (q *Queries) InsertFile(ctx context.Context, arg InsertFileParams) (FileNode, error) {
@@ -70,8 +67,6 @@ func (q *Queries) InsertFile(ctx context.Context, arg InsertFileParams) (FileNod
 		arg.RecentAccessedAt,
 		arg.Favorite,
 		arg.Status,
-		arg.CreatedAt,
-		arg.UpdatedAt,
 	)
 	var i FileNode
 	err := row.Scan(

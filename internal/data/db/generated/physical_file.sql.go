@@ -8,8 +8,69 @@ package db
 import (
 	"context"
 	"database/sql"
-	"time"
+
+	"github.com/google/uuid"
 )
+
+const deletePhysicalFileByID = `-- name: DeletePhysicalFileByID :one
+UPDATE physical_files SET deleted_at = now() WHERE id = $1 RETURNING id, file_hash, size_bytes, mime_type, storage_path, reference_count, created_at, updated_at
+`
+
+func (q *Queries) DeletePhysicalFileByID(ctx context.Context, id uuid.UUID) (PhysicalFile, error) {
+	row := q.db.QueryRowContext(ctx, deletePhysicalFileByID, id)
+	var i PhysicalFile
+	err := row.Scan(
+		&i.ID,
+		&i.FileHash,
+		&i.SizeBytes,
+		&i.MimeType,
+		&i.StoragePath,
+		&i.ReferenceCount,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
+const getPhysicalFileByHash = `-- name: GetPhysicalFileByHash :one
+SELECT id, file_hash, size_bytes, mime_type, storage_path, reference_count, created_at, updated_at FROM physical_files WHERE file_hash = $1
+`
+
+func (q *Queries) GetPhysicalFileByHash(ctx context.Context, fileHash string) (PhysicalFile, error) {
+	row := q.db.QueryRowContext(ctx, getPhysicalFileByHash, fileHash)
+	var i PhysicalFile
+	err := row.Scan(
+		&i.ID,
+		&i.FileHash,
+		&i.SizeBytes,
+		&i.MimeType,
+		&i.StoragePath,
+		&i.ReferenceCount,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
+const getPhysicalFileByID = `-- name: GetPhysicalFileByID :one
+SELECT id, file_hash, size_bytes, mime_type, storage_path, reference_count, created_at, updated_at FROM physical_files WHERE id = $1
+`
+
+func (q *Queries) GetPhysicalFileByID(ctx context.Context, id uuid.UUID) (PhysicalFile, error) {
+	row := q.db.QueryRowContext(ctx, getPhysicalFileByID, id)
+	var i PhysicalFile
+	err := row.Scan(
+		&i.ID,
+		&i.FileHash,
+		&i.SizeBytes,
+		&i.MimeType,
+		&i.StoragePath,
+		&i.ReferenceCount,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
 
 const insertPhysicalFile = `-- name: InsertPhysicalFile :one
 INSERT INTO physical_files (
@@ -18,10 +79,9 @@ INSERT INTO physical_files (
     mime_type,
     storage_path,
     reference_count,
-    created_at,
-    updated_at
+    created_at
 ) VALUES (
-    $1, $2, $3, $4, $5, $6, $7
+    $1, $2, $3, $4, $5, now()
 ) RETURNING id, file_hash, size_bytes, mime_type, storage_path, reference_count, created_at, updated_at
 `
 
@@ -31,8 +91,6 @@ type InsertPhysicalFileParams struct {
 	MimeType       string        `json:"mime_type"`
 	StoragePath    string        `json:"storage_path"`
 	ReferenceCount sql.NullInt32 `json:"reference_count"`
-	CreatedAt      time.Time     `json:"created_at"`
-	UpdatedAt      sql.NullTime  `json:"updated_at"`
 }
 
 func (q *Queries) InsertPhysicalFile(ctx context.Context, arg InsertPhysicalFileParams) (PhysicalFile, error) {
@@ -42,9 +100,32 @@ func (q *Queries) InsertPhysicalFile(ctx context.Context, arg InsertPhysicalFile
 		arg.MimeType,
 		arg.StoragePath,
 		arg.ReferenceCount,
-		arg.CreatedAt,
-		arg.UpdatedAt,
 	)
+	var i PhysicalFile
+	err := row.Scan(
+		&i.ID,
+		&i.FileHash,
+		&i.SizeBytes,
+		&i.MimeType,
+		&i.StoragePath,
+		&i.ReferenceCount,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
+const updatePhysicalFileReferenceCount = `-- name: UpdatePhysicalFileReferenceCount :one
+UPDATE physical_files SET reference_count = reference_count + $2 WHERE id = $1 RETURNING id, file_hash, size_bytes, mime_type, storage_path, reference_count, created_at, updated_at
+`
+
+type UpdatePhysicalFileReferenceCountParams struct {
+	ID             uuid.UUID     `json:"id"`
+	ReferenceCount sql.NullInt32 `json:"reference_count"`
+}
+
+func (q *Queries) UpdatePhysicalFileReferenceCount(ctx context.Context, arg UpdatePhysicalFileReferenceCountParams) (PhysicalFile, error) {
+	row := q.db.QueryRowContext(ctx, updatePhysicalFileReferenceCount, arg.ID, arg.ReferenceCount)
 	var i PhysicalFile
 	err := row.Scan(
 		&i.ID,

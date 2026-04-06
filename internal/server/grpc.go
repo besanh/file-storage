@@ -3,7 +3,6 @@ package server
 import (
 	"crypto/rsa"
 	fileV1 "file/api/file/v1"
-	v1 "file/api/helloworld/v1"
 	"file/internal/conf"
 	"file/internal/service"
 
@@ -17,7 +16,7 @@ import (
 )
 
 // NewGRPCServer new a gRPC server.
-func NewGRPCServer(c *conf.Server, d *conf.Data, greeter *service.GreeterService, fileService *service.FileService, logger log.Logger, publicKey *rsa.PublicKey) *grpc.Server {
+func NewGRPCServer(c *conf.Server, d *conf.Data, fileService *service.FileService, logger log.Logger, publicKey *rsa.PublicKey) *grpc.Server {
 	// =========================================================================
 	// 1. JWT Authentication Middleware
 	// This uses the CPU to mathematically verify the token signature locally.
@@ -52,7 +51,7 @@ func NewGRPCServer(c *conf.Server, d *conf.Data, greeter *service.GreeterService
 		opts = append(opts, grpc.Timeout(c.Grpc.Timeout.AsDuration()))
 	}
 	srv := grpc.NewServer(opts...)
-	v1.RegisterGreeterServer(srv, greeter)
 	fileV1.RegisterFileServiceServer(srv, fileService)
+
 	return srv
 }

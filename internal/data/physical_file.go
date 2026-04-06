@@ -33,3 +33,25 @@ func (r *physicalFileRepo) InsertPhysicalFile(ctx context.Context, file *db.Inse
 	}
 	return &resp, nil
 }
+
+func (r *physicalFileRepo) GetPhysicalFileByHash(ctx context.Context, fileHash string) (*db.PhysicalFile, error) {
+	resp, err := r.data.Queries(ctx).GetPhysicalFileByHash(ctx, fileHash)
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (r *physicalFileRepo) UpdatePhysicalFileReferenceCount(ctx context.Context, file *db.UpdatePhysicalFileReferenceCountParams) (*db.PhysicalFile, error) {
+	resp, err := r.data.Queries(ctx).UpdatePhysicalFileReferenceCount(ctx, *file)
+	if err == sql.ErrNoRows {
+		return nil, fmt.Errorf("file not found")
+	}
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
