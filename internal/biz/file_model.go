@@ -2,6 +2,15 @@ package biz
 
 import "github.com/google/uuid"
 
+type CreateFolderRequest struct {
+	ParentID *uuid.UUID
+	Name     string
+}
+
+type CreateFolderResponse struct {
+	ID *uuid.UUID
+}
+
 type CreateFileRequest struct {
 	ParentID            *uuid.UUID
 	Name                string
@@ -16,5 +25,5 @@ type CreateFileRequest struct {
 }
 
 type CreateFileResponse struct {
-	ID *uuid.UUID
+	ID uuid.UUID
 }

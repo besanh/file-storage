@@ -51,7 +51,12 @@ CREATE TABLE file_nodes (
     status VARCHAR(50) DEFAULT 'active', -- 'active', 'trashed'
     
     created_at TIMESTAMPTZ DEFAULT now(),
-    updated_at TIMESTAMPTZ
+    updated_at TIMESTAMPTZ,
+
+    CONSTRAINT check_folder_integrity CHECK (
+        (is_folder = TRUE AND physical_file_id IS NULL) OR 
+        (is_folder = FALSE AND physical_file_id IS NOT NULL)
+    )
 );
 
 -- Crucial Indexes for Performance

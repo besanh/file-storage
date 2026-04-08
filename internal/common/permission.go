@@ -30,6 +30,22 @@ func (r Relation) String() string {
 	return string(r)
 }
 
+// System Permissions mapped in SpiceDB
+type Permission string
+
+const (
+	PermissionRead   Permission = "read"
+	PermissionWrite  Permission = "write"
+	PermissionDelete Permission = "delete"
+	PermissionShare  Permission = "share"
+	PermissionList   Permission = "list"
+	PermissionCreate Permission = "create"
+)
+
+func (p Permission) String() string {
+	return string(p)
+}
+
 // The system-level permissions granted to microservices
 type SystemScope string
 

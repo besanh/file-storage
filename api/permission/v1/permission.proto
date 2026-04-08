@@ -2,7 +2,7 @@ syntax="proto3";
 
 package permission.v1;
 
-option go_package = "file/api/permission/v1";
+option go_package = "auth_storage/api/permission/v1";
 
 import "google/api/annotations.proto";
 
@@ -19,6 +19,13 @@ service Permission {
     rpc WriteRelationship (WriteRelationshipRequest) returns (WriteRelationshipReply) {
         option (google.api.http) = {
             post: "/v1/internal/permissions/write"
+            body: "*"
+        };
+    }
+
+    rpc DeleteRelationship (DeleteRelationshipRequest) returns (DeleteRelationshipReply) {
+        option (google.api.http) = {
+            post: "/v1/internal/permissions/delete"
             body: "*"
         };
     }
@@ -45,5 +52,17 @@ message WriteRelationshipRequest {
 }
 
 message WriteRelationshipReply {
+    bool success = 1;
+}
+
+message DeleteRelationshipRequest {
+    string resource_type = 1; // e.g., "file"
+    string resource_id = 2;   // e.g., "file-999"
+    string relation = 3;      // e.g., "owner" or "parent"
+    string subject_type = 4;  // e.g., "user" or "folder"
+    string subject_id = 5;    // e.g., "123" or "folder-789"
+}
+
+message DeleteRelationshipReply {
     bool success = 1;
 }

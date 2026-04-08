@@ -64,3 +64,25 @@ func (r *authRepo) CheckPermission(ctx context.Context, subjectType, subjectID, 
 	}
 	return resp.Allowed, nil
 }
+
+func (r *authRepo) WriteRelationship(ctx context.Context, resourceType, resourceID, relation, subjectType, subjectID string) error {
+	_, err := r.permissionClient.WriteRelationship(ctx, &permissionV1.WriteRelationshipRequest{
+		ResourceType: resourceType,
+		ResourceId:   resourceID,
+		Relation:     relation,
+		SubjectType:  subjectType,
+		SubjectId:    subjectID,
+	})
+	return err
+}
+
+func (r *authRepo) DeleteRelationship(ctx context.Context, resourceType, resourceID, relation, subjectType, subjectID string) error {
+	_, err := r.permissionClient.DeleteRelationship(ctx, &permissionV1.DeleteRelationshipRequest{
+		ResourceType: resourceType,
+		ResourceId:   resourceID,
+		Relation:     relation,
+		SubjectType:  subjectType,
+		SubjectId:    subjectID,
+	})
+	return err
+}

@@ -31,7 +31,7 @@ func (s *FileService) CreateFile(ctx context.Context, req *pb.CreateFileRequest)
 	resp, err := s.uc.CreateFile(ctx, &biz.CreateFileRequest{
 		ParentID:            parentIDPtr,
 		Name:                req.Name,
-		IsFolder:            false,
+		IsFolder:            req.IsFolder,
 		FileHash:            req.FileHash,
 		FileSize:            req.FileSize,
 		FileType:            req.FileType,
@@ -44,12 +44,7 @@ func (s *FileService) CreateFile(ctx context.Context, req *pb.CreateFileRequest)
 		return nil, err
 	}
 
-	idStr := ""
-	if resp.ID != nil {
-		idStr = resp.ID.String()
-	}
-
 	return &pb.CreateFileResponse{
-		Id: idStr,
+		Id: resp.ID.String(),
 	}, nil
 }

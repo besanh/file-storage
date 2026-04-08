@@ -16,15 +16,13 @@ type PhysicalFileRepo interface {
 type PhysicalFileUsecase struct {
 	physicalFileRepo PhysicalFileRepo
 	authRepo         AuthRepo
-	tm               Transaction
 	log              *log.Helper
 }
 
-func NewPhysicalFileUsecase(physicalFileRepo PhysicalFileRepo, authRepo AuthRepo, tm Transaction, logger log.Logger) *PhysicalFileUsecase {
+func NewPhysicalFileUsecase(physicalFileRepo PhysicalFileRepo, authRepo AuthRepo, logger log.Logger) *PhysicalFileUsecase {
 	return &PhysicalFileUsecase{
 		physicalFileRepo: physicalFileRepo,
 		authRepo:         authRepo,
-		tm:               tm,
 		log:              log.NewHelper(logger),
 	}
 }

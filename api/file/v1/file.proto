@@ -25,6 +25,7 @@ message CreateFileRequest {
     string file_hash = 7;      // Can be calculated on client side for dedup logic
     string file_video_resolution = 8;
     string status = 9;
+    bool is_folder = 10;
 }
 
 message CreateFileResponse {

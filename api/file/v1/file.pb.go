@@ -33,6 +33,7 @@ type CreateFileRequest struct {
 	FileHash            string                 `protobuf:"bytes,7,opt,name=file_hash,json=fileHash,proto3" json:"file_hash,omitempty"` // Can be calculated on client side for dedup logic
 	FileVideoResolution string                 `protobuf:"bytes,8,opt,name=file_video_resolution,json=fileVideoResolution,proto3" json:"file_video_resolution,omitempty"`
 	Status              string                 `protobuf:"bytes,9,opt,name=status,proto3" json:"status,omitempty"`
+	IsFolder            bool                   `protobuf:"varint,10,opt,name=is_folder,json=isFolder,proto3" json:"is_folder,omitempty"`
 	unknownFields       protoimpl.UnknownFields
 	sizeCache           protoimpl.SizeCache
 }
@@ -130,6 +131,13 @@ func (x *CreateFileRequest) GetStatus() string {
 	return ""
 }
 
+func (x *CreateFileRequest) GetIsFolder() bool {
+	if x != nil {
+		return x.IsFolder
+	}
+	return false
+}
+
 type CreateFileResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -178,7 +186,7 @@ var File_file_v1_file_proto protoreflect.FileDescriptor
 
 const file_file_v1_file_proto_rawDesc = "" +
 	"\n" +
-	"\x12file/v1/file.proto\x12\afile.v1\x1a\x1cgoogle/api/annotations.proto\"\xa8\x02\n" +
+	"\x12file/v1/file.proto\x12\afile.v1\x1a\x1cgoogle/api/annotations.proto\"\xc5\x02\n" +
 	"\x11CreateFileRequest\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x1b\n" +
 	"\tparent_id\x18\x02 \x01(\tR\bparentId\x12\x1b\n" +
@@ -188,7 +196,9 @@ const file_file_v1_file_proto_rawDesc = "" +
 	"\x0efile_mime_type\x18\x06 \x01(\tR\ffileMimeType\x12\x1b\n" +
 	"\tfile_hash\x18\a \x01(\tR\bfileHash\x122\n" +
 	"\x15file_video_resolution\x18\b \x01(\tR\x13fileVideoResolution\x12\x16\n" +
-	"\x06status\x18\t \x01(\tR\x06status\"$\n" +
+	"\x06status\x18\t \x01(\tR\x06status\x12\x1b\n" +
+	"\tis_folder\x18\n" +
+	" \x01(\bR\bisFolder\"$\n" +
 	"\x12CreateFileResponse\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id2q\n" +
 	"\vFileService\x12b\n" +
