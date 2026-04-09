@@ -1,5 +1,5 @@
 CREATE TABLE physical_files (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id UUID PRIMARY KEY DEFAULT uuidv7(),
     
     -- Cryptographic hash (e.g., SHA-256) of the file content.
     -- If two users upload the exact same video, you only store it once!
@@ -20,7 +20,7 @@ CREATE TABLE physical_files (
 );
 
 CREATE TABLE file_nodes (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id UUID PRIMARY KEY DEFAULT uuidv7(),
     
     -- The user who owns this specific file or folder
     owner_id UUID NOT NULL,
@@ -87,3 +87,79 @@ CREATE INDEX idx_share_links_created_by ON share_links(created_by);
 
 -- Index for resource management (e.g., "Show me all active links for this specific folder")
 CREATE INDEX idx_share_links_resource ON share_links(resource_id);
+
+-- Plans and Subscriptions
+CREATE TABLE plans (
+    id UUID PRIMARY KEY DEFAULT uuidv7(),
+    name TEXT UNIQUE NOT NULL,
+    storage_quota BIGINT NOT NULL,
+    price BIGINT NOT NULL DEFAULT 0,
+    discount_price BIGINT NOT NULL DEFAULT 0,
+    duration_days INT NOT NULL,
+    description TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at TIMESTAMPTZ
+);
+
+CREATE TABLE user_subscriptions (
+    id UUID PRIMARY KEY DEFAULT uuidv7(),
+    user_id uuid NOT NULL,
+    plan_id UUID NOT NULL REFERENCES plans(id),
+    started_at TIMESTAMPTZ NOT NULL,
+    expired_at TIMESTAMPTZ,
+    status TEXT NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at TIMESTAMPTZ
+);
+
+-- Ensure a user can have only one active subscription at a time
+CREATE UNIQUE INDEX uniq_active_sub
+ON user_subscriptions(user_id)
+WHERE status = 'active';
+
+-- Trigger function to update user storage usage on hard delete of file_nodes
+CREATE OR REPLACE FUNCTION trg_file_nodes_hard_delete()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF OLD.file_size IS NULL THEN
+        RETURN OLD;
+    END IF;
+
+    UPDATE users
+    SET
+        storage_photos_used = GREATEST(
+            storage_photos_used - (OLD.file_size * (OLD.file_type = 'photo')::int),
+            0
+        ),
+        storage_video_used = GREATEST(
+            storage_video_used - (OLD.file_size * (OLD.file_type = 'video')::int),
+            0
+        ),
+        storage_document_used = GREATEST(
+            storage_document_used - (OLD.file_size * (OLD.file_type = 'document')::int),
+            0
+        ),
+        storage_audio_used = GREATEST(
+            storage_audio_used - (OLD.file_size * (OLD.file_type = 'audio')::int),
+            0
+        ),
+        storage_compress_used = GREATEST(
+            storage_compress_used - (OLD.file_size * (OLD.file_type = 'compress')::int),
+            0
+        ),
+        storage_other_used = GREATEST(
+            storage_other_used - (OLD.file_size * (OLD.file_type = 'other')::int),
+            0
+        ),
+        updated_at = now()
+    WHERE id = OLD.owner_id;
+
+    RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Attach trigger to file_nodes table
+CREATE TRIGGER trg_file_nodes_after_delete
+AFTER DELETE ON file_nodes
+FOR EACH ROW
+EXECUTE FUNCTION trg_file_nodes_hard_delete();

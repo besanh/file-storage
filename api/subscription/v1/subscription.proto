@@ -1,0 +1,66 @@
+syntax = "proto3";
+
+package api.subscription.v1;
+
+option go_package = "file/api/subscription/v1;v1";
+
+import "google/api/annotations.proto";
+
+// =====================================================================
+// SUBSCRIPTION SERVICE
+// =====================================================================
+service SubscriptionService {
+    rpc GetUserSubscription (GetUserSubscriptionRequest) returns (GetUserSubscriptionResponse) {
+        option (google.api.http) = {
+            get: "/v1/subscriptions/me"
+        };
+    }
+
+    rpc SubscribePlan (SubscribePlanRequest) returns (SubscribePlanResponse) {
+        option (google.api.http) = {
+            post: "/v1/subscriptions"
+            body: "*"
+        };
+    }
+
+    rpc ListUserSubscriptions (ListUserSubscriptionsRequest) returns (ListUserSubscriptionsResponse) {
+        option (google.api.http) = {
+            get: "/v1/subscriptions"
+        };
+    }
+}
+
+// =====================================================================
+// MESSAGES
+// =====================================================================
+
+message Subscription {
+    string id = 1;
+    string user_id = 2;
+    string plan_id = 3;
+    string started_at = 4;
+    string expired_at = 5;
+    string status = 6;
+    string created_at = 7;
+    string updated_at = 8;
+}
+
+message GetUserSubscriptionRequest {}
+
+message GetUserSubscriptionResponse {
+    Subscription subscription = 1;
+}
+
+message SubscribePlanRequest {
+    string plan_id = 1;
+}
+
+message SubscribePlanResponse {
+    Subscription subscription = 1;
+}
+
+message ListUserSubscriptionsRequest {}
+
+message ListUserSubscriptionsResponse {
+    repeated Subscription subscriptions = 1;
+}

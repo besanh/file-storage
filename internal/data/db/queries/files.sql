@@ -18,3 +18,10 @@ INSERT INTO file_nodes (
 ) VALUES (
     $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, now()
 ) RETURNING *;
+
+-- name: GetUserStorageUsed :one
+SELECT COALESCE(SUM(file_size), 0)::bigint AS total_used
+FROM file_nodes
+WHERE owner_id = $1
+  AND is_folder = FALSE
+  AND status = 'active';

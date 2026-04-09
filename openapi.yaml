@@ -164,6 +164,93 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/permission.v1.WriteRelationshipReply'
+    /v1/plans:
+        get:
+            tags:
+                - PlanService
+            operationId: PlanService_ListPlans
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.plan.v1.ListPlansResponse'
+        post:
+            tags:
+                - PlanService
+            operationId: PlanService_CreatePlan
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.plan.v1.CreatePlanRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.plan.v1.CreatePlanResponse'
+    /v1/plans/{id}:
+        get:
+            tags:
+                - PlanService
+            operationId: PlanService_GetPlan
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.plan.v1.GetPlanResponse'
+        delete:
+            tags:
+                - PlanService
+            operationId: PlanService_DeletePlan
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.plan.v1.DeletePlanResponse'
+        patch:
+            tags:
+                - PlanService
+            operationId: PlanService_UpdatePlan
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.plan.v1.UpdatePlanRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.plan.v1.UpdatePlanResponse'
     /v1/shares:
         post:
             tags:
@@ -268,8 +355,132 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.share.v1.UpdateShareLinkResponse'
+    /v1/subscriptions:
+        get:
+            tags:
+                - SubscriptionService
+            operationId: SubscriptionService_ListUserSubscriptions
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.subscription.v1.ListUserSubscriptionsResponse'
+        post:
+            tags:
+                - SubscriptionService
+            operationId: SubscriptionService_SubscribePlan
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.subscription.v1.SubscribePlanRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.subscription.v1.SubscribePlanResponse'
+    /v1/subscriptions/me:
+        get:
+            tags:
+                - SubscriptionService
+            operationId: SubscriptionService_GetUserSubscription
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.subscription.v1.GetUserSubscriptionResponse'
 components:
     schemas:
+        api.plan.v1.CreatePlanRequest:
+            type: object
+            properties:
+                name:
+                    type: string
+                storageQuota:
+                    type: string
+                price:
+                    type: string
+                discountPrice:
+                    type: string
+                durationDays:
+                    type: integer
+                    format: int32
+                description:
+                    type: string
+        api.plan.v1.CreatePlanResponse:
+            type: object
+            properties:
+                plan:
+                    $ref: '#/components/schemas/api.plan.v1.Plan'
+        api.plan.v1.DeletePlanResponse:
+            type: object
+            properties:
+                success:
+                    type: boolean
+        api.plan.v1.GetPlanResponse:
+            type: object
+            properties:
+                plan:
+                    $ref: '#/components/schemas/api.plan.v1.Plan'
+        api.plan.v1.ListPlansResponse:
+            type: object
+            properties:
+                plans:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.plan.v1.Plan'
+        api.plan.v1.Plan:
+            type: object
+            properties:
+                id:
+                    type: string
+                name:
+                    type: string
+                storageQuota:
+                    type: string
+                price:
+                    type: string
+                discountPrice:
+                    type: string
+                durationDays:
+                    type: integer
+                    format: int32
+                description:
+                    type: string
+                createdAt:
+                    type: string
+                updatedAt:
+                    type: string
+        api.plan.v1.UpdatePlanRequest:
+            type: object
+            properties:
+                id:
+                    type: string
+                name:
+                    type: string
+                storageQuota:
+                    type: string
+                price:
+                    type: string
+                discountPrice:
+                    type: string
+                durationDays:
+                    type: integer
+                    format: int32
+                description:
+                    type: string
+        api.plan.v1.UpdatePlanResponse:
+            type: object
+            properties:
+                plan:
+                    $ref: '#/components/schemas/api.plan.v1.Plan'
         api.share.v1.CreateShareLinkRequest:
             type: object
             properties:
@@ -346,6 +557,47 @@ components:
             properties:
                 success:
                     type: boolean
+        api.subscription.v1.GetUserSubscriptionResponse:
+            type: object
+            properties:
+                subscription:
+                    $ref: '#/components/schemas/api.subscription.v1.Subscription'
+        api.subscription.v1.ListUserSubscriptionsResponse:
+            type: object
+            properties:
+                subscriptions:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.subscription.v1.Subscription'
+        api.subscription.v1.SubscribePlanRequest:
+            type: object
+            properties:
+                planId:
+                    type: string
+        api.subscription.v1.SubscribePlanResponse:
+            type: object
+            properties:
+                subscription:
+                    $ref: '#/components/schemas/api.subscription.v1.Subscription'
+        api.subscription.v1.Subscription:
+            type: object
+            properties:
+                id:
+                    type: string
+                userId:
+                    type: string
+                planId:
+                    type: string
+                startedAt:
+                    type: string
+                expiredAt:
+                    type: string
+                status:
+                    type: string
+                createdAt:
+                    type: string
+                updatedAt:
+                    type: string
         file.v1.CreateFileRequest:
             type: object
             properties:
@@ -476,8 +728,18 @@ tags:
       description: The greeting service definition.
     - name: M2MAuthService
     - name: PermissionService
+    - name: PlanService
+      description: |-
+        =====================================================================
+         PLAN SERVICE
+         =====================================================================
     - name: ShareService
       description: |-
         =====================================================================
          SHARE SERVICE
+         =====================================================================
+    - name: SubscriptionService
+      description: |-
+        =====================================================================
+         SUBSCRIPTION SERVICE
          =====================================================================

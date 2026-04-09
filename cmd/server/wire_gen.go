@@ -40,8 +40,14 @@ func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*
 	fileUsecase := biz.NewFileUsecase(fileRepo, physicalFileRepo, authRepo, transaction, logger)
 	fileService := service.NewFileService(fileUsecase)
 	shareRepo := data.NewShareRepo(dataData, logger)
-	shareUseCase := biz.NewShareUseCase(shareRepo, logger, authRepo, transaction)
+	shareUseCase := biz.NewShareUseCase(shareRepo, logger, authRepo, transaction, confData)
 	shareService := service.NewShareService(shareUseCase, logger)
+	planRepo := data.NewPlanRepo(dataData, logger)
+	planUseCase := biz.NewPlanUseCase(planRepo, logger)
+	planService := service.NewPlanService(planUseCase, logger)
+	subscriptionRepo := data.NewSubscriptionRepo(dataData, logger)
+	subscriptionUseCase := biz.NewSubscriptionUseCase(subscriptionRepo, planRepo, logger)
+	subscriptionService := service.NewSubscriptionService(subscriptionUseCase, logger)
 	publicPEM, err := util.NewPublicPEM(confData)
 	if err != nil {
 		cleanup()
@@ -52,8 +58,8 @@ func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*
 		cleanup()
 		return nil, nil, err
 	}
-	grpcServer := server.NewGRPCServer(confServer, confData, fileService, shareService, logger, publicKey)
-	httpServer := server.NewHTTPServer(confServer, confData, fileService, shareService, logger, publicKey)
+	grpcServer := server.NewGRPCServer(confServer, confData, fileService, shareService, planService, subscriptionService, logger, publicKey)
+	httpServer := server.NewHTTPServer(confServer, confData, fileService, shareService, planService, subscriptionService, logger, publicKey)
 	app := newApp(logger, grpcServer, httpServer)
 	return app, func() {
 		cleanup()

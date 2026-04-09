@@ -12,6 +12,21 @@ import (
 	"github.com/google/uuid"
 )
 
+const getUserStorageUsed = `-- name: GetUserStorageUsed :one
+SELECT COALESCE(SUM(file_size), 0)::bigint AS total_used
+FROM file_nodes
+WHERE owner_id = $1
+  AND is_folder = FALSE
+  AND status = 'active'
+`
+
+func (q *Queries) GetUserStorageUsed(ctx context.Context, ownerID uuid.UUID) (int64, error) {
+	row := q.db.QueryRowContext(ctx, getUserStorageUsed, ownerID)
+	var total_used int64
+	err := row.Scan(&total_used)
+	return total_used, err
+}
+
 const insertFile = `-- name: InsertFile :one
 INSERT INTO file_nodes (
     owner_id,

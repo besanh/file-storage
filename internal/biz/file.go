@@ -13,21 +13,26 @@ import (
 
 type FileRepo interface {
 	InsertFile(ctx context.Context, file *db.InsertFileParams) (*db.FileNode, error)
+	GetUserStorageUsed(ctx context.Context, ownerID uuid.UUID) (int64, error)
 }
 
 type FileUsecase struct {
 	fileRepo         FileRepo
 	physicalFileRepo PhysicalFileRepo
 	authRepo         AuthRepo
+	subRepo          SubscriptionRepo
+	planRepo         PlanRepo
 	tm               Transaction
 	log              *log.Helper
 }
 
-func NewFileUsecase(fileRepo FileRepo, physicalFileRepo PhysicalFileRepo, authRepo AuthRepo, tm Transaction, logger log.Logger) *FileUsecase {
+func NewFileUsecase(fileRepo FileRepo, physicalFileRepo PhysicalFileRepo, authRepo AuthRepo, subRepo SubscriptionRepo, planRepo PlanRepo, tm Transaction, logger log.Logger) *FileUsecase {
 	return &FileUsecase{
 		fileRepo:         fileRepo,
 		physicalFileRepo: physicalFileRepo,
 		authRepo:         authRepo,
+		subRepo:          subRepo,
+		planRepo:         planRepo,
 		tm:               tm,
 		log:              log.NewHelper(logger),
 	}
@@ -71,6 +76,37 @@ func (uc *FileUsecase) CreateFile(ctx context.Context, input CreateFileRequest) 
 		}
 		if !resp.Allowed {
 			return CreateFileResponse{}, fmt.Errorf("permission denied: cannot create item in %s:%s", objectType, objectID)
+		}
+	}
+
+	// --- Storage Quota Check (only for files, not folders) ---
+	if !input.IsFolder && input.FileSize > 0 {
+		storageSub, err := uc.subRepo.GetUserSubscription(ctx, ownerID)
+		if err != nil {
+			return CreateFileResponse{}, fmt.Errorf("failed to check subscription: %w", err)
+		}
+		if storageSub == nil {
+			return CreateFileResponse{}, fmt.Errorf("no active subscription found, please subscribe to a plan first")
+		}
+
+		plan, err := uc.planRepo.GetPlan(ctx, storageSub.PlanID)
+		if err != nil {
+			return CreateFileResponse{}, fmt.Errorf("failed to get plan: %w", err)
+		}
+		if plan == nil {
+			return CreateFileResponse{}, fmt.Errorf("subscription references invalid plan")
+		}
+
+		currentUsed, err := uc.fileRepo.GetUserStorageUsed(ctx, ownerID)
+		if err != nil {
+			return CreateFileResponse{}, fmt.Errorf("failed to get storage usage: %w", err)
+		}
+
+		if currentUsed+input.FileSize > plan.StorageQuota {
+			return CreateFileResponse{}, fmt.Errorf(
+				"storage quota exceeded: used %d + file %d > quota %d (plan: %s)",
+				currentUsed, input.FileSize, plan.StorageQuota, plan.Name,
+			)
 		}
 	}
 

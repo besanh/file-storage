@@ -1,0 +1,109 @@
+syntax = "proto3";
+
+package api.plan.v1;
+
+option go_package = "file/api/plan/v1;v1";
+
+import "google/api/annotations.proto";
+
+// =====================================================================
+// PLAN SERVICE
+// =====================================================================
+service PlanService {
+    rpc GetPlan (GetPlanRequest) returns (GetPlanResponse) {
+        option (google.api.http) = {
+            get: "/v1/plans/{id}"
+        };
+    }
+
+    rpc ListPlans (ListPlansRequest) returns (ListPlansResponse) {
+        option (google.api.http) = {
+            get: "/v1/plans"
+        };
+    }
+
+    rpc CreatePlan (CreatePlanRequest) returns (CreatePlanResponse) {
+        option (google.api.http) = {
+            post: "/v1/plans"
+            body: "*"
+        };
+    }
+
+    rpc UpdatePlan (UpdatePlanRequest) returns (UpdatePlanResponse) {
+        option (google.api.http) = {
+            patch: "/v1/plans/{id}"
+            body: "*"
+        };
+    }
+
+    rpc DeletePlan (DeletePlanRequest) returns (DeletePlanResponse) {
+        option (google.api.http) = {
+            delete: "/v1/plans/{id}"
+        };
+    }
+}
+
+// =====================================================================
+// MESSAGES
+// =====================================================================
+
+message Plan {
+    string id = 1;
+    string name = 2;
+    int64 storage_quota = 3;
+    int64 price = 4;
+    int64 discount_price = 5;
+    int32 duration_days = 6;
+    string description = 7;
+    string created_at = 8;
+    string updated_at = 9;
+}
+
+message GetPlanRequest {
+    string id = 1;
+}
+
+message GetPlanResponse {
+    Plan plan = 1;
+}
+
+message ListPlansRequest {}
+
+message ListPlansResponse {
+    repeated Plan plans = 1;
+}
+
+message CreatePlanRequest {
+    string name = 1;
+    int64 storage_quota = 2;
+    int64 price = 3;
+    int64 discount_price = 4;
+    int32 duration_days = 5;
+    string description = 6;
+}
+
+message CreatePlanResponse {
+    Plan plan = 1;
+}
+
+message UpdatePlanRequest {
+    string id = 1;
+    string name = 2;
+    int64 storage_quota = 3;
+    int64 price = 4;
+    int64 discount_price = 5;
+    int32 duration_days = 6;
+    string description = 7;
+}
+
+message UpdatePlanResponse {
+    Plan plan = 1;
+}
+
+message DeletePlanRequest {
+    string id = 1;
+}
+
+message DeletePlanResponse {
+    bool success = 1;
+}

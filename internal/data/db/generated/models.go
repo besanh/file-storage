@@ -44,6 +44,18 @@ type PhysicalFile struct {
 	UpdatedAt      sql.NullTime  `json:"updated_at"`
 }
 
+type Plan struct {
+	ID            uuid.UUID      `json:"id"`
+	Name          string         `json:"name"`
+	StorageQuota  int64          `json:"storage_quota"`
+	Price         int64          `json:"price"`
+	DiscountPrice int64          `json:"discount_price"`
+	DurationDays  int32          `json:"duration_days"`
+	Description   sql.NullString `json:"description"`
+	CreatedAt     time.Time      `json:"created_at"`
+	UpdatedAt     sql.NullTime   `json:"updated_at"`
+}
+
 type ShareLink struct {
 	LinkToken       string       `json:"link_token"`
 	ResourceID      uuid.UUID    `json:"resource_id"`
@@ -52,4 +64,15 @@ type ShareLink struct {
 	PermissionLevel string       `json:"permission_level"`
 	ExpiresAt       sql.NullTime `json:"expires_at"`
 	CreatedAt       sql.NullTime `json:"created_at"`
+}
+
+type UserSubscription struct {
+	ID        uuid.UUID    `json:"id"`
+	UserID    uuid.UUID    `json:"user_id"`
+	PlanID    uuid.UUID    `json:"plan_id"`
+	StartedAt time.Time    `json:"started_at"`
+	ExpiredAt sql.NullTime `json:"expired_at"`
+	Status    string       `json:"status"`
+	CreatedAt time.Time    `json:"created_at"`
+	UpdatedAt sql.NullTime `json:"updated_at"`
 }

@@ -1,6 +1,14 @@
 package biz
 
-import "github.com/google/wire"
+import (
+	"errors"
+
+	"github.com/google/wire"
+)
+
+var (
+	ErrUnauthorized = errors.New("unauthorized")
+)
 
 // ProviderSet is biz providers.
-var ProviderSet = wire.NewSet(NewFileUsecase, NewPublicKey, NewPhysicalFileUsecase, NewShareUseCase)
+var ProviderSet = wire.NewSet(NewFileUsecase, NewPublicKey, NewPhysicalFileUsecase, NewShareUseCase, NewPlanUseCase, NewSubscriptionUseCase)
