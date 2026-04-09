@@ -6,7 +6,7 @@ option go_package = "file/api/m2m_auth/v1;m2mv1";
 
 import "google/api/annotations.proto";
 
-service Auth {
+service M2MAuthService {
     rpc Login (LoginRequest) returns (LoginReply) {
         option (google.api.http) = {
         post: "/m2m/v1/auth/login"

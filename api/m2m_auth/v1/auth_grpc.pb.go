@@ -19,101 +19,101 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Auth_Login_FullMethodName = "/m2m_auth.v1.Auth/Login"
+	M2MAuthService_Login_FullMethodName = "/m2m_auth.v1.M2MAuthService/Login"
 )
 
-// AuthClient is the client API for Auth service.
+// M2MAuthServiceClient is the client API for M2MAuthService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type AuthClient interface {
+type M2MAuthServiceClient interface {
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginReply, error)
 }
 
-type authClient struct {
+type m2MAuthServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewAuthClient(cc grpc.ClientConnInterface) AuthClient {
-	return &authClient{cc}
+func NewM2MAuthServiceClient(cc grpc.ClientConnInterface) M2MAuthServiceClient {
+	return &m2MAuthServiceClient{cc}
 }
 
-func (c *authClient) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginReply, error) {
+func (c *m2MAuthServiceClient) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(LoginReply)
-	err := c.cc.Invoke(ctx, Auth_Login_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, M2MAuthService_Login_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// AuthServer is the server API for Auth service.
-// All implementations must embed UnimplementedAuthServer
+// M2MAuthServiceServer is the server API for M2MAuthService service.
+// All implementations must embed UnimplementedM2MAuthServiceServer
 // for forward compatibility.
-type AuthServer interface {
+type M2MAuthServiceServer interface {
 	Login(context.Context, *LoginRequest) (*LoginReply, error)
-	mustEmbedUnimplementedAuthServer()
+	mustEmbedUnimplementedM2MAuthServiceServer()
 }
 
-// UnimplementedAuthServer must be embedded to have
+// UnimplementedM2MAuthServiceServer must be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedAuthServer struct{}
+type UnimplementedM2MAuthServiceServer struct{}
 
-func (UnimplementedAuthServer) Login(context.Context, *LoginRequest) (*LoginReply, error) {
+func (UnimplementedM2MAuthServiceServer) Login(context.Context, *LoginRequest) (*LoginReply, error) {
 	return nil, status.Error(codes.Unimplemented, "method Login not implemented")
 }
-func (UnimplementedAuthServer) mustEmbedUnimplementedAuthServer() {}
-func (UnimplementedAuthServer) testEmbeddedByValue()              {}
+func (UnimplementedM2MAuthServiceServer) mustEmbedUnimplementedM2MAuthServiceServer() {}
+func (UnimplementedM2MAuthServiceServer) testEmbeddedByValue()                        {}
 
-// UnsafeAuthServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to AuthServer will
+// UnsafeM2MAuthServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to M2MAuthServiceServer will
 // result in compilation errors.
-type UnsafeAuthServer interface {
-	mustEmbedUnimplementedAuthServer()
+type UnsafeM2MAuthServiceServer interface {
+	mustEmbedUnimplementedM2MAuthServiceServer()
 }
 
-func RegisterAuthServer(s grpc.ServiceRegistrar, srv AuthServer) {
-	// If the following call panics, it indicates UnimplementedAuthServer was
+func RegisterM2MAuthServiceServer(s grpc.ServiceRegistrar, srv M2MAuthServiceServer) {
+	// If the following call panics, it indicates UnimplementedM2MAuthServiceServer was
 	// embedded by pointer and is nil.  This will cause panics if an
 	// unimplemented method is ever invoked, so we test this at initialization
 	// time to prevent it from happening at runtime later due to I/O.
 	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
 		t.testEmbeddedByValue()
 	}
-	s.RegisterService(&Auth_ServiceDesc, srv)
+	s.RegisterService(&M2MAuthService_ServiceDesc, srv)
 }
 
-func _Auth_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _M2MAuthService_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(LoginRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthServer).Login(ctx, in)
+		return srv.(M2MAuthServiceServer).Login(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Auth_Login_FullMethodName,
+		FullMethod: M2MAuthService_Login_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServer).Login(ctx, req.(*LoginRequest))
+		return srv.(M2MAuthServiceServer).Login(ctx, req.(*LoginRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// Auth_ServiceDesc is the grpc.ServiceDesc for Auth service.
+// M2MAuthService_ServiceDesc is the grpc.ServiceDesc for M2MAuthService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var Auth_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "m2m_auth.v1.Auth",
-	HandlerType: (*AuthServer)(nil),
+var M2MAuthService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "m2m_auth.v1.M2MAuthService",
+	HandlerType: (*M2MAuthServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "Login",
-			Handler:    _Auth_Login_Handler,
+			Handler:    _M2MAuthService_Login_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

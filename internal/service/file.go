@@ -28,7 +28,7 @@ func (s *FileService) CreateFile(ctx context.Context, req *pb.CreateFileRequest)
 		parentIDPtr = &parsedID
 	}
 
-	resp, err := s.uc.CreateFile(ctx, &biz.CreateFileRequest{
+	resp, err := s.uc.CreateFile(ctx, biz.CreateFileRequest{
 		ParentID:            parentIDPtr,
 		Name:                req.Name,
 		IsFolder:            req.IsFolder,

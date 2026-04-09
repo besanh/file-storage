@@ -175,3 +175,6 @@ extension:
   other:
     exts: []
     mime_types: []
+
+  sharing:
+    base_url: "https://besanh.com/s/"

@@ -382,6 +382,136 @@ func (x *DeleteRelationshipReply) GetSuccess() bool {
 	return false
 }
 
+type SwapRelationshipRequest struct {
+	state        protoimpl.MessageState `protogen:"open.v1"`
+	ResourceType string                 `protobuf:"bytes,1,opt,name=resource_type,json=resourceType,proto3" json:"resource_type,omitempty"` // e.g., "file" or "folder"
+	ResourceId   string                 `protobuf:"bytes,2,opt,name=resource_id,json=resourceId,proto3" json:"resource_id,omitempty"`       // e.g., "789-abc-..."
+	// The actor stays exactly the same
+	SubjectType string `protobuf:"bytes,3,opt,name=subject_type,json=subjectType,proto3" json:"subject_type,omitempty"` // e.g., "share_link" (or "user")
+	SubjectId   string `protobuf:"bytes,4,opt,name=subject_id,json=subjectId,proto3" json:"subject_id,omitempty"`       // e.g., "V1StGXR8_Z5jdHi6B-myT"
+	// The permission is what gets swapped
+	OldRelation   string `protobuf:"bytes,5,opt,name=old_relation,json=oldRelation,proto3" json:"old_relation,omitempty"` // e.g., "viewer"
+	NewRelation   string `protobuf:"bytes,6,opt,name=new_relation,json=newRelation,proto3" json:"new_relation,omitempty"` // e.g., "editor"
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SwapRelationshipRequest) Reset() {
+	*x = SwapRelationshipRequest{}
+	mi := &file_permission_v1_permission_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SwapRelationshipRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SwapRelationshipRequest) ProtoMessage() {}
+
+func (x *SwapRelationshipRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_permission_v1_permission_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SwapRelationshipRequest.ProtoReflect.Descriptor instead.
+func (*SwapRelationshipRequest) Descriptor() ([]byte, []int) {
+	return file_permission_v1_permission_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *SwapRelationshipRequest) GetResourceType() string {
+	if x != nil {
+		return x.ResourceType
+	}
+	return ""
+}
+
+func (x *SwapRelationshipRequest) GetResourceId() string {
+	if x != nil {
+		return x.ResourceId
+	}
+	return ""
+}
+
+func (x *SwapRelationshipRequest) GetSubjectType() string {
+	if x != nil {
+		return x.SubjectType
+	}
+	return ""
+}
+
+func (x *SwapRelationshipRequest) GetSubjectId() string {
+	if x != nil {
+		return x.SubjectId
+	}
+	return ""
+}
+
+func (x *SwapRelationshipRequest) GetOldRelation() string {
+	if x != nil {
+		return x.OldRelation
+	}
+	return ""
+}
+
+func (x *SwapRelationshipRequest) GetNewRelation() string {
+	if x != nil {
+		return x.NewRelation
+	}
+	return ""
+}
+
+type SwapRelationshipReply struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SwapRelationshipReply) Reset() {
+	*x = SwapRelationshipReply{}
+	mi := &file_permission_v1_permission_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SwapRelationshipReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SwapRelationshipReply) ProtoMessage() {}
+
+func (x *SwapRelationshipReply) ProtoReflect() protoreflect.Message {
+	mi := &file_permission_v1_permission_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SwapRelationshipReply.ProtoReflect.Descriptor instead.
+func (*SwapRelationshipReply) Descriptor() ([]byte, []int) {
+	return file_permission_v1_permission_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *SwapRelationshipReply) GetSuccess() bool {
+	if x != nil {
+		return x.Success
+	}
+	return false
+}
+
 var File_permission_v1_permission_proto protoreflect.FileDescriptor
 
 const file_permission_v1_permission_proto_rawDesc = "" +
@@ -416,12 +546,23 @@ const file_permission_v1_permission_proto_rawDesc = "" +
 	"\n" +
 	"subject_id\x18\x05 \x01(\tR\tsubjectId\"3\n" +
 	"\x17DeleteRelationshipReply\x12\x18\n" +
-	"\asuccess\x18\x01 \x01(\bR\asuccess2\xbd\x03\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess\"\xe7\x01\n" +
+	"\x17SwapRelationshipRequest\x12#\n" +
+	"\rresource_type\x18\x01 \x01(\tR\fresourceType\x12\x1f\n" +
+	"\vresource_id\x18\x02 \x01(\tR\n" +
+	"resourceId\x12!\n" +
+	"\fsubject_type\x18\x03 \x01(\tR\vsubjectType\x12\x1d\n" +
 	"\n" +
-	"Permission\x12\x88\x01\n" +
+	"subject_id\x18\x04 \x01(\tR\tsubjectId\x12!\n" +
+	"\fold_relation\x18\x05 \x01(\tR\voldRelation\x12!\n" +
+	"\fnew_relation\x18\x06 \x01(\tR\vnewRelation\"1\n" +
+	"\x15SwapRelationshipReply\x12\x18\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess2\xd1\x04\n" +
+	"\x11PermissionService\x12\x88\x01\n" +
 	"\x0fCheckPermission\x12%.permission.v1.CheckPermissionRequest\x1a#.permission.v1.CheckPermissionReply\")\x82\xd3\xe4\x93\x02#:\x01*\"\x1e/v1/internal/permissions/check\x12\x8e\x01\n" +
 	"\x11WriteRelationship\x12'.permission.v1.WriteRelationshipRequest\x1a%.permission.v1.WriteRelationshipReply\")\x82\xd3\xe4\x93\x02#:\x01*\"\x1e/v1/internal/permissions/write\x12\x92\x01\n" +
-	"\x12DeleteRelationship\x12(.permission.v1.DeleteRelationshipRequest\x1a&.permission.v1.DeleteRelationshipReply\"*\x82\xd3\xe4\x93\x02$:\x01*\"\x1f/v1/internal/permissions/deleteB Z\x1eauth_storage/api/permission/v1b\x06proto3"
+	"\x12DeleteRelationship\x12(.permission.v1.DeleteRelationshipRequest\x1a&.permission.v1.DeleteRelationshipReply\"*\x82\xd3\xe4\x93\x02$:\x01*\"\x1f/v1/internal/permissions/delete\x12\x8a\x01\n" +
+	"\x10SwapRelationship\x12&.permission.v1.SwapRelationshipRequest\x1a$.permission.v1.SwapRelationshipReply\"(\x82\xd3\xe4\x93\x02\":\x01*\"\x1d/v1/internal/permissions/swapB Z\x1eauth_storage/api/permission/v1b\x06proto3"
 
 var (
 	file_permission_v1_permission_proto_rawDescOnce sync.Once
@@ -435,7 +576,7 @@ func file_permission_v1_permission_proto_rawDescGZIP() []byte {
 	return file_permission_v1_permission_proto_rawDescData
 }
 
-var file_permission_v1_permission_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_permission_v1_permission_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_permission_v1_permission_proto_goTypes = []any{
 	(*CheckPermissionRequest)(nil),    // 0: permission.v1.CheckPermissionRequest
 	(*CheckPermissionReply)(nil),      // 1: permission.v1.CheckPermissionReply
@@ -443,16 +584,20 @@ var file_permission_v1_permission_proto_goTypes = []any{
 	(*WriteRelationshipReply)(nil),    // 3: permission.v1.WriteRelationshipReply
 	(*DeleteRelationshipRequest)(nil), // 4: permission.v1.DeleteRelationshipRequest
 	(*DeleteRelationshipReply)(nil),   // 5: permission.v1.DeleteRelationshipReply
+	(*SwapRelationshipRequest)(nil),   // 6: permission.v1.SwapRelationshipRequest
+	(*SwapRelationshipReply)(nil),     // 7: permission.v1.SwapRelationshipReply
 }
 var file_permission_v1_permission_proto_depIdxs = []int32{
-	0, // 0: permission.v1.Permission.CheckPermission:input_type -> permission.v1.CheckPermissionRequest
-	2, // 1: permission.v1.Permission.WriteRelationship:input_type -> permission.v1.WriteRelationshipRequest
-	4, // 2: permission.v1.Permission.DeleteRelationship:input_type -> permission.v1.DeleteRelationshipRequest
-	1, // 3: permission.v1.Permission.CheckPermission:output_type -> permission.v1.CheckPermissionReply
-	3, // 4: permission.v1.Permission.WriteRelationship:output_type -> permission.v1.WriteRelationshipReply
-	5, // 5: permission.v1.Permission.DeleteRelationship:output_type -> permission.v1.DeleteRelationshipReply
-	3, // [3:6] is the sub-list for method output_type
-	0, // [0:3] is the sub-list for method input_type
+	0, // 0: permission.v1.PermissionService.CheckPermission:input_type -> permission.v1.CheckPermissionRequest
+	2, // 1: permission.v1.PermissionService.WriteRelationship:input_type -> permission.v1.WriteRelationshipRequest
+	4, // 2: permission.v1.PermissionService.DeleteRelationship:input_type -> permission.v1.DeleteRelationshipRequest
+	6, // 3: permission.v1.PermissionService.SwapRelationship:input_type -> permission.v1.SwapRelationshipRequest
+	1, // 4: permission.v1.PermissionService.CheckPermission:output_type -> permission.v1.CheckPermissionReply
+	3, // 5: permission.v1.PermissionService.WriteRelationship:output_type -> permission.v1.WriteRelationshipReply
+	5, // 6: permission.v1.PermissionService.DeleteRelationship:output_type -> permission.v1.DeleteRelationshipReply
+	7, // 7: permission.v1.PermissionService.SwapRelationship:output_type -> permission.v1.SwapRelationshipReply
+	4, // [4:8] is the sub-list for method output_type
+	0, // [0:4] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -469,7 +614,7 @@ func file_permission_v1_permission_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_permission_v1_permission_proto_rawDesc), len(file_permission_v1_permission_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   6,
+			NumMessages:   8,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

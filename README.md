@@ -1,5 +1,8 @@
 # Kratos Project Template
 
+## Architecture
+For a detailed overview of the system architecture and permission flows, see [ARCHITECTURE.md](ARCHITECTURE.md).
+
 ## Install Kratos
 ```
 go install github.com/go-kratos/kratos/cmd/kratos/v2@latest

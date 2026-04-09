@@ -3,6 +3,7 @@ package server
 import (
 	"crypto/rsa"
 	fileV1 "file/api/file/v1"
+	shareV1 "file/api/share/v1"
 	"file/internal/conf"
 	"file/internal/service"
 
@@ -15,7 +16,8 @@ import (
 )
 
 // NewHTTPServer new an HTTP server.
-func NewHTTPServer(c *conf.Server, d *conf.Data, fileService *service.FileService, logger log.Logger, publicKey *rsa.PublicKey) *http.Server {
+func NewHTTPServer(c *conf.Server, d *conf.Data, fileService *service.FileService, shareService *service.ShareService, logger log.Logger, publicKey *rsa.PublicKey) *http.Server {
+	// ... (content truncated for clarity)
 	jwtAuthn := jwt.Server(func(token *jwtv5.Token) (any, error) {
 		return publicKey, nil
 	}, jwt.WithSigningMethod(jwtv5.SigningMethodRS256))
@@ -42,5 +44,6 @@ func NewHTTPServer(c *conf.Server, d *conf.Data, fileService *service.FileServic
 	}
 	srv := http.NewServer(opts...)
 	fileV1.RegisterFileServiceHTTPServer(srv, fileService)
+	shareV1.RegisterShareServiceHTTPServer(srv, shareService)
 	return srv
 }

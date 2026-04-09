@@ -43,3 +43,13 @@ type PhysicalFile struct {
 	CreatedAt      time.Time     `json:"created_at"`
 	UpdatedAt      sql.NullTime  `json:"updated_at"`
 }
+
+type ShareLink struct {
+	LinkToken       string       `json:"link_token"`
+	ResourceID      uuid.UUID    `json:"resource_id"`
+	ResourceType    string       `json:"resource_type"`
+	CreatedBy       string       `json:"created_by"`
+	PermissionLevel string       `json:"permission_level"`
+	ExpiresAt       sql.NullTime `json:"expires_at"`
+	CreatedAt       sql.NullTime `json:"created_at"`
+}

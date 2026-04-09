@@ -59,4 +59,8 @@ message Data {
     Group other = 6;
   }
   Extension extension = 5;
+  message Sharing {
+    string base_url = 1;
+  }
+  Sharing sharing = 6;
 }

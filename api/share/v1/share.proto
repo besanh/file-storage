@@ -1,0 +1,132 @@
+syntax = "proto3";
+
+package api.share.v1;
+
+// Adjust this to match your actual Go module path
+option go_package = "file/api/share/v1;v1";
+
+import "google/api/annotations.proto";
+
+// =====================================================================
+// SHARE SERVICE
+// =====================================================================
+service ShareService {
+    // 1. CREATE: Called by the owner to generate a link
+    rpc CreateShareLink (CreateShareLinkRequest) returns (CreateShareLinkResponse) {
+        option (google.api.http) = {
+            post: "/v1/shares"
+            body: "*"
+        };
+    }
+
+    // 2. RESOLVE: Called by the visitor when they click the URL (The Missing Endpoint)
+    rpc ResolveShareLink (ResolveShareLinkRequest) returns (ResolveShareLinkResponse) {
+        option (google.api.http) = {
+            get: "/v1/shares/{link_token}"
+        };
+    }
+
+    // 3. LIST (GLOBAL): Called by the owner for their "My Links" dashboard
+    rpc ListShareLinksByCreator (ListShareLinksByCreatorRequest) returns (ListShareLinksByCreatorResponse) {
+        option (google.api.http) = {
+            get: "/v1/shares/me"
+        };
+    }
+
+    // 4. LIST (LOCAL): Called by the owner to see who has access to a specific file/folder
+    rpc ListShareLinksByResource (ListShareLinksByResourceRequest) returns (ListShareLinksByResourceResponse) {
+        option (google.api.http) = {
+            get: "/v1/files/{resource_id}/shares"
+        };
+    }
+
+    // 5. UPDATE: Called by the owner to change "viewer" to "editor"
+    rpc UpdateShareLink (UpdateShareLinkRequest) returns (UpdateShareLinkResponse) {
+        option (google.api.http) = {
+            patch: "/v1/shares/{link_token}"
+            body: "*"
+        };
+    }
+
+    // 6. DELETE: Called by the owner to kill the link
+    rpc RevokeShareLink (RevokeShareLinkRequest) returns (RevokeShareLinkResponse) {
+        option (google.api.http) = {
+            delete: "/v1/shares/{link_token}"
+        };
+    }
+}
+
+// =====================================================================
+// MESSAGES
+// =====================================================================
+
+// --- CREATE ---
+message CreateShareLinkRequest {
+    string resource_id = 1;
+    string resource_type = 2;    // "file" or "folder"
+    string permission_level = 3; // "viewer" or "editor"
+    string expires_at = 4;       // Optional ISO8601 string
+}
+
+message CreateShareLinkResponse {
+    string link_token = 1;
+    string share_url = 2;        // Helpful for the frontend (e.g. "https://socialfi.com/shared/xyz")
+}
+
+// --- RESOLVE (Visitor) ---
+message ResolveShareLinkRequest {
+    string link_token = 1;       // Extracted from URL
+}
+
+message ResolveShareLinkResponse {
+    string resource_id = 1;
+    string resource_type = 2;
+    string permission_level = 3;
+    string expires_at = 4;
+    string creator_id = 5;
+}
+
+// --- LIST SHARES ---
+message ShareLinkInfo {
+    string link_token = 1;
+    string permission_level = 2; 
+    string created_at = 3;
+    string share_url = 4;        
+}
+
+message ListShareLinksByCreatorRequest {
+    int32 limit = 1;
+    int32 offset = 2;
+}
+
+message ListShareLinksByCreatorResponse {
+    repeated ShareLinkInfo links = 1;
+}
+
+message ListShareLinksByResourceRequest {
+    string resource_id = 1;      // Extracted from URL
+    int32 limit = 2;
+    int32 offset = 3;
+}
+
+message ListShareLinksByResourceResponse {
+    repeated ShareLinkInfo links = 1;
+}
+
+// --- UPDATE & REVOKE ---
+message UpdateShareLinkRequest {
+    string link_token = 1;       // Extracted from URL
+    string new_permission = 2;   // e.g., "editor"
+}
+
+message UpdateShareLinkResponse {
+    bool success = 1;
+}
+
+message RevokeShareLinkRequest {
+    string link_token = 1;       // Extracted from URL
+}
+
+message RevokeShareLinkResponse {
+    bool success = 1;
+}

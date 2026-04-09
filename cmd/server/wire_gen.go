@@ -39,6 +39,9 @@ func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*
 	transaction := data.NewTransactionManager(dataData)
 	fileUsecase := biz.NewFileUsecase(fileRepo, physicalFileRepo, authRepo, transaction, logger)
 	fileService := service.NewFileService(fileUsecase)
+	shareRepo := data.NewShareRepo(dataData, logger)
+	shareUseCase := biz.NewShareUseCase(shareRepo, logger, authRepo, transaction)
+	shareService := service.NewShareService(shareUseCase, logger)
 	publicPEM, err := util.NewPublicPEM(confData)
 	if err != nil {
 		cleanup()
@@ -49,8 +52,8 @@ func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*
 		cleanup()
 		return nil, nil, err
 	}
-	grpcServer := server.NewGRPCServer(confServer, confData, fileService, logger, publicKey)
-	httpServer := server.NewHTTPServer(confServer, confData, fileService, logger, publicKey)
+	grpcServer := server.NewGRPCServer(confServer, confData, fileService, shareService, logger, publicKey)
+	httpServer := server.NewHTTPServer(confServer, confData, fileService, shareService, logger, publicKey)
 	app := newApp(logger, grpcServer, httpServer)
 	return app, func() {
 		cleanup()

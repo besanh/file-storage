@@ -14,11 +14,11 @@ import (
 )
 
 type authRepo struct {
-	m2mClient        m2mv1.AuthClient
+	m2mClient        m2mv1.M2MAuthServiceClient
 	clientID         string
 	clientSecret     string
 	kid              string
-	permissionClient permissionV1.PermissionClient
+	permissionClient permissionV1.PermissionServiceClient
 }
 
 func NewAuthRepo(c *conf.Data) (biz.AuthRepo, error) {
@@ -45,44 +45,65 @@ func NewAuthRepo(c *conf.Data) (biz.AuthRepo, error) {
 		return nil, err
 	}
 
-	r.m2mClient = m2mv1.NewAuthClient(conn)
-	r.permissionClient = permissionV1.NewPermissionClient(conn)
+	r.m2mClient = m2mv1.NewM2MAuthServiceClient(conn)
+	r.permissionClient = permissionV1.NewPermissionServiceClient(conn)
 
 	return r, nil
 }
 
-func (r *authRepo) CheckPermission(ctx context.Context, subjectType, subjectID, relation, objectType, objectID string) (bool, error) {
+func (r *authRepo) CheckPermission(ctx context.Context, req *biz.CheckPermissionRequest) (*biz.CheckPermissionResponse, error) {
 	resp, err := r.permissionClient.CheckPermission(ctx, &permissionV1.CheckPermissionRequest{
-		SubjectType:  subjectType,
-		SubjectId:    subjectID,
-		Relation:     relation,
-		ResourceType: objectType,
-		ResourceId:   objectID,
+		SubjectType:  req.SubjectType,
+		SubjectId:    req.SubjectID,
+		Relation:     req.Relation,
+		ResourceType: req.ObjectType,
+		ResourceId:   req.ObjectID,
 	})
 	if err != nil {
-		return false, err
+		return nil, err
 	}
-	return resp.Allowed, nil
+	return &biz.CheckPermissionResponse{Allowed: resp.Allowed}, nil
 }
 
-func (r *authRepo) WriteRelationship(ctx context.Context, resourceType, resourceID, relation, subjectType, subjectID string) error {
+func (r *authRepo) WriteRelationship(ctx context.Context, req *biz.WriteRelationshipRequest) (*biz.WriteRelationshipResponse, error) {
 	_, err := r.permissionClient.WriteRelationship(ctx, &permissionV1.WriteRelationshipRequest{
-		ResourceType: resourceType,
-		ResourceId:   resourceID,
-		Relation:     relation,
-		SubjectType:  subjectType,
-		SubjectId:    subjectID,
+		ResourceType: req.ResourceType,
+		ResourceId:   req.ResourceID,
+		Relation:     req.Relation,
+		SubjectType:  req.SubjectType,
+		SubjectId:    req.SubjectID,
 	})
-	return err
+	if err != nil {
+		return nil, err
+	}
+	return &biz.WriteRelationshipResponse{}, nil
 }
 
-func (r *authRepo) DeleteRelationship(ctx context.Context, resourceType, resourceID, relation, subjectType, subjectID string) error {
+func (r *authRepo) DeleteRelationship(ctx context.Context, req *biz.DeleteRelationshipRequest) (*biz.DeleteRelationshipResponse, error) {
 	_, err := r.permissionClient.DeleteRelationship(ctx, &permissionV1.DeleteRelationshipRequest{
-		ResourceType: resourceType,
-		ResourceId:   resourceID,
-		Relation:     relation,
-		SubjectType:  subjectType,
-		SubjectId:    subjectID,
+		ResourceType: req.ResourceType,
+		ResourceId:   req.ResourceID,
+		Relation:     req.Relation,
+		SubjectType:  req.SubjectType,
+		SubjectId:    req.SubjectID,
 	})
-	return err
+	if err != nil {
+		return nil, err
+	}
+	return &biz.DeleteRelationshipResponse{}, nil
+}
+
+func (r *authRepo) SwapRelationship(ctx context.Context, req *biz.SwapRelationshipRequest) (*biz.SwapRelationshipResponse, error) {
+	_, err := r.permissionClient.SwapRelationship(ctx, &permissionV1.SwapRelationshipRequest{
+		ResourceType: req.ResourceType,
+		ResourceId:   req.ResourceID,
+		SubjectType:  req.SubjectType,
+		SubjectId:    req.SubjectID,
+		OldRelation:  req.OldRelation,
+		NewRelation:  req.NewRelation,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &biz.SwapRelationshipResponse{}, nil
 }

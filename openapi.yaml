@@ -28,8 +28,8 @@ paths:
     /m2m/v1/auth/login:
         post:
             tags:
-                - Auth
-            operationId: Auth_Login
+                - M2MAuthService
+            operationId: M2MAuthService_Login
             requestBody:
                 content:
                     application/json:
@@ -61,12 +61,41 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/file.v1.CreateFileResponse'
+    /v1/files/{resourceId}/shares:
+        get:
+            tags:
+                - ShareService
+            description: '4. LIST (LOCAL): Called by the owner to see who has access to a specific file/folder'
+            operationId: ShareService_ListShareLinksByResource
+            parameters:
+                - name: resourceId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+                - name: limit
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+                - name: offset
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.share.v1.ListShareLinksByResourceResponse'
     /v1/internal/permissions/check:
         post:
             tags:
-                - Permission
+                - PermissionService
             description: 'Internal API: Asks SpiceDB if a subject can perform an action'
-            operationId: Permission_CheckPermission
+            operationId: PermissionService_CheckPermission
             requestBody:
                 content:
                     application/json:
@@ -83,8 +112,8 @@ paths:
     /v1/internal/permissions/delete:
         post:
             tags:
-                - Permission
-            operationId: Permission_DeleteRelationship
+                - PermissionService
+            operationId: PermissionService_DeleteRelationship
             requestBody:
                 content:
                     application/json:
@@ -98,12 +127,30 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/permission.v1.DeleteRelationshipReply'
+    /v1/internal/permissions/swap:
+        post:
+            tags:
+                - PermissionService
+            operationId: PermissionService_SwapRelationship
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/permission.v1.SwapRelationshipRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/permission.v1.SwapRelationshipReply'
     /v1/internal/permissions/write:
         post:
             tags:
-                - Permission
+                - PermissionService
             description: 'Internal API: Tells SpiceDB to create a new ownership/parent tuple'
-            operationId: Permission_WriteRelationship
+            operationId: PermissionService_WriteRelationship
             requestBody:
                 content:
                     application/json:
@@ -117,8 +164,188 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/permission.v1.WriteRelationshipReply'
+    /v1/shares:
+        post:
+            tags:
+                - ShareService
+            description: '1. CREATE: Called by the owner to generate a link'
+            operationId: ShareService_CreateShareLink
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.share.v1.CreateShareLinkRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.share.v1.CreateShareLinkResponse'
+    /v1/shares/me:
+        get:
+            tags:
+                - ShareService
+            description: '3. LIST (GLOBAL): Called by the owner for their "My Links" dashboard'
+            operationId: ShareService_ListShareLinksByCreator
+            parameters:
+                - name: limit
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+                - name: offset
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.share.v1.ListShareLinksByCreatorResponse'
+    /v1/shares/{linkToken}:
+        get:
+            tags:
+                - ShareService
+            description: '2. RESOLVE: Called by the visitor when they click the URL (The Missing Endpoint)'
+            operationId: ShareService_ResolveShareLink
+            parameters:
+                - name: linkToken
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.share.v1.ResolveShareLinkResponse'
+        delete:
+            tags:
+                - ShareService
+            description: '6. DELETE: Called by the owner to kill the link'
+            operationId: ShareService_RevokeShareLink
+            parameters:
+                - name: linkToken
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.share.v1.RevokeShareLinkResponse'
+        patch:
+            tags:
+                - ShareService
+            description: '5. UPDATE: Called by the owner to change "viewer" to "editor"'
+            operationId: ShareService_UpdateShareLink
+            parameters:
+                - name: linkToken
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.share.v1.UpdateShareLinkRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.share.v1.UpdateShareLinkResponse'
 components:
     schemas:
+        api.share.v1.CreateShareLinkRequest:
+            type: object
+            properties:
+                resourceId:
+                    type: string
+                resourceType:
+                    type: string
+                permissionLevel:
+                    type: string
+                expiresAt:
+                    type: string
+            description: '--- CREATE ---'
+        api.share.v1.CreateShareLinkResponse:
+            type: object
+            properties:
+                linkToken:
+                    type: string
+                shareUrl:
+                    type: string
+        api.share.v1.ListShareLinksByCreatorResponse:
+            type: object
+            properties:
+                links:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.share.v1.ShareLinkInfo'
+        api.share.v1.ListShareLinksByResourceResponse:
+            type: object
+            properties:
+                links:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.share.v1.ShareLinkInfo'
+        api.share.v1.ResolveShareLinkResponse:
+            type: object
+            properties:
+                resourceId:
+                    type: string
+                resourceType:
+                    type: string
+                permissionLevel:
+                    type: string
+                expiresAt:
+                    type: string
+                creatorId:
+                    type: string
+        api.share.v1.RevokeShareLinkResponse:
+            type: object
+            properties:
+                success:
+                    type: boolean
+        api.share.v1.ShareLinkInfo:
+            type: object
+            properties:
+                linkToken:
+                    type: string
+                permissionLevel:
+                    type: string
+                createdAt:
+                    type: string
+                shareUrl:
+                    type: string
+            description: '--- LIST SHARES ---'
+        api.share.v1.UpdateShareLinkRequest:
+            type: object
+            properties:
+                linkToken:
+                    type: string
+                newPermission:
+                    type: string
+            description: '--- UPDATE & REVOKE ---'
+        api.share.v1.UpdateShareLinkResponse:
+            type: object
+            properties:
+                success:
+                    type: boolean
         file.v1.CreateFileRequest:
             type: object
             properties:
@@ -203,6 +430,28 @@ components:
                     type: string
                 subjectId:
                     type: string
+        permission.v1.SwapRelationshipReply:
+            type: object
+            properties:
+                success:
+                    type: boolean
+        permission.v1.SwapRelationshipRequest:
+            type: object
+            properties:
+                resourceType:
+                    type: string
+                resourceId:
+                    type: string
+                subjectType:
+                    type: string
+                    description: The actor stays exactly the same
+                subjectId:
+                    type: string
+                oldRelation:
+                    type: string
+                    description: The permission is what gets swapped
+                newRelation:
+                    type: string
         permission.v1.WriteRelationshipReply:
             type: object
             properties:
@@ -222,8 +471,13 @@ components:
                 subjectId:
                     type: string
 tags:
-    - name: Auth
     - name: FileService
     - name: Greeter
       description: The greeting service definition.
-    - name: Permission
+    - name: M2MAuthService
+    - name: PermissionService
+    - name: ShareService
+      description: |-
+        =====================================================================
+         SHARE SERVICE
+         =====================================================================

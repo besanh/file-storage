@@ -14,9 +14,10 @@ type PrivatePEM []byte
 type PublicPEM []byte
 
 type AuthRepo interface {
-	CheckPermission(ctx context.Context, subjectType, subjectID, relation, objectType, objectID string) (bool, error)
-	WriteRelationship(ctx context.Context, resourceType, resourceID, relation, subjectType, subjectID string) error
-	DeleteRelationship(ctx context.Context, resourceType, resourceID, relation, subjectType, subjectID string) error
+	CheckPermission(ctx context.Context, req *CheckPermissionRequest) (*CheckPermissionResponse, error)
+	WriteRelationship(ctx context.Context, req *WriteRelationshipRequest) (*WriteRelationshipResponse, error)
+	DeleteRelationship(ctx context.Context, req *DeleteRelationshipRequest) (*DeleteRelationshipResponse, error)
+	SwapRelationship(ctx context.Context, req *SwapRelationshipRequest) (*SwapRelationshipResponse, error)
 }
 
 func NewPublicKey(pem PublicPEM) (*rsa.PublicKey, error) {

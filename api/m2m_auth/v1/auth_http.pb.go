@@ -19,18 +19,18 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const OperationAuthLogin = "/m2m_auth.v1.Auth/Login"
+const OperationM2MAuthServiceLogin = "/m2m_auth.v1.M2MAuthService/Login"
 
-type AuthHTTPServer interface {
+type M2MAuthServiceHTTPServer interface {
 	Login(context.Context, *LoginRequest) (*LoginReply, error)
 }
 
-func RegisterAuthHTTPServer(s *http.Server, srv AuthHTTPServer) {
+func RegisterM2MAuthServiceHTTPServer(s *http.Server, srv M2MAuthServiceHTTPServer) {
 	r := s.Route("/")
-	r.POST("/m2m/v1/auth/login", _Auth_Login0_HTTP_Handler(srv))
+	r.POST("/m2m/v1/auth/login", _M2MAuthService_Login0_HTTP_Handler(srv))
 }
 
-func _Auth_Login0_HTTP_Handler(srv AuthHTTPServer) func(ctx http.Context) error {
+func _M2MAuthService_Login0_HTTP_Handler(srv M2MAuthServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in LoginRequest
 		if err := ctx.Bind(&in); err != nil {
@@ -39,7 +39,7 @@ func _Auth_Login0_HTTP_Handler(srv AuthHTTPServer) func(ctx http.Context) error 
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationAuthLogin)
+		http.SetOperation(ctx, OperationM2MAuthServiceLogin)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.Login(ctx, req.(*LoginRequest))
 		})
@@ -52,23 +52,23 @@ func _Auth_Login0_HTTP_Handler(srv AuthHTTPServer) func(ctx http.Context) error 
 	}
 }
 
-type AuthHTTPClient interface {
+type M2MAuthServiceHTTPClient interface {
 	Login(ctx context.Context, req *LoginRequest, opts ...http.CallOption) (rsp *LoginReply, err error)
 }
 
-type AuthHTTPClientImpl struct {
+type M2MAuthServiceHTTPClientImpl struct {
 	cc *http.Client
 }
 
-func NewAuthHTTPClient(client *http.Client) AuthHTTPClient {
-	return &AuthHTTPClientImpl{client}
+func NewM2MAuthServiceHTTPClient(client *http.Client) M2MAuthServiceHTTPClient {
+	return &M2MAuthServiceHTTPClientImpl{client}
 }
 
-func (c *AuthHTTPClientImpl) Login(ctx context.Context, in *LoginRequest, opts ...http.CallOption) (*LoginReply, error) {
+func (c *M2MAuthServiceHTTPClientImpl) Login(ctx context.Context, in *LoginRequest, opts ...http.CallOption) (*LoginReply, error) {
 	var out LoginReply
 	pattern := "/m2m/v1/auth/login"
 	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationAuthLogin))
+	opts = append(opts, http.Operation(OperationM2MAuthServiceLogin))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {

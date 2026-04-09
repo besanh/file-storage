@@ -64,3 +64,26 @@ CREATE INDEX idx_file_nodes_parent_id ON file_nodes(parent_id);
 CREATE INDEX idx_file_nodes_owner_id ON file_nodes(owner_id);
 -- Ensure a user cannot have two files with the exact same name in the exact same folder
 CREATE UNIQUE INDEX idx_unique_name_per_folder ON file_nodes (owner_id, parent_id, name) WHERE status = 'active';
+
+-- Create the share_links table
+CREATE TABLE share_links (
+    link_token VARCHAR(32) PRIMARY KEY,       -- e.g., NanoID: "V1StGXR8_Z5jdHi6B-myT"
+    
+    -- The resource this link points to
+    resource_id UUID NOT NULL REFERENCES file_nodes(id) ON DELETE CASCADE,
+    resource_type VARCHAR(20) NOT NULL,       -- Explicitly "file" or "folder" for SpiceDB routing
+    
+    -- Audit & Control
+    created_by TEXT NOT NULL, 
+    permission_level VARCHAR(20) NOT NULL,    -- e.g., "viewer" or "editor"
+    
+    -- Lifecycle
+    expires_at TIMESTAMP WITH TIME ZONE,      -- NULL means it never expires
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Index for the owner dashboard (e.g., "Show me all links I created")
+CREATE INDEX idx_share_links_created_by ON share_links(created_by);
+
+-- Index for resource management (e.g., "Show me all active links for this specific folder")
+CREATE INDEX idx_share_links_resource ON share_links(resource_id);

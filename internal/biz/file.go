@@ -33,7 +33,7 @@ func NewFileUsecase(fileRepo FileRepo, physicalFileRepo PhysicalFileRepo, authRe
 	}
 }
 
-func (uc *FileUsecase) CreateFile(ctx context.Context, input *CreateFileRequest) (CreateFileResponse, error) {
+func (uc *FileUsecase) CreateFile(ctx context.Context, input CreateFileRequest) (CreateFileResponse, error) {
 	actorType, actorID, err := GetActorInfo(ctx)
 	if err != nil {
 		return CreateFileResponse{}, err
@@ -56,18 +56,20 @@ func (uc *FileUsecase) CreateFile(ctx context.Context, input *CreateFileRequest)
 		objectType := common.TypeFolder.String()
 		objectID := input.ParentID.String()
 
-		allowed, err := uc.authRepo.CheckPermission(
+		resp, err := uc.authRepo.CheckPermission(
 			ctx,
-			actorType,
-			actorID,
-			common.PermissionCreate.String(),
-			objectType,
-			objectID,
+			&CheckPermissionRequest{
+				SubjectType: actorType,
+				SubjectID:   actorID,
+				Relation:    common.PermissionCreate.String(),
+				ObjectType:  objectType,
+				ObjectID:    objectID,
+			},
 		)
 		if err != nil {
 			return CreateFileResponse{}, fmt.Errorf("permission check failed: %w", err)
 		}
-		if !allowed {
+		if !resp.Allowed {
 			return CreateFileResponse{}, fmt.Errorf("permission denied: cannot create item in %s:%s", objectType, objectID)
 		}
 	}
@@ -141,29 +143,31 @@ func (uc *FileUsecase) CreateFile(ctx context.Context, input *CreateFileRequest)
 		}
 
 		// Grant Ownership
-		err = uc.authRepo.WriteRelationship(
+		if _, err := uc.authRepo.WriteRelationship(
 			ctx,
-			resType.String(),
-			fileID.String(),
-			common.RelationOwner.String(),
-			actorType,
-			actorID,
-		)
-		if err != nil {
+			&WriteRelationshipRequest{
+				ResourceType: resType.String(),
+				ResourceID:   fileID.String(),
+				Relation:     common.RelationOwner.String(),
+				SubjectType:  actorType,
+				SubjectID:    actorID,
+			},
+		); err != nil {
 			return fmt.Errorf("failed to grant ownership in SpiceDB: %w", err)
 		}
 
 		// Link to Parent (if applicable)
 		if input.ParentID != nil {
-			err = uc.authRepo.WriteRelationship(
+			if _, err := uc.authRepo.WriteRelationship(
 				ctx,
-				resType.String(),
-				fileID.String(),
-				common.RelationParent.String(),
-				common.TypeFolder.String(),
-				input.ParentID.String(),
-			)
-			if err != nil {
+				&WriteRelationshipRequest{
+					ResourceType: resType.String(),
+					ResourceID:   fileID.String(),
+					Relation:     common.RelationParent.String(),
+					SubjectType:  common.TypeFolder.String(),
+					SubjectID:    input.ParentID.String(),
+				},
+			); err != nil {
 				return fmt.Errorf("failed to link to parent in SpiceDB: %w", err)
 			}
 		}
@@ -172,9 +176,25 @@ func (uc *FileUsecase) CreateFile(ctx context.Context, input *CreateFileRequest)
 	}); err != nil {
 		// COMPENSATING TRANSACTION: If the DB transaction failed, cleanup SpiceDB
 		if fileID != uuid.Nil {
-			_ = uc.authRepo.DeleteRelationship(ctx, resType.String(), fileID.String(), common.RelationOwner.String(), actorType, actorID)
+			if _, err := uc.authRepo.DeleteRelationship(ctx, &DeleteRelationshipRequest{
+				ResourceType: resType.String(),
+				ResourceID:   fileID.String(),
+				Relation:     common.RelationOwner.String(),
+				SubjectType:  actorType,
+				SubjectID:    actorID,
+			}); err != nil {
+				return CreateFileResponse{}, fmt.Errorf("failed to delete ownership in SpiceDB: %w", err)
+			}
 			if input.ParentID != nil {
-				_ = uc.authRepo.DeleteRelationship(ctx, resType.String(), fileID.String(), common.RelationParent.String(), common.TypeFolder.String(), input.ParentID.String())
+				if _, err := uc.authRepo.DeleteRelationship(ctx, &DeleteRelationshipRequest{
+					ResourceType: resType.String(),
+					ResourceID:   fileID.String(),
+					Relation:     common.RelationParent.String(),
+					SubjectType:  common.TypeFolder.String(),
+					SubjectID:    input.ParentID.String(),
+				}); err != nil {
+					return CreateFileResponse{}, fmt.Errorf("failed to delete parent link in SpiceDB: %w", err)
+				}
 			}
 		}
 		return CreateFileResponse{}, err

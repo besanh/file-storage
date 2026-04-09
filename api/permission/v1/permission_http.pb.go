@@ -19,26 +19,29 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const OperationPermissionCheckPermission = "/permission.v1.Permission/CheckPermission"
-const OperationPermissionDeleteRelationship = "/permission.v1.Permission/DeleteRelationship"
-const OperationPermissionWriteRelationship = "/permission.v1.Permission/WriteRelationship"
+const OperationPermissionServiceCheckPermission = "/permission.v1.PermissionService/CheckPermission"
+const OperationPermissionServiceDeleteRelationship = "/permission.v1.PermissionService/DeleteRelationship"
+const OperationPermissionServiceSwapRelationship = "/permission.v1.PermissionService/SwapRelationship"
+const OperationPermissionServiceWriteRelationship = "/permission.v1.PermissionService/WriteRelationship"
 
-type PermissionHTTPServer interface {
+type PermissionServiceHTTPServer interface {
 	// CheckPermission Internal API: Asks SpiceDB if a subject can perform an action
 	CheckPermission(context.Context, *CheckPermissionRequest) (*CheckPermissionReply, error)
 	DeleteRelationship(context.Context, *DeleteRelationshipRequest) (*DeleteRelationshipReply, error)
+	SwapRelationship(context.Context, *SwapRelationshipRequest) (*SwapRelationshipReply, error)
 	// WriteRelationship Internal API: Tells SpiceDB to create a new ownership/parent tuple
 	WriteRelationship(context.Context, *WriteRelationshipRequest) (*WriteRelationshipReply, error)
 }
 
-func RegisterPermissionHTTPServer(s *http.Server, srv PermissionHTTPServer) {
+func RegisterPermissionServiceHTTPServer(s *http.Server, srv PermissionServiceHTTPServer) {
 	r := s.Route("/")
-	r.POST("/v1/internal/permissions/check", _Permission_CheckPermission0_HTTP_Handler(srv))
-	r.POST("/v1/internal/permissions/write", _Permission_WriteRelationship0_HTTP_Handler(srv))
-	r.POST("/v1/internal/permissions/delete", _Permission_DeleteRelationship0_HTTP_Handler(srv))
+	r.POST("/v1/internal/permissions/check", _PermissionService_CheckPermission0_HTTP_Handler(srv))
+	r.POST("/v1/internal/permissions/write", _PermissionService_WriteRelationship0_HTTP_Handler(srv))
+	r.POST("/v1/internal/permissions/delete", _PermissionService_DeleteRelationship0_HTTP_Handler(srv))
+	r.POST("/v1/internal/permissions/swap", _PermissionService_SwapRelationship0_HTTP_Handler(srv))
 }
 
-func _Permission_CheckPermission0_HTTP_Handler(srv PermissionHTTPServer) func(ctx http.Context) error {
+func _PermissionService_CheckPermission0_HTTP_Handler(srv PermissionServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in CheckPermissionRequest
 		if err := ctx.Bind(&in); err != nil {
@@ -47,7 +50,7 @@ func _Permission_CheckPermission0_HTTP_Handler(srv PermissionHTTPServer) func(ct
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationPermissionCheckPermission)
+		http.SetOperation(ctx, OperationPermissionServiceCheckPermission)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.CheckPermission(ctx, req.(*CheckPermissionRequest))
 		})
@@ -60,7 +63,7 @@ func _Permission_CheckPermission0_HTTP_Handler(srv PermissionHTTPServer) func(ct
 	}
 }
 
-func _Permission_WriteRelationship0_HTTP_Handler(srv PermissionHTTPServer) func(ctx http.Context) error {
+func _PermissionService_WriteRelationship0_HTTP_Handler(srv PermissionServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in WriteRelationshipRequest
 		if err := ctx.Bind(&in); err != nil {
@@ -69,7 +72,7 @@ func _Permission_WriteRelationship0_HTTP_Handler(srv PermissionHTTPServer) func(
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationPermissionWriteRelationship)
+		http.SetOperation(ctx, OperationPermissionServiceWriteRelationship)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.WriteRelationship(ctx, req.(*WriteRelationshipRequest))
 		})
@@ -82,7 +85,7 @@ func _Permission_WriteRelationship0_HTTP_Handler(srv PermissionHTTPServer) func(
 	}
 }
 
-func _Permission_DeleteRelationship0_HTTP_Handler(srv PermissionHTTPServer) func(ctx http.Context) error {
+func _PermissionService_DeleteRelationship0_HTTP_Handler(srv PermissionServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in DeleteRelationshipRequest
 		if err := ctx.Bind(&in); err != nil {
@@ -91,7 +94,7 @@ func _Permission_DeleteRelationship0_HTTP_Handler(srv PermissionHTTPServer) func
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationPermissionDeleteRelationship)
+		http.SetOperation(ctx, OperationPermissionServiceDeleteRelationship)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.DeleteRelationship(ctx, req.(*DeleteRelationshipRequest))
 		})
@@ -104,28 +107,51 @@ func _Permission_DeleteRelationship0_HTTP_Handler(srv PermissionHTTPServer) func
 	}
 }
 
-type PermissionHTTPClient interface {
+func _PermissionService_SwapRelationship0_HTTP_Handler(srv PermissionServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in SwapRelationshipRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationPermissionServiceSwapRelationship)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.SwapRelationship(ctx, req.(*SwapRelationshipRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*SwapRelationshipReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+type PermissionServiceHTTPClient interface {
 	// CheckPermission Internal API: Asks SpiceDB if a subject can perform an action
 	CheckPermission(ctx context.Context, req *CheckPermissionRequest, opts ...http.CallOption) (rsp *CheckPermissionReply, err error)
 	DeleteRelationship(ctx context.Context, req *DeleteRelationshipRequest, opts ...http.CallOption) (rsp *DeleteRelationshipReply, err error)
+	SwapRelationship(ctx context.Context, req *SwapRelationshipRequest, opts ...http.CallOption) (rsp *SwapRelationshipReply, err error)
 	// WriteRelationship Internal API: Tells SpiceDB to create a new ownership/parent tuple
 	WriteRelationship(ctx context.Context, req *WriteRelationshipRequest, opts ...http.CallOption) (rsp *WriteRelationshipReply, err error)
 }
 
-type PermissionHTTPClientImpl struct {
+type PermissionServiceHTTPClientImpl struct {
 	cc *http.Client
 }
 
-func NewPermissionHTTPClient(client *http.Client) PermissionHTTPClient {
-	return &PermissionHTTPClientImpl{client}
+func NewPermissionServiceHTTPClient(client *http.Client) PermissionServiceHTTPClient {
+	return &PermissionServiceHTTPClientImpl{client}
 }
 
 // CheckPermission Internal API: Asks SpiceDB if a subject can perform an action
-func (c *PermissionHTTPClientImpl) CheckPermission(ctx context.Context, in *CheckPermissionRequest, opts ...http.CallOption) (*CheckPermissionReply, error) {
+func (c *PermissionServiceHTTPClientImpl) CheckPermission(ctx context.Context, in *CheckPermissionRequest, opts ...http.CallOption) (*CheckPermissionReply, error) {
 	var out CheckPermissionReply
 	pattern := "/v1/internal/permissions/check"
 	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationPermissionCheckPermission))
+	opts = append(opts, http.Operation(OperationPermissionServiceCheckPermission))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
@@ -134,11 +160,24 @@ func (c *PermissionHTTPClientImpl) CheckPermission(ctx context.Context, in *Chec
 	return &out, nil
 }
 
-func (c *PermissionHTTPClientImpl) DeleteRelationship(ctx context.Context, in *DeleteRelationshipRequest, opts ...http.CallOption) (*DeleteRelationshipReply, error) {
+func (c *PermissionServiceHTTPClientImpl) DeleteRelationship(ctx context.Context, in *DeleteRelationshipRequest, opts ...http.CallOption) (*DeleteRelationshipReply, error) {
 	var out DeleteRelationshipReply
 	pattern := "/v1/internal/permissions/delete"
 	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationPermissionDeleteRelationship))
+	opts = append(opts, http.Operation(OperationPermissionServiceDeleteRelationship))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *PermissionServiceHTTPClientImpl) SwapRelationship(ctx context.Context, in *SwapRelationshipRequest, opts ...http.CallOption) (*SwapRelationshipReply, error) {
+	var out SwapRelationshipReply
+	pattern := "/v1/internal/permissions/swap"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationPermissionServiceSwapRelationship))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
@@ -148,11 +187,11 @@ func (c *PermissionHTTPClientImpl) DeleteRelationship(ctx context.Context, in *D
 }
 
 // WriteRelationship Internal API: Tells SpiceDB to create a new ownership/parent tuple
-func (c *PermissionHTTPClientImpl) WriteRelationship(ctx context.Context, in *WriteRelationshipRequest, opts ...http.CallOption) (*WriteRelationshipReply, error) {
+func (c *PermissionServiceHTTPClientImpl) WriteRelationship(ctx context.Context, in *WriteRelationshipRequest, opts ...http.CallOption) (*WriteRelationshipReply, error) {
 	var out WriteRelationshipReply
 	pattern := "/v1/internal/permissions/write"
 	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationPermissionWriteRelationship))
+	opts = append(opts, http.Operation(OperationPermissionServiceWriteRelationship))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {

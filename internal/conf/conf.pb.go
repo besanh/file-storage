@@ -132,6 +132,7 @@ type Data struct {
 	Spicedb       *Data_SpiceDB          `protobuf:"bytes,3,opt,name=spicedb,proto3" json:"spicedb,omitempty"`
 	Auth          *Data_Auth             `protobuf:"bytes,4,opt,name=auth,proto3" json:"auth,omitempty"`
 	Extension     *Data_Extension        `protobuf:"bytes,5,opt,name=extension,proto3" json:"extension,omitempty"`
+	Sharing       *Data_Sharing          `protobuf:"bytes,6,opt,name=sharing,proto3" json:"sharing,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -190,6 +191,13 @@ func (x *Data) GetAuth() *Data_Auth {
 func (x *Data) GetExtension() *Data_Extension {
 	if x != nil {
 		return x.Extension
+	}
+	return nil
+}
+
+func (x *Data) GetSharing() *Data_Sharing {
+	if x != nil {
+		return x.Sharing
 	}
 	return nil
 }
@@ -594,6 +602,50 @@ func (x *Data_Extension) GetOther() *Data_Extension_Group {
 	return nil
 }
 
+type Data_Sharing struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	BaseUrl       string                 `protobuf:"bytes,1,opt,name=base_url,json=baseUrl,proto3" json:"base_url,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Data_Sharing) Reset() {
+	*x = Data_Sharing{}
+	mi := &file_conf_conf_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Data_Sharing) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Data_Sharing) ProtoMessage() {}
+
+func (x *Data_Sharing) ProtoReflect() protoreflect.Message {
+	mi := &file_conf_conf_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Data_Sharing.ProtoReflect.Descriptor instead.
+func (*Data_Sharing) Descriptor() ([]byte, []int) {
+	return file_conf_conf_proto_rawDescGZIP(), []int{2, 4}
+}
+
+func (x *Data_Sharing) GetBaseUrl() string {
+	if x != nil {
+		return x.BaseUrl
+	}
+	return ""
+}
+
 type Data_Extension_Group struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Exts          []string               `protobuf:"bytes,1,rep,name=exts,proto3" json:"exts,omitempty"`
@@ -604,7 +656,7 @@ type Data_Extension_Group struct {
 
 func (x *Data_Extension_Group) Reset() {
 	*x = Data_Extension_Group{}
-	mi := &file_conf_conf_proto_msgTypes[9]
+	mi := &file_conf_conf_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -616,7 +668,7 @@ func (x *Data_Extension_Group) String() string {
 func (*Data_Extension_Group) ProtoMessage() {}
 
 func (x *Data_Extension_Group) ProtoReflect() protoreflect.Message {
-	mi := &file_conf_conf_proto_msgTypes[9]
+	mi := &file_conf_conf_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -665,12 +717,13 @@ const file_conf_conf_proto_rawDesc = "" +
 	"\x04GRPC\x12\x18\n" +
 	"\anetwork\x18\x01 \x01(\tR\anetwork\x12\x12\n" +
 	"\x04addr\x18\x02 \x01(\tR\x04addr\x123\n" +
-	"\atimeout\x18\x03 \x01(\v2\x19.google.protobuf.DurationR\atimeout\"\xb1\a\n" +
+	"\atimeout\x18\x03 \x01(\v2\x19.google.protobuf.DurationR\atimeout\"\x8b\b\n" +
 	"\x04Data\x125\n" +
 	"\bdatabase\x18\x01 \x01(\v2\x19.kratos.api.Data.DatabaseR\bdatabase\x122\n" +
 	"\aspicedb\x18\x03 \x01(\v2\x18.kratos.api.Data.SpiceDBR\aspicedb\x12)\n" +
 	"\x04auth\x18\x04 \x01(\v2\x15.kratos.api.Data.AuthR\x04auth\x128\n" +
-	"\textension\x18\x05 \x01(\v2\x1a.kratos.api.Data.ExtensionR\textension\x1aR\n" +
+	"\textension\x18\x05 \x01(\v2\x1a.kratos.api.Data.ExtensionR\textension\x122\n" +
+	"\asharing\x18\x06 \x01(\v2\x18.kratos.api.Data.SharingR\asharing\x1aR\n" +
 	"\bDatabase\x12\x16\n" +
 	"\x06enable\x18\x01 \x01(\bR\x06enable\x12\x16\n" +
 	"\x06driver\x18\x02 \x01(\tR\x06driver\x12\x16\n" +
@@ -695,7 +748,9 @@ const file_conf_conf_proto_rawDesc = "" +
 	"\x05Group\x12\x12\n" +
 	"\x04exts\x18\x01 \x03(\tR\x04exts\x12\x1d\n" +
 	"\n" +
-	"mime_types\x18\x02 \x03(\tR\tmimeTypesB\x1bZ\x19server/internal/conf;confb\x06proto3"
+	"mime_types\x18\x02 \x03(\tR\tmimeTypes\x1a$\n" +
+	"\aSharing\x12\x19\n" +
+	"\bbase_url\x18\x01 \x01(\tR\abaseUrlB\x1bZ\x19server/internal/conf;confb\x06proto3"
 
 var (
 	file_conf_conf_proto_rawDescOnce sync.Once
@@ -709,7 +764,7 @@ func file_conf_conf_proto_rawDescGZIP() []byte {
 	return file_conf_conf_proto_rawDescData
 }
 
-var file_conf_conf_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
+var file_conf_conf_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
 var file_conf_conf_proto_goTypes = []any{
 	(*Bootstrap)(nil),            // 0: kratos.api.Bootstrap
 	(*Server)(nil),               // 1: kratos.api.Server
@@ -720,8 +775,9 @@ var file_conf_conf_proto_goTypes = []any{
 	(*Data_SpiceDB)(nil),         // 6: kratos.api.Data.SpiceDB
 	(*Data_Auth)(nil),            // 7: kratos.api.Data.Auth
 	(*Data_Extension)(nil),       // 8: kratos.api.Data.Extension
-	(*Data_Extension_Group)(nil), // 9: kratos.api.Data.Extension.Group
-	(*durationpb.Duration)(nil),  // 10: google.protobuf.Duration
+	(*Data_Sharing)(nil),         // 9: kratos.api.Data.Sharing
+	(*Data_Extension_Group)(nil), // 10: kratos.api.Data.Extension.Group
+	(*durationpb.Duration)(nil),  // 11: google.protobuf.Duration
 }
 var file_conf_conf_proto_depIdxs = []int32{
 	1,  // 0: kratos.api.Bootstrap.server:type_name -> kratos.api.Server
@@ -732,19 +788,20 @@ var file_conf_conf_proto_depIdxs = []int32{
 	6,  // 5: kratos.api.Data.spicedb:type_name -> kratos.api.Data.SpiceDB
 	7,  // 6: kratos.api.Data.auth:type_name -> kratos.api.Data.Auth
 	8,  // 7: kratos.api.Data.extension:type_name -> kratos.api.Data.Extension
-	10, // 8: kratos.api.Server.HTTP.timeout:type_name -> google.protobuf.Duration
-	10, // 9: kratos.api.Server.GRPC.timeout:type_name -> google.protobuf.Duration
-	9,  // 10: kratos.api.Data.Extension.photo:type_name -> kratos.api.Data.Extension.Group
-	9,  // 11: kratos.api.Data.Extension.video:type_name -> kratos.api.Data.Extension.Group
-	9,  // 12: kratos.api.Data.Extension.audio:type_name -> kratos.api.Data.Extension.Group
-	9,  // 13: kratos.api.Data.Extension.document:type_name -> kratos.api.Data.Extension.Group
-	9,  // 14: kratos.api.Data.Extension.compress:type_name -> kratos.api.Data.Extension.Group
-	9,  // 15: kratos.api.Data.Extension.other:type_name -> kratos.api.Data.Extension.Group
-	16, // [16:16] is the sub-list for method output_type
-	16, // [16:16] is the sub-list for method input_type
-	16, // [16:16] is the sub-list for extension type_name
-	16, // [16:16] is the sub-list for extension extendee
-	0,  // [0:16] is the sub-list for field type_name
+	9,  // 8: kratos.api.Data.sharing:type_name -> kratos.api.Data.Sharing
+	11, // 9: kratos.api.Server.HTTP.timeout:type_name -> google.protobuf.Duration
+	11, // 10: kratos.api.Server.GRPC.timeout:type_name -> google.protobuf.Duration
+	10, // 11: kratos.api.Data.Extension.photo:type_name -> kratos.api.Data.Extension.Group
+	10, // 12: kratos.api.Data.Extension.video:type_name -> kratos.api.Data.Extension.Group
+	10, // 13: kratos.api.Data.Extension.audio:type_name -> kratos.api.Data.Extension.Group
+	10, // 14: kratos.api.Data.Extension.document:type_name -> kratos.api.Data.Extension.Group
+	10, // 15: kratos.api.Data.Extension.compress:type_name -> kratos.api.Data.Extension.Group
+	10, // 16: kratos.api.Data.Extension.other:type_name -> kratos.api.Data.Extension.Group
+	17, // [17:17] is the sub-list for method output_type
+	17, // [17:17] is the sub-list for method input_type
+	17, // [17:17] is the sub-list for extension type_name
+	17, // [17:17] is the sub-list for extension extendee
+	0,  // [0:17] is the sub-list for field type_name
 }
 
 func init() { file_conf_conf_proto_init() }
@@ -758,7 +815,7 @@ func file_conf_conf_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_conf_conf_proto_rawDesc), len(file_conf_conf_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   10,
+			NumMessages:   11,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

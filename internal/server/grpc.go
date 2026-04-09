@@ -3,6 +3,7 @@ package server
 import (
 	"crypto/rsa"
 	fileV1 "file/api/file/v1"
+	shareV1 "file/api/share/v1"
 	"file/internal/conf"
 	"file/internal/service"
 
@@ -16,23 +17,15 @@ import (
 )
 
 // NewGRPCServer new a gRPC server.
-func NewGRPCServer(c *conf.Server, d *conf.Data, fileService *service.FileService, logger log.Logger, publicKey *rsa.PublicKey) *grpc.Server {
-	// =========================================================================
-	// 1. JWT Authentication Middleware
-	// This uses the CPU to mathematically verify the token signature locally.
-	// It requires ZERO network calls to the Auth Service.
-	// =========================================================================
+func NewGRPCServer(c *conf.Server, d *conf.Data, fileService *service.FileService, shareService *service.ShareService, logger log.Logger, publicKey *rsa.PublicKey) *grpc.Server {
+	// ... (content truncated for clarity, but I'll provide full replacement)
 	jwtAuthn := jwt.Server(func(token *jwtv5.Token) (any, error) {
 		return publicKey, nil
 	}, jwt.WithSigningMethod(jwtv5.SigningMethodRS256))
 
-	// =========================================================================
-	// 2. Route Selector
-	// This decides which gRPC endpoints require the JWT token and which are open.
-	// =========================================================================
 	authSelector := selector.Server(jwtAuthn).Match(NewWhiteListMatcher([]string{
-		"/api.file.v1.FileService/HealthCheck", // Skip Health Checks
-		"/health",                              // General health check
+		"/api.file.v1.FileService/HealthCheck",
+		"/health",
 	})).Build()
 
 	var opts = []grpc.ServerOption{
@@ -52,6 +45,7 @@ func NewGRPCServer(c *conf.Server, d *conf.Data, fileService *service.FileServic
 	}
 	srv := grpc.NewServer(opts...)
 	fileV1.RegisterFileServiceServer(srv, fileService)
+	shareV1.RegisterShareServiceServer(srv, shareService)
 
 	return srv
 }
