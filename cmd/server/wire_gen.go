@@ -29,6 +29,9 @@ func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*
 	if err != nil {
 		return nil, nil, err
 	}
+	greeterRepo := data.NewGreeterRepo(dataData, logger)
+	greeterUsecase := biz.NewGreeterUsecase(greeterRepo)
+	greeterService := service.NewGreeterService(greeterUsecase)
 	fileRepo := data.NewFileRepo(dataData, logger)
 	physicalFileRepo := data.NewPhysicalFileRepo(dataData, logger)
 	authRepo, err := data.NewAuthRepo(confData)
@@ -61,8 +64,8 @@ func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*
 		cleanup()
 		return nil, nil, err
 	}
-	grpcServer := server.NewGRPCServer(confServer, confData, fileService, shareService, planService, subscriptionService, dashboardService, logger, publicKey)
-	httpServer := server.NewHTTPServer(confServer, confData, fileService, shareService, planService, subscriptionService, dashboardService, logger, publicKey)
+	grpcServer := server.NewGRPCServer(confServer, confData, greeterService, fileService, shareService, planService, subscriptionService, dashboardService, logger, publicKey)
+	httpServer := server.NewHTTPServer(confServer, confData, greeterService, fileService, shareService, planService, subscriptionService, dashboardService, logger, publicKey)
 	app := newApp(logger, grpcServer, httpServer)
 	return app, func() {
 		cleanup()
