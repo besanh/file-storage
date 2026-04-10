@@ -4,6 +4,7 @@ import (
 	"context"
 	m2mv1 "file/api/m2m_auth/v1"
 	permissionV1 "file/api/permission/v1"
+	userV1 "file/api/user/v1"
 	"file/internal/biz"
 	"file/internal/conf"
 	"fmt"
@@ -19,6 +20,7 @@ type authRepo struct {
 	clientSecret     string
 	kid              string
 	permissionClient permissionV1.PermissionServiceClient
+	userClient       userV1.UserServiceClient
 }
 
 func NewAuthRepo(c *conf.Data) (biz.AuthRepo, error) {
@@ -47,6 +49,7 @@ func NewAuthRepo(c *conf.Data) (biz.AuthRepo, error) {
 
 	r.m2mClient = m2mv1.NewM2MAuthServiceClient(conn)
 	r.permissionClient = permissionV1.NewPermissionServiceClient(conn)
+	r.userClient = userV1.NewUserServiceClient(conn)
 
 	return r, nil
 }
@@ -106,4 +109,19 @@ func (r *authRepo) SwapRelationship(ctx context.Context, req *biz.SwapRelationsh
 		return nil, err
 	}
 	return &biz.SwapRelationshipResponse{}, nil
+}
+
+func (r *authRepo) GetUserProfile(ctx context.Context, id string) (*biz.UserProfile, error) {
+	resp, err := r.userClient.GetUser(ctx, &userV1.GetUserRequest{UserId: id})
+	if err != nil {
+		return nil, err
+	}
+	return &biz.UserProfile{
+		UserID:    resp.UserId,
+		Email:     resp.Email,
+		Role:      resp.Role,
+		Scope:     resp.Scope,
+		Status:    resp.Status,
+		CreatedAt: resp.CreatedAt,
+	}, nil
 }

@@ -30,28 +30,28 @@ services:
     networks:
       - file-storage-network
 
-  elasticsearch:
-    container_name: file-storage-elasticsearch-local
-    image: elasticsearch:9.2.0
-    ports:
-      - "9200:9200" # Rest
-      - "9300:9300" # Cluster
-    volumes:
-      - ./tmp/es_data:/usr/share/elasticsearch/data
-    environment:
-      http.port: 9200
-      transport.port: 9300
-      discovery.type: single-node
-      xpack.security.enabled: true
-      xpack.security.http.ssl.enabled: false
-      xpack.security.enrollment.enabled: true
-      ELASTIC_PASSWORD: anhle # (build-in) user: elastic by default
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    networks:
-      - file-storage-network
+  # elasticsearch:
+  #   container_name: file-storage-elasticsearch-local
+  #   image: elasticsearch:9.2.0
+  #   ports:
+  #     - "9200:9200" # Rest
+  #     - "9300:9300" # Cluster
+  #   volumes:
+  #     - ./tmp/es_data:/usr/share/elasticsearch/data
+  #   environment:
+  #     http.port: 9200
+  #     transport.port: 9300
+  #     discovery.type: single-node
+  #     xpack.security.enabled: true
+  #     xpack.security.http.ssl.enabled: false
+  #     xpack.security.enrollment.enabled: true
+  #     ELASTIC_PASSWORD: anhle # (build-in) user: elastic by default
+  #   ulimits:
+  #     memlock:
+  #       soft: -1
+  #       hard: -1
+  #   networks:
+  #     - file-storage-network
 
 networks:
   file-storage-network:

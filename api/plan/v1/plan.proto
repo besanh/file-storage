@@ -10,33 +10,33 @@ import "google/api/annotations.proto";
 // PLAN SERVICE
 // =====================================================================
 service PlanService {
-    rpc GetPlan (GetPlanRequest) returns (GetPlanResponse) {
+    rpc GetPlan (GetPlanRequest) returns (GetPlanReply) {
         option (google.api.http) = {
             get: "/v1/plans/{id}"
         };
     }
 
-    rpc ListPlans (ListPlansRequest) returns (ListPlansResponse) {
+    rpc ListPlans (ListPlansRequest) returns (ListPlansReply) {
         option (google.api.http) = {
             get: "/v1/plans"
         };
     }
 
-    rpc CreatePlan (CreatePlanRequest) returns (CreatePlanResponse) {
+    rpc CreatePlan (CreatePlanRequest) returns (CreatePlanReply) {
         option (google.api.http) = {
             post: "/v1/plans"
             body: "*"
         };
     }
 
-    rpc UpdatePlan (UpdatePlanRequest) returns (UpdatePlanResponse) {
+    rpc UpdatePlan (UpdatePlanRequest) returns (UpdatePlanReply) {
         option (google.api.http) = {
             patch: "/v1/plans/{id}"
             body: "*"
         };
     }
 
-    rpc DeletePlan (DeletePlanRequest) returns (DeletePlanResponse) {
+    rpc DeletePlan (DeletePlanRequest) returns (DeletePlanReply) {
         option (google.api.http) = {
             delete: "/v1/plans/{id}"
         };
@@ -63,13 +63,13 @@ message GetPlanRequest {
     string id = 1;
 }
 
-message GetPlanResponse {
+message GetPlanReply {
     Plan plan = 1;
 }
 
 message ListPlansRequest {}
 
-message ListPlansResponse {
+message ListPlansReply {
     repeated Plan plans = 1;
 }
 
@@ -82,7 +82,7 @@ message CreatePlanRequest {
     string description = 6;
 }
 
-message CreatePlanResponse {
+message CreatePlanReply {
     Plan plan = 1;
 }
 
@@ -96,7 +96,7 @@ message UpdatePlanRequest {
     string description = 7;
 }
 
-message UpdatePlanResponse {
+message UpdatePlanReply {
     Plan plan = 1;
 }
 
@@ -104,6 +104,6 @@ message DeletePlanRequest {
     string id = 1;
 }
 
-message DeletePlanResponse {
+message DeletePlanReply {
     bool success = 1;
 }

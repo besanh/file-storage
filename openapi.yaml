@@ -43,6 +43,18 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/m2m_auth.v1.LoginReply'
+    /v1/dashboard/summary:
+        get:
+            tags:
+                - DashboardService
+            operationId: DashboardService_GetDashboardSummary
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/dashboard.v1.GetDashboardSummaryReply'
     /v1/files/create:
         post:
             tags:
@@ -89,7 +101,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.share.v1.ListShareLinksByResourceResponse'
+                                $ref: '#/components/schemas/api.share.v1.ListShareLinksByResourceReply'
     /v1/internal/permissions/check:
         post:
             tags:
@@ -175,7 +187,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.plan.v1.ListPlansResponse'
+                                $ref: '#/components/schemas/api.plan.v1.ListPlansReply'
         post:
             tags:
                 - PlanService
@@ -192,7 +204,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.plan.v1.CreatePlanResponse'
+                                $ref: '#/components/schemas/api.plan.v1.CreatePlanReply'
     /v1/plans/{id}:
         get:
             tags:
@@ -210,7 +222,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.plan.v1.GetPlanResponse'
+                                $ref: '#/components/schemas/api.plan.v1.GetPlanReply'
         delete:
             tags:
                 - PlanService
@@ -227,7 +239,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.plan.v1.DeletePlanResponse'
+                                $ref: '#/components/schemas/api.plan.v1.DeletePlanReply'
         patch:
             tags:
                 - PlanService
@@ -250,7 +262,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.plan.v1.UpdatePlanResponse'
+                                $ref: '#/components/schemas/api.plan.v1.UpdatePlanReply'
     /v1/shares:
         post:
             tags:
@@ -269,7 +281,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.share.v1.CreateShareLinkResponse'
+                                $ref: '#/components/schemas/api.share.v1.CreateShareLinkReply'
     /v1/shares/me:
         get:
             tags:
@@ -293,7 +305,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.share.v1.ListShareLinksByCreatorResponse'
+                                $ref: '#/components/schemas/api.share.v1.ListShareLinksByCreatorReply'
     /v1/shares/{linkToken}:
         get:
             tags:
@@ -312,7 +324,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.share.v1.ResolveShareLinkResponse'
+                                $ref: '#/components/schemas/api.share.v1.ResolveShareLinkReply'
         delete:
             tags:
                 - ShareService
@@ -330,7 +342,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.share.v1.RevokeShareLinkResponse'
+                                $ref: '#/components/schemas/api.share.v1.RevokeShareLinkReply'
         patch:
             tags:
                 - ShareService
@@ -354,7 +366,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.share.v1.UpdateShareLinkResponse'
+                                $ref: '#/components/schemas/api.share.v1.UpdateShareLinkReply'
     /v1/subscriptions:
         get:
             tags:
@@ -366,7 +378,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.subscription.v1.ListUserSubscriptionsResponse'
+                                $ref: '#/components/schemas/api.subscription.v1.ListUserSubscriptionsReply'
         post:
             tags:
                 - SubscriptionService
@@ -383,7 +395,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.subscription.v1.SubscribePlanResponse'
+                                $ref: '#/components/schemas/api.subscription.v1.SubscribePlanReply'
     /v1/subscriptions/me:
         get:
             tags:
@@ -395,9 +407,31 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.subscription.v1.GetUserSubscriptionResponse'
+                                $ref: '#/components/schemas/api.subscription.v1.GetUserSubscriptionReply'
+    /v1/user:
+        get:
+            tags:
+                - UserService
+            operationId: UserService_GetUser
+            parameters:
+                - name: userId
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/user.v1.GetUserReply'
 components:
     schemas:
+        api.plan.v1.CreatePlanReply:
+            type: object
+            properties:
+                plan:
+                    $ref: '#/components/schemas/api.plan.v1.Plan'
         api.plan.v1.CreatePlanRequest:
             type: object
             properties:
@@ -414,22 +448,17 @@ components:
                     format: int32
                 description:
                     type: string
-        api.plan.v1.CreatePlanResponse:
-            type: object
-            properties:
-                plan:
-                    $ref: '#/components/schemas/api.plan.v1.Plan'
-        api.plan.v1.DeletePlanResponse:
+        api.plan.v1.DeletePlanReply:
             type: object
             properties:
                 success:
                     type: boolean
-        api.plan.v1.GetPlanResponse:
+        api.plan.v1.GetPlanReply:
             type: object
             properties:
                 plan:
                     $ref: '#/components/schemas/api.plan.v1.Plan'
-        api.plan.v1.ListPlansResponse:
+        api.plan.v1.ListPlansReply:
             type: object
             properties:
                 plans:
@@ -458,6 +487,11 @@ components:
                     type: string
                 updatedAt:
                     type: string
+        api.plan.v1.UpdatePlanReply:
+            type: object
+            properties:
+                plan:
+                    $ref: '#/components/schemas/api.plan.v1.Plan'
         api.plan.v1.UpdatePlanRequest:
             type: object
             properties:
@@ -476,11 +510,13 @@ components:
                     format: int32
                 description:
                     type: string
-        api.plan.v1.UpdatePlanResponse:
+        api.share.v1.CreateShareLinkReply:
             type: object
             properties:
-                plan:
-                    $ref: '#/components/schemas/api.plan.v1.Plan'
+                linkToken:
+                    type: string
+                shareUrl:
+                    type: string
         api.share.v1.CreateShareLinkRequest:
             type: object
             properties:
@@ -493,28 +529,21 @@ components:
                 expiresAt:
                     type: string
             description: '--- CREATE ---'
-        api.share.v1.CreateShareLinkResponse:
-            type: object
-            properties:
-                linkToken:
-                    type: string
-                shareUrl:
-                    type: string
-        api.share.v1.ListShareLinksByCreatorResponse:
+        api.share.v1.ListShareLinksByCreatorReply:
             type: object
             properties:
                 links:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.share.v1.ShareLinkInfo'
-        api.share.v1.ListShareLinksByResourceResponse:
+        api.share.v1.ListShareLinksByResourceReply:
             type: object
             properties:
                 links:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.share.v1.ShareLinkInfo'
-        api.share.v1.ResolveShareLinkResponse:
+        api.share.v1.ResolveShareLinkReply:
             type: object
             properties:
                 resourceId:
@@ -527,7 +556,7 @@ components:
                     type: string
                 creatorId:
                     type: string
-        api.share.v1.RevokeShareLinkResponse:
+        api.share.v1.RevokeShareLinkReply:
             type: object
             properties:
                 success:
@@ -544,6 +573,11 @@ components:
                 shareUrl:
                     type: string
             description: '--- LIST SHARES ---'
+        api.share.v1.UpdateShareLinkReply:
+            type: object
+            properties:
+                success:
+                    type: boolean
         api.share.v1.UpdateShareLinkRequest:
             type: object
             properties:
@@ -552,33 +586,28 @@ components:
                 newPermission:
                     type: string
             description: '--- UPDATE & REVOKE ---'
-        api.share.v1.UpdateShareLinkResponse:
-            type: object
-            properties:
-                success:
-                    type: boolean
-        api.subscription.v1.GetUserSubscriptionResponse:
+        api.subscription.v1.GetUserSubscriptionReply:
             type: object
             properties:
                 subscription:
                     $ref: '#/components/schemas/api.subscription.v1.Subscription'
-        api.subscription.v1.ListUserSubscriptionsResponse:
+        api.subscription.v1.ListUserSubscriptionsReply:
             type: object
             properties:
                 subscriptions:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.subscription.v1.Subscription'
+        api.subscription.v1.SubscribePlanReply:
+            type: object
+            properties:
+                subscription:
+                    $ref: '#/components/schemas/api.subscription.v1.Subscription'
         api.subscription.v1.SubscribePlanRequest:
             type: object
             properties:
                 planId:
                     type: string
-        api.subscription.v1.SubscribePlanResponse:
-            type: object
-            properties:
-                subscription:
-                    $ref: '#/components/schemas/api.subscription.v1.Subscription'
         api.subscription.v1.Subscription:
             type: object
             properties:
@@ -597,6 +626,55 @@ components:
                 createdAt:
                     type: string
                 updatedAt:
+                    type: string
+        dashboard.v1.GetDashboardSummaryReply:
+            type: object
+            properties:
+                welcomeMessage:
+                    type: string
+                storage:
+                    $ref: '#/components/schemas/dashboard.v1.GetDashboardSummaryReply_StorageBreakdown'
+                recentActivity:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/dashboard.v1.GetDashboardSummaryReply_RecentActivity'
+                activePlanName:
+                    type: string
+        dashboard.v1.GetDashboardSummaryReply_RecentActivity:
+            type: object
+            properties:
+                id:
+                    type: string
+                name:
+                    type: string
+                type:
+                    type: string
+                icon:
+                    type: string
+                size:
+                    type: string
+                lastAccessedAt:
+                    type: string
+                isFolder:
+                    type: boolean
+        dashboard.v1.GetDashboardSummaryReply_StorageBreakdown:
+            type: object
+            properties:
+                photos:
+                    type: string
+                videos:
+                    type: string
+                documents:
+                    type: string
+                audio:
+                    type: string
+                compress:
+                    type: string
+                other:
+                    type: string
+                total:
+                    type: string
+                quota:
                     type: string
         file.v1.CreateFileRequest:
             type: object
@@ -722,7 +800,23 @@ components:
                     type: string
                 subjectId:
                     type: string
+        user.v1.GetUserReply:
+            type: object
+            properties:
+                userId:
+                    type: string
+                email:
+                    type: string
+                role:
+                    type: string
+                scope:
+                    type: string
+                status:
+                    type: string
+                createdAt:
+                    type: string
 tags:
+    - name: DashboardService
     - name: FileService
     - name: Greeter
       description: The greeting service definition.
@@ -743,3 +837,4 @@ tags:
         =====================================================================
          SUBSCRIPTION SERVICE
          =====================================================================
+    - name: UserService

@@ -14,6 +14,7 @@ import (
 type FileRepo interface {
 	InsertFile(ctx context.Context, file *db.InsertFileParams) (*db.FileNode, error)
 	GetUserStorageUsed(ctx context.Context, ownerID uuid.UUID) (int64, error)
+	GetRecentFiles(ctx context.Context, ownerID uuid.UUID, limit int32) ([]*db.FileNode, error)
 }
 
 type FileUsecase struct {

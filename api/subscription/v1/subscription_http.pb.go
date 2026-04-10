@@ -24,9 +24,9 @@ const OperationSubscriptionServiceListUserSubscriptions = "/api.subscription.v1.
 const OperationSubscriptionServiceSubscribePlan = "/api.subscription.v1.SubscriptionService/SubscribePlan"
 
 type SubscriptionServiceHTTPServer interface {
-	GetUserSubscription(context.Context, *GetUserSubscriptionRequest) (*GetUserSubscriptionResponse, error)
-	ListUserSubscriptions(context.Context, *ListUserSubscriptionsRequest) (*ListUserSubscriptionsResponse, error)
-	SubscribePlan(context.Context, *SubscribePlanRequest) (*SubscribePlanResponse, error)
+	GetUserSubscription(context.Context, *GetUserSubscriptionRequest) (*GetUserSubscriptionReply, error)
+	ListUserSubscriptions(context.Context, *ListUserSubscriptionsRequest) (*ListUserSubscriptionsReply, error)
+	SubscribePlan(context.Context, *SubscribePlanRequest) (*SubscribePlanReply, error)
 }
 
 func RegisterSubscriptionServiceHTTPServer(s *http.Server, srv SubscriptionServiceHTTPServer) {
@@ -50,7 +50,7 @@ func _SubscriptionService_GetUserSubscription0_HTTP_Handler(srv SubscriptionServ
 		if err != nil {
 			return err
 		}
-		reply := out.(*GetUserSubscriptionResponse)
+		reply := out.(*GetUserSubscriptionReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -72,7 +72,7 @@ func _SubscriptionService_SubscribePlan0_HTTP_Handler(srv SubscriptionServiceHTT
 		if err != nil {
 			return err
 		}
-		reply := out.(*SubscribePlanResponse)
+		reply := out.(*SubscribePlanReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -91,15 +91,15 @@ func _SubscriptionService_ListUserSubscriptions0_HTTP_Handler(srv SubscriptionSe
 		if err != nil {
 			return err
 		}
-		reply := out.(*ListUserSubscriptionsResponse)
+		reply := out.(*ListUserSubscriptionsReply)
 		return ctx.Result(200, reply)
 	}
 }
 
 type SubscriptionServiceHTTPClient interface {
-	GetUserSubscription(ctx context.Context, req *GetUserSubscriptionRequest, opts ...http.CallOption) (rsp *GetUserSubscriptionResponse, err error)
-	ListUserSubscriptions(ctx context.Context, req *ListUserSubscriptionsRequest, opts ...http.CallOption) (rsp *ListUserSubscriptionsResponse, err error)
-	SubscribePlan(ctx context.Context, req *SubscribePlanRequest, opts ...http.CallOption) (rsp *SubscribePlanResponse, err error)
+	GetUserSubscription(ctx context.Context, req *GetUserSubscriptionRequest, opts ...http.CallOption) (rsp *GetUserSubscriptionReply, err error)
+	ListUserSubscriptions(ctx context.Context, req *ListUserSubscriptionsRequest, opts ...http.CallOption) (rsp *ListUserSubscriptionsReply, err error)
+	SubscribePlan(ctx context.Context, req *SubscribePlanRequest, opts ...http.CallOption) (rsp *SubscribePlanReply, err error)
 }
 
 type SubscriptionServiceHTTPClientImpl struct {
@@ -110,8 +110,8 @@ func NewSubscriptionServiceHTTPClient(client *http.Client) SubscriptionServiceHT
 	return &SubscriptionServiceHTTPClientImpl{client}
 }
 
-func (c *SubscriptionServiceHTTPClientImpl) GetUserSubscription(ctx context.Context, in *GetUserSubscriptionRequest, opts ...http.CallOption) (*GetUserSubscriptionResponse, error) {
-	var out GetUserSubscriptionResponse
+func (c *SubscriptionServiceHTTPClientImpl) GetUserSubscription(ctx context.Context, in *GetUserSubscriptionRequest, opts ...http.CallOption) (*GetUserSubscriptionReply, error) {
+	var out GetUserSubscriptionReply
 	pattern := "/v1/subscriptions/me"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationSubscriptionServiceGetUserSubscription))
@@ -123,8 +123,8 @@ func (c *SubscriptionServiceHTTPClientImpl) GetUserSubscription(ctx context.Cont
 	return &out, nil
 }
 
-func (c *SubscriptionServiceHTTPClientImpl) ListUserSubscriptions(ctx context.Context, in *ListUserSubscriptionsRequest, opts ...http.CallOption) (*ListUserSubscriptionsResponse, error) {
-	var out ListUserSubscriptionsResponse
+func (c *SubscriptionServiceHTTPClientImpl) ListUserSubscriptions(ctx context.Context, in *ListUserSubscriptionsRequest, opts ...http.CallOption) (*ListUserSubscriptionsReply, error) {
+	var out ListUserSubscriptionsReply
 	pattern := "/v1/subscriptions"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationSubscriptionServiceListUserSubscriptions))
@@ -136,8 +136,8 @@ func (c *SubscriptionServiceHTTPClientImpl) ListUserSubscriptions(ctx context.Co
 	return &out, nil
 }
 
-func (c *SubscriptionServiceHTTPClientImpl) SubscribePlan(ctx context.Context, in *SubscribePlanRequest, opts ...http.CallOption) (*SubscribePlanResponse, error) {
-	var out SubscribePlanResponse
+func (c *SubscriptionServiceHTTPClientImpl) SubscribePlan(ctx context.Context, in *SubscribePlanRequest, opts ...http.CallOption) (*SubscribePlanReply, error) {
+	var out SubscribePlanReply
 	pattern := "/v1/subscriptions"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationSubscriptionServiceSubscribePlan))

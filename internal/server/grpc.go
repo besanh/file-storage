@@ -2,7 +2,9 @@ package server
 
 import (
 	"crypto/rsa"
+	dashboardV1 "file/api/dashboard/v1"
 	fileV1 "file/api/file/v1"
+	greeterV1 "file/api/helloworld/v1"
 	planV1 "file/api/plan/v1"
 	shareV1 "file/api/share/v1"
 	subV1 "file/api/subscription/v1"
@@ -19,7 +21,7 @@ import (
 )
 
 // NewGRPCServer new a gRPC server.
-func NewGRPCServer(c *conf.Server, d *conf.Data, fileService *service.FileService, shareService *service.ShareService, planService *service.PlanService, subService *service.SubscriptionService, logger log.Logger, publicKey *rsa.PublicKey) *grpc.Server {
+func NewGRPCServer(c *conf.Server, d *conf.Data, greeterService *service.GreeterService, fileService *service.FileService, shareService *service.ShareService, planService *service.PlanService, subService *service.SubscriptionService, dashService *service.DashboardService, logger log.Logger, publicKey *rsa.PublicKey) *grpc.Server {
 	jwtAuthn := jwt.Server(func(token *jwtv5.Token) (any, error) {
 		return publicKey, nil
 	}, jwt.WithSigningMethod(jwtv5.SigningMethodRS256))
@@ -47,10 +49,12 @@ func NewGRPCServer(c *conf.Server, d *conf.Data, fileService *service.FileServic
 		opts = append(opts, grpc.Timeout(c.Grpc.Timeout.AsDuration()))
 	}
 	srv := grpc.NewServer(opts...)
+	greeterV1.RegisterGreeterServer(srv, greeterService)
 	fileV1.RegisterFileServiceServer(srv, fileService)
 	shareV1.RegisterShareServiceServer(srv, shareService)
 	planV1.RegisterPlanServiceServer(srv, planService)
 	subV1.RegisterSubscriptionServiceServer(srv, subService)
+	dashboardV1.RegisterDashboardServiceServer(srv, dashService)
 
 	return srv
 }

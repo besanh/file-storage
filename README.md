@@ -46,9 +46,9 @@ wire
 ## Docker
 ```bash
 # build
-docker build -t <your-docker-image-name> .
+docker build -t anhle-storage .
 
-# run
-docker run --rm -p 8000:8000 -p 9000:9000 -v </path/to/your/configs>:/data/conf <your-docker-image-name>
+# run (Mapping HTTP: 8001, gRPC: 9001)
+docker run --rm -p 8001:8001 -p 9001:9001 -v </path/to/your/configs>:/data/conf anhle-storage
 ```
 

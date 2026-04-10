@@ -28,17 +28,17 @@ const OperationShareServiceUpdateShareLink = "/api.share.v1.ShareService/UpdateS
 
 type ShareServiceHTTPServer interface {
 	// CreateShareLink 1. CREATE: Called by the owner to generate a link
-	CreateShareLink(context.Context, *CreateShareLinkRequest) (*CreateShareLinkResponse, error)
+	CreateShareLink(context.Context, *CreateShareLinkRequest) (*CreateShareLinkReply, error)
 	// ListShareLinksByCreator 3. LIST (GLOBAL): Called by the owner for their "My Links" dashboard
-	ListShareLinksByCreator(context.Context, *ListShareLinksByCreatorRequest) (*ListShareLinksByCreatorResponse, error)
+	ListShareLinksByCreator(context.Context, *ListShareLinksByCreatorRequest) (*ListShareLinksByCreatorReply, error)
 	// ListShareLinksByResource 4. LIST (LOCAL): Called by the owner to see who has access to a specific file/folder
-	ListShareLinksByResource(context.Context, *ListShareLinksByResourceRequest) (*ListShareLinksByResourceResponse, error)
+	ListShareLinksByResource(context.Context, *ListShareLinksByResourceRequest) (*ListShareLinksByResourceReply, error)
 	// ResolveShareLink 2. RESOLVE: Called by the visitor when they click the URL (The Missing Endpoint)
-	ResolveShareLink(context.Context, *ResolveShareLinkRequest) (*ResolveShareLinkResponse, error)
+	ResolveShareLink(context.Context, *ResolveShareLinkRequest) (*ResolveShareLinkReply, error)
 	// RevokeShareLink 6. DELETE: Called by the owner to kill the link
-	RevokeShareLink(context.Context, *RevokeShareLinkRequest) (*RevokeShareLinkResponse, error)
+	RevokeShareLink(context.Context, *RevokeShareLinkRequest) (*RevokeShareLinkReply, error)
 	// UpdateShareLink 5. UPDATE: Called by the owner to change "viewer" to "editor"
-	UpdateShareLink(context.Context, *UpdateShareLinkRequest) (*UpdateShareLinkResponse, error)
+	UpdateShareLink(context.Context, *UpdateShareLinkRequest) (*UpdateShareLinkReply, error)
 }
 
 func RegisterShareServiceHTTPServer(s *http.Server, srv ShareServiceHTTPServer) {
@@ -68,7 +68,7 @@ func _ShareService_CreateShareLink0_HTTP_Handler(srv ShareServiceHTTPServer) fun
 		if err != nil {
 			return err
 		}
-		reply := out.(*CreateShareLinkResponse)
+		reply := out.(*CreateShareLinkReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -90,7 +90,7 @@ func _ShareService_ResolveShareLink0_HTTP_Handler(srv ShareServiceHTTPServer) fu
 		if err != nil {
 			return err
 		}
-		reply := out.(*ResolveShareLinkResponse)
+		reply := out.(*ResolveShareLinkReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -109,7 +109,7 @@ func _ShareService_ListShareLinksByCreator0_HTTP_Handler(srv ShareServiceHTTPSer
 		if err != nil {
 			return err
 		}
-		reply := out.(*ListShareLinksByCreatorResponse)
+		reply := out.(*ListShareLinksByCreatorReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -131,7 +131,7 @@ func _ShareService_ListShareLinksByResource0_HTTP_Handler(srv ShareServiceHTTPSe
 		if err != nil {
 			return err
 		}
-		reply := out.(*ListShareLinksByResourceResponse)
+		reply := out.(*ListShareLinksByResourceReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -156,7 +156,7 @@ func _ShareService_UpdateShareLink0_HTTP_Handler(srv ShareServiceHTTPServer) fun
 		if err != nil {
 			return err
 		}
-		reply := out.(*UpdateShareLinkResponse)
+		reply := out.(*UpdateShareLinkReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -178,24 +178,24 @@ func _ShareService_RevokeShareLink0_HTTP_Handler(srv ShareServiceHTTPServer) fun
 		if err != nil {
 			return err
 		}
-		reply := out.(*RevokeShareLinkResponse)
+		reply := out.(*RevokeShareLinkReply)
 		return ctx.Result(200, reply)
 	}
 }
 
 type ShareServiceHTTPClient interface {
 	// CreateShareLink 1. CREATE: Called by the owner to generate a link
-	CreateShareLink(ctx context.Context, req *CreateShareLinkRequest, opts ...http.CallOption) (rsp *CreateShareLinkResponse, err error)
+	CreateShareLink(ctx context.Context, req *CreateShareLinkRequest, opts ...http.CallOption) (rsp *CreateShareLinkReply, err error)
 	// ListShareLinksByCreator 3. LIST (GLOBAL): Called by the owner for their "My Links" dashboard
-	ListShareLinksByCreator(ctx context.Context, req *ListShareLinksByCreatorRequest, opts ...http.CallOption) (rsp *ListShareLinksByCreatorResponse, err error)
+	ListShareLinksByCreator(ctx context.Context, req *ListShareLinksByCreatorRequest, opts ...http.CallOption) (rsp *ListShareLinksByCreatorReply, err error)
 	// ListShareLinksByResource 4. LIST (LOCAL): Called by the owner to see who has access to a specific file/folder
-	ListShareLinksByResource(ctx context.Context, req *ListShareLinksByResourceRequest, opts ...http.CallOption) (rsp *ListShareLinksByResourceResponse, err error)
+	ListShareLinksByResource(ctx context.Context, req *ListShareLinksByResourceRequest, opts ...http.CallOption) (rsp *ListShareLinksByResourceReply, err error)
 	// ResolveShareLink 2. RESOLVE: Called by the visitor when they click the URL (The Missing Endpoint)
-	ResolveShareLink(ctx context.Context, req *ResolveShareLinkRequest, opts ...http.CallOption) (rsp *ResolveShareLinkResponse, err error)
+	ResolveShareLink(ctx context.Context, req *ResolveShareLinkRequest, opts ...http.CallOption) (rsp *ResolveShareLinkReply, err error)
 	// RevokeShareLink 6. DELETE: Called by the owner to kill the link
-	RevokeShareLink(ctx context.Context, req *RevokeShareLinkRequest, opts ...http.CallOption) (rsp *RevokeShareLinkResponse, err error)
+	RevokeShareLink(ctx context.Context, req *RevokeShareLinkRequest, opts ...http.CallOption) (rsp *RevokeShareLinkReply, err error)
 	// UpdateShareLink 5. UPDATE: Called by the owner to change "viewer" to "editor"
-	UpdateShareLink(ctx context.Context, req *UpdateShareLinkRequest, opts ...http.CallOption) (rsp *UpdateShareLinkResponse, err error)
+	UpdateShareLink(ctx context.Context, req *UpdateShareLinkRequest, opts ...http.CallOption) (rsp *UpdateShareLinkReply, err error)
 }
 
 type ShareServiceHTTPClientImpl struct {
@@ -207,8 +207,8 @@ func NewShareServiceHTTPClient(client *http.Client) ShareServiceHTTPClient {
 }
 
 // CreateShareLink 1. CREATE: Called by the owner to generate a link
-func (c *ShareServiceHTTPClientImpl) CreateShareLink(ctx context.Context, in *CreateShareLinkRequest, opts ...http.CallOption) (*CreateShareLinkResponse, error) {
-	var out CreateShareLinkResponse
+func (c *ShareServiceHTTPClientImpl) CreateShareLink(ctx context.Context, in *CreateShareLinkRequest, opts ...http.CallOption) (*CreateShareLinkReply, error) {
+	var out CreateShareLinkReply
 	pattern := "/v1/shares"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationShareServiceCreateShareLink))
@@ -221,8 +221,8 @@ func (c *ShareServiceHTTPClientImpl) CreateShareLink(ctx context.Context, in *Cr
 }
 
 // ListShareLinksByCreator 3. LIST (GLOBAL): Called by the owner for their "My Links" dashboard
-func (c *ShareServiceHTTPClientImpl) ListShareLinksByCreator(ctx context.Context, in *ListShareLinksByCreatorRequest, opts ...http.CallOption) (*ListShareLinksByCreatorResponse, error) {
-	var out ListShareLinksByCreatorResponse
+func (c *ShareServiceHTTPClientImpl) ListShareLinksByCreator(ctx context.Context, in *ListShareLinksByCreatorRequest, opts ...http.CallOption) (*ListShareLinksByCreatorReply, error) {
+	var out ListShareLinksByCreatorReply
 	pattern := "/v1/shares/me"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationShareServiceListShareLinksByCreator))
@@ -235,8 +235,8 @@ func (c *ShareServiceHTTPClientImpl) ListShareLinksByCreator(ctx context.Context
 }
 
 // ListShareLinksByResource 4. LIST (LOCAL): Called by the owner to see who has access to a specific file/folder
-func (c *ShareServiceHTTPClientImpl) ListShareLinksByResource(ctx context.Context, in *ListShareLinksByResourceRequest, opts ...http.CallOption) (*ListShareLinksByResourceResponse, error) {
-	var out ListShareLinksByResourceResponse
+func (c *ShareServiceHTTPClientImpl) ListShareLinksByResource(ctx context.Context, in *ListShareLinksByResourceRequest, opts ...http.CallOption) (*ListShareLinksByResourceReply, error) {
+	var out ListShareLinksByResourceReply
 	pattern := "/v1/files/{resource_id}/shares"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationShareServiceListShareLinksByResource))
@@ -249,8 +249,8 @@ func (c *ShareServiceHTTPClientImpl) ListShareLinksByResource(ctx context.Contex
 }
 
 // ResolveShareLink 2. RESOLVE: Called by the visitor when they click the URL (The Missing Endpoint)
-func (c *ShareServiceHTTPClientImpl) ResolveShareLink(ctx context.Context, in *ResolveShareLinkRequest, opts ...http.CallOption) (*ResolveShareLinkResponse, error) {
-	var out ResolveShareLinkResponse
+func (c *ShareServiceHTTPClientImpl) ResolveShareLink(ctx context.Context, in *ResolveShareLinkRequest, opts ...http.CallOption) (*ResolveShareLinkReply, error) {
+	var out ResolveShareLinkReply
 	pattern := "/v1/shares/{link_token}"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationShareServiceResolveShareLink))
@@ -263,8 +263,8 @@ func (c *ShareServiceHTTPClientImpl) ResolveShareLink(ctx context.Context, in *R
 }
 
 // RevokeShareLink 6. DELETE: Called by the owner to kill the link
-func (c *ShareServiceHTTPClientImpl) RevokeShareLink(ctx context.Context, in *RevokeShareLinkRequest, opts ...http.CallOption) (*RevokeShareLinkResponse, error) {
-	var out RevokeShareLinkResponse
+func (c *ShareServiceHTTPClientImpl) RevokeShareLink(ctx context.Context, in *RevokeShareLinkRequest, opts ...http.CallOption) (*RevokeShareLinkReply, error) {
+	var out RevokeShareLinkReply
 	pattern := "/v1/shares/{link_token}"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationShareServiceRevokeShareLink))
@@ -277,8 +277,8 @@ func (c *ShareServiceHTTPClientImpl) RevokeShareLink(ctx context.Context, in *Re
 }
 
 // UpdateShareLink 5. UPDATE: Called by the owner to change "viewer" to "editor"
-func (c *ShareServiceHTTPClientImpl) UpdateShareLink(ctx context.Context, in *UpdateShareLinkRequest, opts ...http.CallOption) (*UpdateShareLinkResponse, error) {
-	var out UpdateShareLinkResponse
+func (c *ShareServiceHTTPClientImpl) UpdateShareLink(ctx context.Context, in *UpdateShareLinkRequest, opts ...http.CallOption) (*UpdateShareLinkReply, error) {
+	var out UpdateShareLinkReply
 	pattern := "/v1/shares/{link_token}"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationShareServiceUpdateShareLink))

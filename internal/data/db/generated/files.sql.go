@@ -12,6 +12,100 @@ import (
 	"github.com/google/uuid"
 )
 
+const getRecentFiles = `-- name: GetRecentFiles :many
+SELECT id, owner_id, parent_id, physical_file_id, name, is_folder, file_hash, file_size, file_type, file_ext, file_mime_type, file_video_resolution, recent_accessed_at, favorite, deleted_at, deleted_by, status, created_at, updated_at
+FROM file_nodes
+WHERE owner_id = $1
+AND status = 'active'
+ORDER BY recent_accessed_at DESC NULLS LAST, created_at DESC
+LIMIT $2
+`
+
+type GetRecentFilesParams struct {
+	OwnerID uuid.UUID `json:"owner_id"`
+	Limit   int32     `json:"limit"`
+}
+
+func (q *Queries) GetRecentFiles(ctx context.Context, arg GetRecentFilesParams) ([]FileNode, error) {
+	rows, err := q.db.QueryContext(ctx, getRecentFiles, arg.OwnerID, arg.Limit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []FileNode
+	for rows.Next() {
+		var i FileNode
+		if err := rows.Scan(
+			&i.ID,
+			&i.OwnerID,
+			&i.ParentID,
+			&i.PhysicalFileID,
+			&i.Name,
+			&i.IsFolder,
+			&i.FileHash,
+			&i.FileSize,
+			&i.FileType,
+			&i.FileExt,
+			&i.FileMimeType,
+			&i.FileVideoResolution,
+			&i.RecentAccessedAt,
+			&i.Favorite,
+			&i.DeletedAt,
+			&i.DeletedBy,
+			&i.Status,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getUserStorageBreakdown = `-- name: GetUserStorageBreakdown :one
+SELECT 
+    COALESCE(SUM(CASE WHEN file_type = 'photo' THEN file_size ELSE 0 END), 0)::bigint AS photos,
+    COALESCE(SUM(CASE WHEN file_type = 'video' THEN file_size ELSE 0 END), 0)::bigint AS videos,
+    COALESCE(SUM(CASE WHEN file_type = 'document' THEN file_size ELSE 0 END), 0)::bigint AS documents,
+    COALESCE(SUM(CASE WHEN file_type = 'audio' THEN file_size ELSE 0 END), 0)::bigint AS audio,
+    COALESCE(SUM(CASE WHEN file_type = 'compress' THEN file_size ELSE 0 END), 0)::bigint AS compress,
+    COALESCE(SUM(CASE WHEN file_type = 'other' THEN file_size ELSE 0 END), 0)::bigint AS other
+FROM file_nodes
+WHERE owner_id = $1
+  AND is_folder = FALSE
+  AND status = 'active'
+`
+
+type GetUserStorageBreakdownRow struct {
+	Photos    int64 `json:"photos"`
+	Videos    int64 `json:"videos"`
+	Documents int64 `json:"documents"`
+	Audio     int64 `json:"audio"`
+	Compress  int64 `json:"compress"`
+	Other     int64 `json:"other"`
+}
+
+func (q *Queries) GetUserStorageBreakdown(ctx context.Context, ownerID uuid.UUID) (GetUserStorageBreakdownRow, error) {
+	row := q.db.QueryRowContext(ctx, getUserStorageBreakdown, ownerID)
+	var i GetUserStorageBreakdownRow
+	err := row.Scan(
+		&i.Photos,
+		&i.Videos,
+		&i.Documents,
+		&i.Audio,
+		&i.Compress,
+		&i.Other,
+	)
+	return i, err
+}
+
 const getUserStorageUsed = `-- name: GetUserStorageUsed :one
 SELECT COALESCE(SUM(file_size), 0)::bigint AS total_used
 FROM file_nodes

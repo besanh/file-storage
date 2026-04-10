@@ -26,11 +26,11 @@ const OperationPlanServiceListPlans = "/api.plan.v1.PlanService/ListPlans"
 const OperationPlanServiceUpdatePlan = "/api.plan.v1.PlanService/UpdatePlan"
 
 type PlanServiceHTTPServer interface {
-	CreatePlan(context.Context, *CreatePlanRequest) (*CreatePlanResponse, error)
-	DeletePlan(context.Context, *DeletePlanRequest) (*DeletePlanResponse, error)
-	GetPlan(context.Context, *GetPlanRequest) (*GetPlanResponse, error)
-	ListPlans(context.Context, *ListPlansRequest) (*ListPlansResponse, error)
-	UpdatePlan(context.Context, *UpdatePlanRequest) (*UpdatePlanResponse, error)
+	CreatePlan(context.Context, *CreatePlanRequest) (*CreatePlanReply, error)
+	DeletePlan(context.Context, *DeletePlanRequest) (*DeletePlanReply, error)
+	GetPlan(context.Context, *GetPlanRequest) (*GetPlanReply, error)
+	ListPlans(context.Context, *ListPlansRequest) (*ListPlansReply, error)
+	UpdatePlan(context.Context, *UpdatePlanRequest) (*UpdatePlanReply, error)
 }
 
 func RegisterPlanServiceHTTPServer(s *http.Server, srv PlanServiceHTTPServer) {
@@ -59,7 +59,7 @@ func _PlanService_GetPlan0_HTTP_Handler(srv PlanServiceHTTPServer) func(ctx http
 		if err != nil {
 			return err
 		}
-		reply := out.(*GetPlanResponse)
+		reply := out.(*GetPlanReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -78,7 +78,7 @@ func _PlanService_ListPlans0_HTTP_Handler(srv PlanServiceHTTPServer) func(ctx ht
 		if err != nil {
 			return err
 		}
-		reply := out.(*ListPlansResponse)
+		reply := out.(*ListPlansReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -100,7 +100,7 @@ func _PlanService_CreatePlan0_HTTP_Handler(srv PlanServiceHTTPServer) func(ctx h
 		if err != nil {
 			return err
 		}
-		reply := out.(*CreatePlanResponse)
+		reply := out.(*CreatePlanReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -125,7 +125,7 @@ func _PlanService_UpdatePlan0_HTTP_Handler(srv PlanServiceHTTPServer) func(ctx h
 		if err != nil {
 			return err
 		}
-		reply := out.(*UpdatePlanResponse)
+		reply := out.(*UpdatePlanReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -147,17 +147,17 @@ func _PlanService_DeletePlan0_HTTP_Handler(srv PlanServiceHTTPServer) func(ctx h
 		if err != nil {
 			return err
 		}
-		reply := out.(*DeletePlanResponse)
+		reply := out.(*DeletePlanReply)
 		return ctx.Result(200, reply)
 	}
 }
 
 type PlanServiceHTTPClient interface {
-	CreatePlan(ctx context.Context, req *CreatePlanRequest, opts ...http.CallOption) (rsp *CreatePlanResponse, err error)
-	DeletePlan(ctx context.Context, req *DeletePlanRequest, opts ...http.CallOption) (rsp *DeletePlanResponse, err error)
-	GetPlan(ctx context.Context, req *GetPlanRequest, opts ...http.CallOption) (rsp *GetPlanResponse, err error)
-	ListPlans(ctx context.Context, req *ListPlansRequest, opts ...http.CallOption) (rsp *ListPlansResponse, err error)
-	UpdatePlan(ctx context.Context, req *UpdatePlanRequest, opts ...http.CallOption) (rsp *UpdatePlanResponse, err error)
+	CreatePlan(ctx context.Context, req *CreatePlanRequest, opts ...http.CallOption) (rsp *CreatePlanReply, err error)
+	DeletePlan(ctx context.Context, req *DeletePlanRequest, opts ...http.CallOption) (rsp *DeletePlanReply, err error)
+	GetPlan(ctx context.Context, req *GetPlanRequest, opts ...http.CallOption) (rsp *GetPlanReply, err error)
+	ListPlans(ctx context.Context, req *ListPlansRequest, opts ...http.CallOption) (rsp *ListPlansReply, err error)
+	UpdatePlan(ctx context.Context, req *UpdatePlanRequest, opts ...http.CallOption) (rsp *UpdatePlanReply, err error)
 }
 
 type PlanServiceHTTPClientImpl struct {
@@ -168,8 +168,8 @@ func NewPlanServiceHTTPClient(client *http.Client) PlanServiceHTTPClient {
 	return &PlanServiceHTTPClientImpl{client}
 }
 
-func (c *PlanServiceHTTPClientImpl) CreatePlan(ctx context.Context, in *CreatePlanRequest, opts ...http.CallOption) (*CreatePlanResponse, error) {
-	var out CreatePlanResponse
+func (c *PlanServiceHTTPClientImpl) CreatePlan(ctx context.Context, in *CreatePlanRequest, opts ...http.CallOption) (*CreatePlanReply, error) {
+	var out CreatePlanReply
 	pattern := "/v1/plans"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationPlanServiceCreatePlan))
@@ -181,8 +181,8 @@ func (c *PlanServiceHTTPClientImpl) CreatePlan(ctx context.Context, in *CreatePl
 	return &out, nil
 }
 
-func (c *PlanServiceHTTPClientImpl) DeletePlan(ctx context.Context, in *DeletePlanRequest, opts ...http.CallOption) (*DeletePlanResponse, error) {
-	var out DeletePlanResponse
+func (c *PlanServiceHTTPClientImpl) DeletePlan(ctx context.Context, in *DeletePlanRequest, opts ...http.CallOption) (*DeletePlanReply, error) {
+	var out DeletePlanReply
 	pattern := "/v1/plans/{id}"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationPlanServiceDeletePlan))
@@ -194,8 +194,8 @@ func (c *PlanServiceHTTPClientImpl) DeletePlan(ctx context.Context, in *DeletePl
 	return &out, nil
 }
 
-func (c *PlanServiceHTTPClientImpl) GetPlan(ctx context.Context, in *GetPlanRequest, opts ...http.CallOption) (*GetPlanResponse, error) {
-	var out GetPlanResponse
+func (c *PlanServiceHTTPClientImpl) GetPlan(ctx context.Context, in *GetPlanRequest, opts ...http.CallOption) (*GetPlanReply, error) {
+	var out GetPlanReply
 	pattern := "/v1/plans/{id}"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationPlanServiceGetPlan))
@@ -207,8 +207,8 @@ func (c *PlanServiceHTTPClientImpl) GetPlan(ctx context.Context, in *GetPlanRequ
 	return &out, nil
 }
 
-func (c *PlanServiceHTTPClientImpl) ListPlans(ctx context.Context, in *ListPlansRequest, opts ...http.CallOption) (*ListPlansResponse, error) {
-	var out ListPlansResponse
+func (c *PlanServiceHTTPClientImpl) ListPlans(ctx context.Context, in *ListPlansRequest, opts ...http.CallOption) (*ListPlansReply, error) {
+	var out ListPlansReply
 	pattern := "/v1/plans"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationPlanServiceListPlans))
@@ -220,8 +220,8 @@ func (c *PlanServiceHTTPClientImpl) ListPlans(ctx context.Context, in *ListPlans
 	return &out, nil
 }
 
-func (c *PlanServiceHTTPClientImpl) UpdatePlan(ctx context.Context, in *UpdatePlanRequest, opts ...http.CallOption) (*UpdatePlanResponse, error) {
-	var out UpdatePlanResponse
+func (c *PlanServiceHTTPClientImpl) UpdatePlan(ctx context.Context, in *UpdatePlanRequest, opts ...http.CallOption) (*UpdatePlanReply, error) {
+	var out UpdatePlanReply
 	pattern := "/v1/plans/{id}"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationPlanServiceUpdatePlan))

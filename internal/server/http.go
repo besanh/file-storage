@@ -2,7 +2,9 @@ package server
 
 import (
 	"crypto/rsa"
+	dashboardV1 "file/api/dashboard/v1"
 	fileV1 "file/api/file/v1"
+	greeterV1 "file/api/helloworld/v1"
 	planV1 "file/api/plan/v1"
 	shareV1 "file/api/share/v1"
 	subV1 "file/api/subscription/v1"
@@ -18,7 +20,7 @@ import (
 )
 
 // NewHTTPServer new an HTTP server.
-func NewHTTPServer(c *conf.Server, d *conf.Data, fileService *service.FileService, shareService *service.ShareService, planService *service.PlanService, subService *service.SubscriptionService, logger log.Logger, publicKey *rsa.PublicKey) *http.Server {
+func NewHTTPServer(c *conf.Server, d *conf.Data, greeterService *service.GreeterService, fileService *service.FileService, shareService *service.ShareService, planService *service.PlanService, subService *service.SubscriptionService, dashService *service.DashboardService, logger log.Logger, publicKey *rsa.PublicKey) *http.Server {
 	jwtAuthn := jwt.Server(func(token *jwtv5.Token) (any, error) {
 		return publicKey, nil
 	}, jwt.WithSigningMethod(jwtv5.SigningMethodRS256))
@@ -28,6 +30,7 @@ func NewHTTPServer(c *conf.Server, d *conf.Data, fileService *service.FileServic
 		"/api.plan.v1.PlanService/ListPlans",
 		"/api.plan.v1.PlanService/GetPlan",
 		"/health",
+		"/api.helloworld.v1.Greeter/SayHello",
 	})).Build()
 
 	var opts = []http.ServerOption{
@@ -46,9 +49,11 @@ func NewHTTPServer(c *conf.Server, d *conf.Data, fileService *service.FileServic
 		opts = append(opts, http.Timeout(c.Http.Timeout.AsDuration()))
 	}
 	srv := http.NewServer(opts...)
+	greeterV1.RegisterGreeterHTTPServer(srv, greeterService)
 	fileV1.RegisterFileServiceHTTPServer(srv, fileService)
 	shareV1.RegisterShareServiceHTTPServer(srv, shareService)
 	planV1.RegisterPlanServiceHTTPServer(srv, planService)
 	subV1.RegisterSubscriptionServiceHTTPServer(srv, subService)
+	dashboardV1.RegisterDashboardServiceHTTPServer(srv, dashService)
 	return srv
 }

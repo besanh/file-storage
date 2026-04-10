@@ -1,6 +1,10 @@
 package biz
 
-import "github.com/google/uuid"
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
 
 type CreateFolderRequest struct {
 	ParentID *uuid.UUID
@@ -26,4 +30,15 @@ type CreateFileRequest struct {
 
 type CreateFileResponse struct {
 	ID uuid.UUID
+}
+
+type FileNode struct {
+	ID           uuid.UUID
+	Name         string
+	IsFolder     bool
+	FileSize     int64
+	FileType     string
+	FileExt      string
+	MimeType     string
+	LastAccessed time.Time
 }

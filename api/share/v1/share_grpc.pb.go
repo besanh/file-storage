@@ -36,17 +36,17 @@ const (
 // =====================================================================
 type ShareServiceClient interface {
 	// 1. CREATE: Called by the owner to generate a link
-	CreateShareLink(ctx context.Context, in *CreateShareLinkRequest, opts ...grpc.CallOption) (*CreateShareLinkResponse, error)
+	CreateShareLink(ctx context.Context, in *CreateShareLinkRequest, opts ...grpc.CallOption) (*CreateShareLinkReply, error)
 	// 2. RESOLVE: Called by the visitor when they click the URL (The Missing Endpoint)
-	ResolveShareLink(ctx context.Context, in *ResolveShareLinkRequest, opts ...grpc.CallOption) (*ResolveShareLinkResponse, error)
+	ResolveShareLink(ctx context.Context, in *ResolveShareLinkRequest, opts ...grpc.CallOption) (*ResolveShareLinkReply, error)
 	// 3. LIST (GLOBAL): Called by the owner for their "My Links" dashboard
-	ListShareLinksByCreator(ctx context.Context, in *ListShareLinksByCreatorRequest, opts ...grpc.CallOption) (*ListShareLinksByCreatorResponse, error)
+	ListShareLinksByCreator(ctx context.Context, in *ListShareLinksByCreatorRequest, opts ...grpc.CallOption) (*ListShareLinksByCreatorReply, error)
 	// 4. LIST (LOCAL): Called by the owner to see who has access to a specific file/folder
-	ListShareLinksByResource(ctx context.Context, in *ListShareLinksByResourceRequest, opts ...grpc.CallOption) (*ListShareLinksByResourceResponse, error)
+	ListShareLinksByResource(ctx context.Context, in *ListShareLinksByResourceRequest, opts ...grpc.CallOption) (*ListShareLinksByResourceReply, error)
 	// 5. UPDATE: Called by the owner to change "viewer" to "editor"
-	UpdateShareLink(ctx context.Context, in *UpdateShareLinkRequest, opts ...grpc.CallOption) (*UpdateShareLinkResponse, error)
+	UpdateShareLink(ctx context.Context, in *UpdateShareLinkRequest, opts ...grpc.CallOption) (*UpdateShareLinkReply, error)
 	// 6. DELETE: Called by the owner to kill the link
-	RevokeShareLink(ctx context.Context, in *RevokeShareLinkRequest, opts ...grpc.CallOption) (*RevokeShareLinkResponse, error)
+	RevokeShareLink(ctx context.Context, in *RevokeShareLinkRequest, opts ...grpc.CallOption) (*RevokeShareLinkReply, error)
 }
 
 type shareServiceClient struct {
@@ -57,9 +57,9 @@ func NewShareServiceClient(cc grpc.ClientConnInterface) ShareServiceClient {
 	return &shareServiceClient{cc}
 }
 
-func (c *shareServiceClient) CreateShareLink(ctx context.Context, in *CreateShareLinkRequest, opts ...grpc.CallOption) (*CreateShareLinkResponse, error) {
+func (c *shareServiceClient) CreateShareLink(ctx context.Context, in *CreateShareLinkRequest, opts ...grpc.CallOption) (*CreateShareLinkReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CreateShareLinkResponse)
+	out := new(CreateShareLinkReply)
 	err := c.cc.Invoke(ctx, ShareService_CreateShareLink_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -67,9 +67,9 @@ func (c *shareServiceClient) CreateShareLink(ctx context.Context, in *CreateShar
 	return out, nil
 }
 
-func (c *shareServiceClient) ResolveShareLink(ctx context.Context, in *ResolveShareLinkRequest, opts ...grpc.CallOption) (*ResolveShareLinkResponse, error) {
+func (c *shareServiceClient) ResolveShareLink(ctx context.Context, in *ResolveShareLinkRequest, opts ...grpc.CallOption) (*ResolveShareLinkReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ResolveShareLinkResponse)
+	out := new(ResolveShareLinkReply)
 	err := c.cc.Invoke(ctx, ShareService_ResolveShareLink_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -77,9 +77,9 @@ func (c *shareServiceClient) ResolveShareLink(ctx context.Context, in *ResolveSh
 	return out, nil
 }
 
-func (c *shareServiceClient) ListShareLinksByCreator(ctx context.Context, in *ListShareLinksByCreatorRequest, opts ...grpc.CallOption) (*ListShareLinksByCreatorResponse, error) {
+func (c *shareServiceClient) ListShareLinksByCreator(ctx context.Context, in *ListShareLinksByCreatorRequest, opts ...grpc.CallOption) (*ListShareLinksByCreatorReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListShareLinksByCreatorResponse)
+	out := new(ListShareLinksByCreatorReply)
 	err := c.cc.Invoke(ctx, ShareService_ListShareLinksByCreator_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -87,9 +87,9 @@ func (c *shareServiceClient) ListShareLinksByCreator(ctx context.Context, in *Li
 	return out, nil
 }
 
-func (c *shareServiceClient) ListShareLinksByResource(ctx context.Context, in *ListShareLinksByResourceRequest, opts ...grpc.CallOption) (*ListShareLinksByResourceResponse, error) {
+func (c *shareServiceClient) ListShareLinksByResource(ctx context.Context, in *ListShareLinksByResourceRequest, opts ...grpc.CallOption) (*ListShareLinksByResourceReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListShareLinksByResourceResponse)
+	out := new(ListShareLinksByResourceReply)
 	err := c.cc.Invoke(ctx, ShareService_ListShareLinksByResource_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -97,9 +97,9 @@ func (c *shareServiceClient) ListShareLinksByResource(ctx context.Context, in *L
 	return out, nil
 }
 
-func (c *shareServiceClient) UpdateShareLink(ctx context.Context, in *UpdateShareLinkRequest, opts ...grpc.CallOption) (*UpdateShareLinkResponse, error) {
+func (c *shareServiceClient) UpdateShareLink(ctx context.Context, in *UpdateShareLinkRequest, opts ...grpc.CallOption) (*UpdateShareLinkReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(UpdateShareLinkResponse)
+	out := new(UpdateShareLinkReply)
 	err := c.cc.Invoke(ctx, ShareService_UpdateShareLink_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -107,9 +107,9 @@ func (c *shareServiceClient) UpdateShareLink(ctx context.Context, in *UpdateShar
 	return out, nil
 }
 
-func (c *shareServiceClient) RevokeShareLink(ctx context.Context, in *RevokeShareLinkRequest, opts ...grpc.CallOption) (*RevokeShareLinkResponse, error) {
+func (c *shareServiceClient) RevokeShareLink(ctx context.Context, in *RevokeShareLinkRequest, opts ...grpc.CallOption) (*RevokeShareLinkReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(RevokeShareLinkResponse)
+	out := new(RevokeShareLinkReply)
 	err := c.cc.Invoke(ctx, ShareService_RevokeShareLink_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -126,17 +126,17 @@ func (c *shareServiceClient) RevokeShareLink(ctx context.Context, in *RevokeShar
 // =====================================================================
 type ShareServiceServer interface {
 	// 1. CREATE: Called by the owner to generate a link
-	CreateShareLink(context.Context, *CreateShareLinkRequest) (*CreateShareLinkResponse, error)
+	CreateShareLink(context.Context, *CreateShareLinkRequest) (*CreateShareLinkReply, error)
 	// 2. RESOLVE: Called by the visitor when they click the URL (The Missing Endpoint)
-	ResolveShareLink(context.Context, *ResolveShareLinkRequest) (*ResolveShareLinkResponse, error)
+	ResolveShareLink(context.Context, *ResolveShareLinkRequest) (*ResolveShareLinkReply, error)
 	// 3. LIST (GLOBAL): Called by the owner for their "My Links" dashboard
-	ListShareLinksByCreator(context.Context, *ListShareLinksByCreatorRequest) (*ListShareLinksByCreatorResponse, error)
+	ListShareLinksByCreator(context.Context, *ListShareLinksByCreatorRequest) (*ListShareLinksByCreatorReply, error)
 	// 4. LIST (LOCAL): Called by the owner to see who has access to a specific file/folder
-	ListShareLinksByResource(context.Context, *ListShareLinksByResourceRequest) (*ListShareLinksByResourceResponse, error)
+	ListShareLinksByResource(context.Context, *ListShareLinksByResourceRequest) (*ListShareLinksByResourceReply, error)
 	// 5. UPDATE: Called by the owner to change "viewer" to "editor"
-	UpdateShareLink(context.Context, *UpdateShareLinkRequest) (*UpdateShareLinkResponse, error)
+	UpdateShareLink(context.Context, *UpdateShareLinkRequest) (*UpdateShareLinkReply, error)
 	// 6. DELETE: Called by the owner to kill the link
-	RevokeShareLink(context.Context, *RevokeShareLinkRequest) (*RevokeShareLinkResponse, error)
+	RevokeShareLink(context.Context, *RevokeShareLinkRequest) (*RevokeShareLinkReply, error)
 	mustEmbedUnimplementedShareServiceServer()
 }
 
@@ -147,22 +147,22 @@ type ShareServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedShareServiceServer struct{}
 
-func (UnimplementedShareServiceServer) CreateShareLink(context.Context, *CreateShareLinkRequest) (*CreateShareLinkResponse, error) {
+func (UnimplementedShareServiceServer) CreateShareLink(context.Context, *CreateShareLinkRequest) (*CreateShareLinkReply, error) {
 	return nil, status.Error(codes.Unimplemented, "method CreateShareLink not implemented")
 }
-func (UnimplementedShareServiceServer) ResolveShareLink(context.Context, *ResolveShareLinkRequest) (*ResolveShareLinkResponse, error) {
+func (UnimplementedShareServiceServer) ResolveShareLink(context.Context, *ResolveShareLinkRequest) (*ResolveShareLinkReply, error) {
 	return nil, status.Error(codes.Unimplemented, "method ResolveShareLink not implemented")
 }
-func (UnimplementedShareServiceServer) ListShareLinksByCreator(context.Context, *ListShareLinksByCreatorRequest) (*ListShareLinksByCreatorResponse, error) {
+func (UnimplementedShareServiceServer) ListShareLinksByCreator(context.Context, *ListShareLinksByCreatorRequest) (*ListShareLinksByCreatorReply, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListShareLinksByCreator not implemented")
 }
-func (UnimplementedShareServiceServer) ListShareLinksByResource(context.Context, *ListShareLinksByResourceRequest) (*ListShareLinksByResourceResponse, error) {
+func (UnimplementedShareServiceServer) ListShareLinksByResource(context.Context, *ListShareLinksByResourceRequest) (*ListShareLinksByResourceReply, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListShareLinksByResource not implemented")
 }
-func (UnimplementedShareServiceServer) UpdateShareLink(context.Context, *UpdateShareLinkRequest) (*UpdateShareLinkResponse, error) {
+func (UnimplementedShareServiceServer) UpdateShareLink(context.Context, *UpdateShareLinkRequest) (*UpdateShareLinkReply, error) {
 	return nil, status.Error(codes.Unimplemented, "method UpdateShareLink not implemented")
 }
-func (UnimplementedShareServiceServer) RevokeShareLink(context.Context, *RevokeShareLinkRequest) (*RevokeShareLinkResponse, error) {
+func (UnimplementedShareServiceServer) RevokeShareLink(context.Context, *RevokeShareLinkRequest) (*RevokeShareLinkReply, error) {
 	return nil, status.Error(codes.Unimplemented, "method RevokeShareLink not implemented")
 }
 func (UnimplementedShareServiceServer) mustEmbedUnimplementedShareServiceServer() {}

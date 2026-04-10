@@ -5,10 +5,13 @@ This project implements a secure file storage system with fine-grained access co
 ## System Architecture
 
 The system follows a layered architecture:
-- **API**: gRPC definitions (Protobuf).
-- **Service**: Implements gRPC handlers, maps request types to internal models.
+- **API**: gRPC and HTTP definitions (Protobuf).
+- **Service**: Implements handlers for File, Share, Plan, Subscription, Dashboard, and Greeter.
 - **Biz (Business Logic)**: Core domain logic and permission enforcement using `AuthRepo`.
-- **Data (Persistence)**: Implements `Repo` interfaces for SQL (PostgreSQL) and Auth (SpiceDB).
+- **Data (Persistence)**: Implements `Repo` interfaces for SQL (PostgreSQL/TimescaleDB) and Auth (SpiceDB).
+
+> [!NOTE]
+> Elasticsearch-based search is currently disabled in favor of database-native queries for the Dashboard.
 
 ## File Sharing Flows
 

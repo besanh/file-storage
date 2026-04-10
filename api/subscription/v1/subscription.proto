@@ -10,20 +10,20 @@ import "google/api/annotations.proto";
 // SUBSCRIPTION SERVICE
 // =====================================================================
 service SubscriptionService {
-    rpc GetUserSubscription (GetUserSubscriptionRequest) returns (GetUserSubscriptionResponse) {
+    rpc GetUserSubscription (GetUserSubscriptionRequest) returns (GetUserSubscriptionReply) {
         option (google.api.http) = {
             get: "/v1/subscriptions/me"
         };
     }
 
-    rpc SubscribePlan (SubscribePlanRequest) returns (SubscribePlanResponse) {
+    rpc SubscribePlan (SubscribePlanRequest) returns (SubscribePlanReply) {
         option (google.api.http) = {
             post: "/v1/subscriptions"
             body: "*"
         };
     }
 
-    rpc ListUserSubscriptions (ListUserSubscriptionsRequest) returns (ListUserSubscriptionsResponse) {
+    rpc ListUserSubscriptions (ListUserSubscriptionsRequest) returns (ListUserSubscriptionsReply) {
         option (google.api.http) = {
             get: "/v1/subscriptions"
         };
@@ -47,7 +47,7 @@ message Subscription {
 
 message GetUserSubscriptionRequest {}
 
-message GetUserSubscriptionResponse {
+message GetUserSubscriptionReply {
     Subscription subscription = 1;
 }
 
@@ -55,12 +55,12 @@ message SubscribePlanRequest {
     string plan_id = 1;
 }
 
-message SubscribePlanResponse {
+message SubscribePlanReply {
     Subscription subscription = 1;
 }
 
 message ListUserSubscriptionsRequest {}
 
-message ListUserSubscriptionsResponse {
+message ListUserSubscriptionsReply {
     repeated Subscription subscriptions = 1;
 }

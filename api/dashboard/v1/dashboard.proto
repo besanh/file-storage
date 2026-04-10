@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package dashboard.v1;
+
+option go_package = "file/api/dashboard/v1;v1";
+
+import "google/api/annotations.proto";
+
+service DashboardService {
+    rpc GetDashboardSummary (GetDashboardSummaryRequest) returns (GetDashboardSummaryReply) {
+        option (google.api.http) = {
+            get: "/v1/dashboard/summary"
+        };
+    }
+}
+
+message GetDashboardSummaryRequest {}
+
+message GetDashboardSummaryReply {
+    message StorageBreakdown {
+        int64 photos = 1;
+        int64 videos = 2;
+        int64 documents = 3;
+        int64 audio = 4;
+        int64 compress = 5;
+        int64 other = 6;
+        int64 total = 7;
+        int64 quota = 8;
+    }
+
+    message RecentActivity {
+        string id = 1;
+        string name = 2;
+        string type = 3;
+        string icon = 4;
+        string size = 5;
+        string last_accessed_at = 6;
+        bool is_folder = 7;
+    }
+
+    string welcome_message = 1;
+    StorageBreakdown storage = 2;
+    repeated RecentActivity recent_activity = 3;
+    string active_plan_name = 4;
+}

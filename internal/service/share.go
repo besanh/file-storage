@@ -23,7 +23,7 @@ func NewShareService(suc *biz.ShareUseCase, logger log.Logger) *ShareService {
 	}
 }
 
-func (s *ShareService) CreateShareLink(ctx context.Context, req *pb.CreateShareLinkRequest) (*pb.CreateShareLinkResponse, error) {
+func (s *ShareService) CreateShareLink(ctx context.Context, req *pb.CreateShareLinkRequest) (*pb.CreateShareLinkReply, error) {
 	resourceID, err := uuid.Parse(req.ResourceId)
 	if err != nil {
 		return nil, err
@@ -37,13 +37,13 @@ func (s *ShareService) CreateShareLink(ctx context.Context, req *pb.CreateShareL
 		return nil, err
 	}
 
-	return &pb.CreateShareLinkResponse{
+	return &pb.CreateShareLinkReply{
 		LinkToken: res.Token,
 		ShareUrl:  res.URL,
 	}, nil
 }
 
-func (s *ShareService) ResolveShareLink(ctx context.Context, req *pb.ResolveShareLinkRequest) (*pb.ResolveShareLinkResponse, error) {
+func (s *ShareService) ResolveShareLink(ctx context.Context, req *pb.ResolveShareLinkRequest) (*pb.ResolveShareLinkReply, error) {
 	res, err := s.suc.ResolveShareLink(ctx, biz.ResolveShareLinkRequest{
 		Token: req.LinkToken,
 	})
@@ -51,7 +51,7 @@ func (s *ShareService) ResolveShareLink(ctx context.Context, req *pb.ResolveShar
 		return nil, err
 	}
 
-	return &pb.ResolveShareLinkResponse{
+	return &pb.ResolveShareLinkReply{
 		ResourceId:      res.ResourceID.String(),
 		ResourceType:    res.ResourceType,
 		PermissionLevel: res.PermissionLevel,
@@ -60,19 +60,19 @@ func (s *ShareService) ResolveShareLink(ctx context.Context, req *pb.ResolveShar
 	}, nil
 }
 
-func (s *ShareService) RevokeShareLink(ctx context.Context, req *pb.RevokeShareLinkRequest) (*pb.RevokeShareLinkResponse, error) {
+func (s *ShareService) RevokeShareLink(ctx context.Context, req *pb.RevokeShareLinkRequest) (*pb.RevokeShareLinkReply, error) {
 	resp, err := s.suc.RevokeShareLink(ctx, biz.RevokeShareLinkRequest{
 		Token: req.LinkToken,
 	})
 	if err != nil {
 		return nil, err
 	}
-	return &pb.RevokeShareLinkResponse{
+	return &pb.RevokeShareLinkReply{
 		Success: resp.Success,
 	}, nil
 }
 
-func (s *ShareService) ListShareLinksByCreator(ctx context.Context, req *pb.ListShareLinksByCreatorRequest) (*pb.ListShareLinksByCreatorResponse, error) {
+func (s *ShareService) ListShareLinksByCreator(ctx context.Context, req *pb.ListShareLinksByCreatorRequest) (*pb.ListShareLinksByCreatorReply, error) {
 	res, err := s.suc.ListShareLinksByCreator(ctx, biz.ListShareLinksByCreatorRequest{
 		Limit:  req.Limit,
 		Offset: req.Offset,
@@ -91,12 +91,12 @@ func (s *ShareService) ListShareLinksByCreator(ctx context.Context, req *pb.List
 		})
 	}
 
-	return &pb.ListShareLinksByCreatorResponse{
+	return &pb.ListShareLinksByCreatorReply{
 		Links: links,
 	}, nil
 }
 
-func (s *ShareService) ListShareLinksByResource(ctx context.Context, req *pb.ListShareLinksByResourceRequest) (*pb.ListShareLinksByResourceResponse, error) {
+func (s *ShareService) ListShareLinksByResource(ctx context.Context, req *pb.ListShareLinksByResourceRequest) (*pb.ListShareLinksByResourceReply, error) {
 	resourceID, err := uuid.Parse(req.ResourceId)
 	if err != nil {
 		return nil, err
@@ -121,12 +121,12 @@ func (s *ShareService) ListShareLinksByResource(ctx context.Context, req *pb.Lis
 		})
 	}
 
-	return &pb.ListShareLinksByResourceResponse{
+	return &pb.ListShareLinksByResourceReply{
 		Links: links,
 	}, nil
 }
 
-func (s *ShareService) UpdateShareLink(ctx context.Context, req *pb.UpdateShareLinkRequest) (*pb.UpdateShareLinkResponse, error) {
+func (s *ShareService) UpdateShareLink(ctx context.Context, req *pb.UpdateShareLinkRequest) (*pb.UpdateShareLinkReply, error) {
 	_, err := s.suc.UpdateUserPermission(ctx, biz.UpdateUserPermissionRequest{
 		Token:           req.LinkToken,
 		PermissionLevel: req.NewPermission,
@@ -134,7 +134,7 @@ func (s *ShareService) UpdateShareLink(ctx context.Context, req *pb.UpdateShareL
 	if err != nil {
 		return nil, err
 	}
-	return &pb.UpdateShareLinkResponse{
+	return &pb.UpdateShareLinkReply{
 		Success: true,
 	}, nil
 }

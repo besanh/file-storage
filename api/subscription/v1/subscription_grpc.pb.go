@@ -32,9 +32,9 @@ const (
 // SUBSCRIPTION SERVICE
 // =====================================================================
 type SubscriptionServiceClient interface {
-	GetUserSubscription(ctx context.Context, in *GetUserSubscriptionRequest, opts ...grpc.CallOption) (*GetUserSubscriptionResponse, error)
-	SubscribePlan(ctx context.Context, in *SubscribePlanRequest, opts ...grpc.CallOption) (*SubscribePlanResponse, error)
-	ListUserSubscriptions(ctx context.Context, in *ListUserSubscriptionsRequest, opts ...grpc.CallOption) (*ListUserSubscriptionsResponse, error)
+	GetUserSubscription(ctx context.Context, in *GetUserSubscriptionRequest, opts ...grpc.CallOption) (*GetUserSubscriptionReply, error)
+	SubscribePlan(ctx context.Context, in *SubscribePlanRequest, opts ...grpc.CallOption) (*SubscribePlanReply, error)
+	ListUserSubscriptions(ctx context.Context, in *ListUserSubscriptionsRequest, opts ...grpc.CallOption) (*ListUserSubscriptionsReply, error)
 }
 
 type subscriptionServiceClient struct {
@@ -45,9 +45,9 @@ func NewSubscriptionServiceClient(cc grpc.ClientConnInterface) SubscriptionServi
 	return &subscriptionServiceClient{cc}
 }
 
-func (c *subscriptionServiceClient) GetUserSubscription(ctx context.Context, in *GetUserSubscriptionRequest, opts ...grpc.CallOption) (*GetUserSubscriptionResponse, error) {
+func (c *subscriptionServiceClient) GetUserSubscription(ctx context.Context, in *GetUserSubscriptionRequest, opts ...grpc.CallOption) (*GetUserSubscriptionReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetUserSubscriptionResponse)
+	out := new(GetUserSubscriptionReply)
 	err := c.cc.Invoke(ctx, SubscriptionService_GetUserSubscription_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -55,9 +55,9 @@ func (c *subscriptionServiceClient) GetUserSubscription(ctx context.Context, in 
 	return out, nil
 }
 
-func (c *subscriptionServiceClient) SubscribePlan(ctx context.Context, in *SubscribePlanRequest, opts ...grpc.CallOption) (*SubscribePlanResponse, error) {
+func (c *subscriptionServiceClient) SubscribePlan(ctx context.Context, in *SubscribePlanRequest, opts ...grpc.CallOption) (*SubscribePlanReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(SubscribePlanResponse)
+	out := new(SubscribePlanReply)
 	err := c.cc.Invoke(ctx, SubscriptionService_SubscribePlan_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -65,9 +65,9 @@ func (c *subscriptionServiceClient) SubscribePlan(ctx context.Context, in *Subsc
 	return out, nil
 }
 
-func (c *subscriptionServiceClient) ListUserSubscriptions(ctx context.Context, in *ListUserSubscriptionsRequest, opts ...grpc.CallOption) (*ListUserSubscriptionsResponse, error) {
+func (c *subscriptionServiceClient) ListUserSubscriptions(ctx context.Context, in *ListUserSubscriptionsRequest, opts ...grpc.CallOption) (*ListUserSubscriptionsReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListUserSubscriptionsResponse)
+	out := new(ListUserSubscriptionsReply)
 	err := c.cc.Invoke(ctx, SubscriptionService_ListUserSubscriptions_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -83,9 +83,9 @@ func (c *subscriptionServiceClient) ListUserSubscriptions(ctx context.Context, i
 // SUBSCRIPTION SERVICE
 // =====================================================================
 type SubscriptionServiceServer interface {
-	GetUserSubscription(context.Context, *GetUserSubscriptionRequest) (*GetUserSubscriptionResponse, error)
-	SubscribePlan(context.Context, *SubscribePlanRequest) (*SubscribePlanResponse, error)
-	ListUserSubscriptions(context.Context, *ListUserSubscriptionsRequest) (*ListUserSubscriptionsResponse, error)
+	GetUserSubscription(context.Context, *GetUserSubscriptionRequest) (*GetUserSubscriptionReply, error)
+	SubscribePlan(context.Context, *SubscribePlanRequest) (*SubscribePlanReply, error)
+	ListUserSubscriptions(context.Context, *ListUserSubscriptionsRequest) (*ListUserSubscriptionsReply, error)
 	mustEmbedUnimplementedSubscriptionServiceServer()
 }
 
@@ -96,13 +96,13 @@ type SubscriptionServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedSubscriptionServiceServer struct{}
 
-func (UnimplementedSubscriptionServiceServer) GetUserSubscription(context.Context, *GetUserSubscriptionRequest) (*GetUserSubscriptionResponse, error) {
+func (UnimplementedSubscriptionServiceServer) GetUserSubscription(context.Context, *GetUserSubscriptionRequest) (*GetUserSubscriptionReply, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetUserSubscription not implemented")
 }
-func (UnimplementedSubscriptionServiceServer) SubscribePlan(context.Context, *SubscribePlanRequest) (*SubscribePlanResponse, error) {
+func (UnimplementedSubscriptionServiceServer) SubscribePlan(context.Context, *SubscribePlanRequest) (*SubscribePlanReply, error) {
 	return nil, status.Error(codes.Unimplemented, "method SubscribePlan not implemented")
 }
-func (UnimplementedSubscriptionServiceServer) ListUserSubscriptions(context.Context, *ListUserSubscriptionsRequest) (*ListUserSubscriptionsResponse, error) {
+func (UnimplementedSubscriptionServiceServer) ListUserSubscriptions(context.Context, *ListUserSubscriptionsRequest) (*ListUserSubscriptionsReply, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListUserSubscriptions not implemented")
 }
 func (UnimplementedSubscriptionServiceServer) mustEmbedUnimplementedSubscriptionServiceServer() {}

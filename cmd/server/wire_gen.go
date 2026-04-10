@@ -36,18 +36,21 @@ func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*
 		cleanup()
 		return nil, nil, err
 	}
+	subscriptionRepo := data.NewSubscriptionRepo(dataData, logger)
+	planRepo := data.NewPlanRepo(dataData, logger)
 	transaction := data.NewTransactionManager(dataData)
-	fileUsecase := biz.NewFileUsecase(fileRepo, physicalFileRepo, authRepo, transaction, logger)
+	fileUsecase := biz.NewFileUsecase(fileRepo, physicalFileRepo, authRepo, subscriptionRepo, planRepo, transaction, logger)
 	fileService := service.NewFileService(fileUsecase)
 	shareRepo := data.NewShareRepo(dataData, logger)
 	shareUseCase := biz.NewShareUseCase(shareRepo, logger, authRepo, transaction, confData)
 	shareService := service.NewShareService(shareUseCase, logger)
-	planRepo := data.NewPlanRepo(dataData, logger)
 	planUseCase := biz.NewPlanUseCase(planRepo, logger)
 	planService := service.NewPlanService(planUseCase, logger)
-	subscriptionRepo := data.NewSubscriptionRepo(dataData, logger)
 	subscriptionUseCase := biz.NewSubscriptionUseCase(subscriptionRepo, planRepo, logger)
 	subscriptionService := service.NewSubscriptionService(subscriptionUseCase, logger)
+	userRepo := data.NewUserRepo(dataData, logger)
+	dashboardUsecase := biz.NewDashboardUsecase(fileRepo, subscriptionRepo, planRepo, userRepo, authRepo, logger)
+	dashboardService := service.NewDashboardService(dashboardUsecase, logger)
 	publicPEM, err := util.NewPublicPEM(confData)
 	if err != nil {
 		cleanup()
@@ -58,8 +61,8 @@ func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*
 		cleanup()
 		return nil, nil, err
 	}
-	grpcServer := server.NewGRPCServer(confServer, confData, fileService, shareService, planService, subscriptionService, logger, publicKey)
-	httpServer := server.NewHTTPServer(confServer, confData, fileService, shareService, planService, subscriptionService, logger, publicKey)
+	grpcServer := server.NewGRPCServer(confServer, confData, fileService, shareService, planService, subscriptionService, dashboardService, logger, publicKey)
+	httpServer := server.NewHTTPServer(confServer, confData, fileService, shareService, planService, subscriptionService, dashboardService, logger, publicKey)
 	app := newApp(logger, grpcServer, httpServer)
 	return app, func() {
 		cleanup()

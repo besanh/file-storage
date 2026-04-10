@@ -23,7 +23,7 @@ func NewSubscriptionService(uc *biz.SubscriptionUseCase, logger log.Logger) *Sub
 	}
 }
 
-func (s *SubscriptionService) GetUserSubscription(ctx context.Context, req *pb.GetUserSubscriptionRequest) (*pb.GetUserSubscriptionResponse, error) {
+func (s *SubscriptionService) GetUserSubscription(ctx context.Context, req *pb.GetUserSubscriptionRequest) (*pb.GetUserSubscriptionReply, error) {
 	userIDStr := biz.GetUserID(ctx)
 	if userIDStr == "" {
 		return nil, biz.ErrUnauthorized
@@ -37,10 +37,10 @@ func (s *SubscriptionService) GetUserSubscription(ctx context.Context, req *pb.G
 	if err != nil {
 		return nil, err
 	}
-	return &pb.GetUserSubscriptionResponse{Subscription: mapBizSubscriptionToPb(sub)}, nil
+	return &pb.GetUserSubscriptionReply{Subscription: mapBizSubscriptionToPb(sub)}, nil
 }
 
-func (s *SubscriptionService) SubscribePlan(ctx context.Context, req *pb.SubscribePlanRequest) (*pb.SubscribePlanResponse, error) {
+func (s *SubscriptionService) SubscribePlan(ctx context.Context, req *pb.SubscribePlanRequest) (*pb.SubscribePlanReply, error) {
 	userIDStr := biz.GetUserID(ctx)
 	if userIDStr == "" {
 		return nil, biz.ErrUnauthorized
@@ -59,10 +59,10 @@ func (s *SubscriptionService) SubscribePlan(ctx context.Context, req *pb.Subscri
 	if err != nil {
 		return nil, err
 	}
-	return &pb.SubscribePlanResponse{Subscription: mapBizSubscriptionToPb(sub)}, nil
+	return &pb.SubscribePlanReply{Subscription: mapBizSubscriptionToPb(sub)}, nil
 }
 
-func (s *SubscriptionService) ListUserSubscriptions(ctx context.Context, req *pb.ListUserSubscriptionsRequest) (*pb.ListUserSubscriptionsResponse, error) {
+func (s *SubscriptionService) ListUserSubscriptions(ctx context.Context, req *pb.ListUserSubscriptionsRequest) (*pb.ListUserSubscriptionsReply, error) {
 	userIDStr := biz.GetUserID(ctx)
 	if userIDStr == "" {
 		return nil, biz.ErrUnauthorized
@@ -80,7 +80,7 @@ func (s *SubscriptionService) ListUserSubscriptions(ctx context.Context, req *pb
 	for _, sub := range ss {
 		res = append(res, mapBizSubscriptionToPb(sub))
 	}
-	return &pb.ListUserSubscriptionsResponse{Subscriptions: res}, nil
+	return &pb.ListUserSubscriptionsReply{Subscriptions: res}, nil
 }
 
 func mapBizSubscriptionToPb(s *biz.Subscription) *pb.Subscription {

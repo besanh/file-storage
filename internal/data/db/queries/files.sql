@@ -25,3 +25,24 @@ FROM file_nodes
 WHERE owner_id = $1
   AND is_folder = FALSE
   AND status = 'active';
+
+-- name: GetUserStorageBreakdown :one
+SELECT 
+    COALESCE(SUM(CASE WHEN file_type = 'photo' THEN file_size ELSE 0 END), 0)::bigint AS photos,
+    COALESCE(SUM(CASE WHEN file_type = 'video' THEN file_size ELSE 0 END), 0)::bigint AS videos,
+    COALESCE(SUM(CASE WHEN file_type = 'document' THEN file_size ELSE 0 END), 0)::bigint AS documents,
+    COALESCE(SUM(CASE WHEN file_type = 'audio' THEN file_size ELSE 0 END), 0)::bigint AS audio,
+    COALESCE(SUM(CASE WHEN file_type = 'compress' THEN file_size ELSE 0 END), 0)::bigint AS compress,
+    COALESCE(SUM(CASE WHEN file_type = 'other' THEN file_size ELSE 0 END), 0)::bigint AS other
+FROM file_nodes
+WHERE owner_id = $1
+  AND is_folder = FALSE
+  AND status = 'active';
+
+-- name: GetRecentFiles :many
+SELECT *
+FROM file_nodes
+WHERE owner_id = $1
+AND status = 'active'
+ORDER BY recent_accessed_at DESC NULLS LAST, created_at DESC
+LIMIT $2;

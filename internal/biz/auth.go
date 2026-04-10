@@ -13,11 +13,21 @@ import (
 type PrivatePEM []byte
 type PublicPEM []byte
 
+type UserProfile struct {
+	UserID    string
+	Email     string
+	Role      string
+	Scope     string
+	Status    string
+	CreatedAt string
+}
+
 type AuthRepo interface {
 	CheckPermission(ctx context.Context, req *CheckPermissionRequest) (*CheckPermissionResponse, error)
 	WriteRelationship(ctx context.Context, req *WriteRelationshipRequest) (*WriteRelationshipResponse, error)
 	DeleteRelationship(ctx context.Context, req *DeleteRelationshipRequest) (*DeleteRelationshipResponse, error)
 	SwapRelationship(ctx context.Context, req *SwapRelationshipRequest) (*SwapRelationshipResponse, error)
+	GetUserProfile(ctx context.Context, id string) (*UserProfile, error)
 }
 
 func NewPublicKey(pem PublicPEM) (*rsa.PublicKey, error) {

@@ -158,27 +158,27 @@ func (*GetUserSubscriptionRequest) Descriptor() ([]byte, []int) {
 	return file_subscription_v1_subscription_proto_rawDescGZIP(), []int{1}
 }
 
-type GetUserSubscriptionResponse struct {
+type GetUserSubscriptionReply struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Subscription  *Subscription          `protobuf:"bytes,1,opt,name=subscription,proto3" json:"subscription,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetUserSubscriptionResponse) Reset() {
-	*x = GetUserSubscriptionResponse{}
+func (x *GetUserSubscriptionReply) Reset() {
+	*x = GetUserSubscriptionReply{}
 	mi := &file_subscription_v1_subscription_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetUserSubscriptionResponse) String() string {
+func (x *GetUserSubscriptionReply) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetUserSubscriptionResponse) ProtoMessage() {}
+func (*GetUserSubscriptionReply) ProtoMessage() {}
 
-func (x *GetUserSubscriptionResponse) ProtoReflect() protoreflect.Message {
+func (x *GetUserSubscriptionReply) ProtoReflect() protoreflect.Message {
 	mi := &file_subscription_v1_subscription_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -190,12 +190,12 @@ func (x *GetUserSubscriptionResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetUserSubscriptionResponse.ProtoReflect.Descriptor instead.
-func (*GetUserSubscriptionResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetUserSubscriptionReply.ProtoReflect.Descriptor instead.
+func (*GetUserSubscriptionReply) Descriptor() ([]byte, []int) {
 	return file_subscription_v1_subscription_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *GetUserSubscriptionResponse) GetSubscription() *Subscription {
+func (x *GetUserSubscriptionReply) GetSubscription() *Subscription {
 	if x != nil {
 		return x.Subscription
 	}
@@ -246,27 +246,27 @@ func (x *SubscribePlanRequest) GetPlanId() string {
 	return ""
 }
 
-type SubscribePlanResponse struct {
+type SubscribePlanReply struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Subscription  *Subscription          `protobuf:"bytes,1,opt,name=subscription,proto3" json:"subscription,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *SubscribePlanResponse) Reset() {
-	*x = SubscribePlanResponse{}
+func (x *SubscribePlanReply) Reset() {
+	*x = SubscribePlanReply{}
 	mi := &file_subscription_v1_subscription_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *SubscribePlanResponse) String() string {
+func (x *SubscribePlanReply) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*SubscribePlanResponse) ProtoMessage() {}
+func (*SubscribePlanReply) ProtoMessage() {}
 
-func (x *SubscribePlanResponse) ProtoReflect() protoreflect.Message {
+func (x *SubscribePlanReply) ProtoReflect() protoreflect.Message {
 	mi := &file_subscription_v1_subscription_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -278,12 +278,12 @@ func (x *SubscribePlanResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use SubscribePlanResponse.ProtoReflect.Descriptor instead.
-func (*SubscribePlanResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use SubscribePlanReply.ProtoReflect.Descriptor instead.
+func (*SubscribePlanReply) Descriptor() ([]byte, []int) {
 	return file_subscription_v1_subscription_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *SubscribePlanResponse) GetSubscription() *Subscription {
+func (x *SubscribePlanReply) GetSubscription() *Subscription {
 	if x != nil {
 		return x.Subscription
 	}
@@ -326,27 +326,27 @@ func (*ListUserSubscriptionsRequest) Descriptor() ([]byte, []int) {
 	return file_subscription_v1_subscription_proto_rawDescGZIP(), []int{5}
 }
 
-type ListUserSubscriptionsResponse struct {
+type ListUserSubscriptionsReply struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Subscriptions []*Subscription        `protobuf:"bytes,1,rep,name=subscriptions,proto3" json:"subscriptions,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ListUserSubscriptionsResponse) Reset() {
-	*x = ListUserSubscriptionsResponse{}
+func (x *ListUserSubscriptionsReply) Reset() {
+	*x = ListUserSubscriptionsReply{}
 	mi := &file_subscription_v1_subscription_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ListUserSubscriptionsResponse) String() string {
+func (x *ListUserSubscriptionsReply) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ListUserSubscriptionsResponse) ProtoMessage() {}
+func (*ListUserSubscriptionsReply) ProtoMessage() {}
 
-func (x *ListUserSubscriptionsResponse) ProtoReflect() protoreflect.Message {
+func (x *ListUserSubscriptionsReply) ProtoReflect() protoreflect.Message {
 	mi := &file_subscription_v1_subscription_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -358,12 +358,12 @@ func (x *ListUserSubscriptionsResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ListUserSubscriptionsResponse.ProtoReflect.Descriptor instead.
-func (*ListUserSubscriptionsResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use ListUserSubscriptionsReply.ProtoReflect.Descriptor instead.
+func (*ListUserSubscriptionsReply) Descriptor() ([]byte, []int) {
 	return file_subscription_v1_subscription_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *ListUserSubscriptionsResponse) GetSubscriptions() []*Subscription {
+func (x *ListUserSubscriptionsReply) GetSubscriptions() []*Subscription {
 	if x != nil {
 		return x.Subscriptions
 	}
@@ -388,20 +388,20 @@ const file_subscription_v1_subscription_proto_rawDesc = "" +
 	"created_at\x18\a \x01(\tR\tcreatedAt\x12\x1d\n" +
 	"\n" +
 	"updated_at\x18\b \x01(\tR\tupdatedAt\"\x1c\n" +
-	"\x1aGetUserSubscriptionRequest\"d\n" +
-	"\x1bGetUserSubscriptionResponse\x12E\n" +
+	"\x1aGetUserSubscriptionRequest\"a\n" +
+	"\x18GetUserSubscriptionReply\x12E\n" +
 	"\fsubscription\x18\x01 \x01(\v2!.api.subscription.v1.SubscriptionR\fsubscription\"/\n" +
 	"\x14SubscribePlanRequest\x12\x17\n" +
-	"\aplan_id\x18\x01 \x01(\tR\x06planId\"^\n" +
-	"\x15SubscribePlanResponse\x12E\n" +
+	"\aplan_id\x18\x01 \x01(\tR\x06planId\"[\n" +
+	"\x12SubscribePlanReply\x12E\n" +
 	"\fsubscription\x18\x01 \x01(\v2!.api.subscription.v1.SubscriptionR\fsubscription\"\x1e\n" +
-	"\x1cListUserSubscriptionsRequest\"h\n" +
-	"\x1dListUserSubscriptionsResponse\x12G\n" +
-	"\rsubscriptions\x18\x01 \x03(\v2!.api.subscription.v1.SubscriptionR\rsubscriptions2\xd1\x03\n" +
-	"\x13SubscriptionService\x12\x96\x01\n" +
-	"\x13GetUserSubscription\x12/.api.subscription.v1.GetUserSubscriptionRequest\x1a0.api.subscription.v1.GetUserSubscriptionResponse\"\x1c\x82\xd3\xe4\x93\x02\x16\x12\x14/v1/subscriptions/me\x12\x84\x01\n" +
-	"\rSubscribePlan\x12).api.subscription.v1.SubscribePlanRequest\x1a*.api.subscription.v1.SubscribePlanResponse\"\x1c\x82\xd3\xe4\x93\x02\x16:\x01*\"\x11/v1/subscriptions\x12\x99\x01\n" +
-	"\x15ListUserSubscriptions\x121.api.subscription.v1.ListUserSubscriptionsRequest\x1a2.api.subscription.v1.ListUserSubscriptionsResponse\"\x19\x82\xd3\xe4\x93\x02\x13\x12\x11/v1/subscriptionsB\x1dZ\x1bfile/api/subscription/v1;v1b\x06proto3"
+	"\x1cListUserSubscriptionsRequest\"e\n" +
+	"\x1aListUserSubscriptionsReply\x12G\n" +
+	"\rsubscriptions\x18\x01 \x03(\v2!.api.subscription.v1.SubscriptionR\rsubscriptions2\xc8\x03\n" +
+	"\x13SubscriptionService\x12\x93\x01\n" +
+	"\x13GetUserSubscription\x12/.api.subscription.v1.GetUserSubscriptionRequest\x1a-.api.subscription.v1.GetUserSubscriptionReply\"\x1c\x82\xd3\xe4\x93\x02\x16\x12\x14/v1/subscriptions/me\x12\x81\x01\n" +
+	"\rSubscribePlan\x12).api.subscription.v1.SubscribePlanRequest\x1a'.api.subscription.v1.SubscribePlanReply\"\x1c\x82\xd3\xe4\x93\x02\x16:\x01*\"\x11/v1/subscriptions\x12\x96\x01\n" +
+	"\x15ListUserSubscriptions\x121.api.subscription.v1.ListUserSubscriptionsRequest\x1a/.api.subscription.v1.ListUserSubscriptionsReply\"\x19\x82\xd3\xe4\x93\x02\x13\x12\x11/v1/subscriptionsB\x1dZ\x1bfile/api/subscription/v1;v1b\x06proto3"
 
 var (
 	file_subscription_v1_subscription_proto_rawDescOnce sync.Once
@@ -417,24 +417,24 @@ func file_subscription_v1_subscription_proto_rawDescGZIP() []byte {
 
 var file_subscription_v1_subscription_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_subscription_v1_subscription_proto_goTypes = []any{
-	(*Subscription)(nil),                  // 0: api.subscription.v1.Subscription
-	(*GetUserSubscriptionRequest)(nil),    // 1: api.subscription.v1.GetUserSubscriptionRequest
-	(*GetUserSubscriptionResponse)(nil),   // 2: api.subscription.v1.GetUserSubscriptionResponse
-	(*SubscribePlanRequest)(nil),          // 3: api.subscription.v1.SubscribePlanRequest
-	(*SubscribePlanResponse)(nil),         // 4: api.subscription.v1.SubscribePlanResponse
-	(*ListUserSubscriptionsRequest)(nil),  // 5: api.subscription.v1.ListUserSubscriptionsRequest
-	(*ListUserSubscriptionsResponse)(nil), // 6: api.subscription.v1.ListUserSubscriptionsResponse
+	(*Subscription)(nil),                 // 0: api.subscription.v1.Subscription
+	(*GetUserSubscriptionRequest)(nil),   // 1: api.subscription.v1.GetUserSubscriptionRequest
+	(*GetUserSubscriptionReply)(nil),     // 2: api.subscription.v1.GetUserSubscriptionReply
+	(*SubscribePlanRequest)(nil),         // 3: api.subscription.v1.SubscribePlanRequest
+	(*SubscribePlanReply)(nil),           // 4: api.subscription.v1.SubscribePlanReply
+	(*ListUserSubscriptionsRequest)(nil), // 5: api.subscription.v1.ListUserSubscriptionsRequest
+	(*ListUserSubscriptionsReply)(nil),   // 6: api.subscription.v1.ListUserSubscriptionsReply
 }
 var file_subscription_v1_subscription_proto_depIdxs = []int32{
-	0, // 0: api.subscription.v1.GetUserSubscriptionResponse.subscription:type_name -> api.subscription.v1.Subscription
-	0, // 1: api.subscription.v1.SubscribePlanResponse.subscription:type_name -> api.subscription.v1.Subscription
-	0, // 2: api.subscription.v1.ListUserSubscriptionsResponse.subscriptions:type_name -> api.subscription.v1.Subscription
+	0, // 0: api.subscription.v1.GetUserSubscriptionReply.subscription:type_name -> api.subscription.v1.Subscription
+	0, // 1: api.subscription.v1.SubscribePlanReply.subscription:type_name -> api.subscription.v1.Subscription
+	0, // 2: api.subscription.v1.ListUserSubscriptionsReply.subscriptions:type_name -> api.subscription.v1.Subscription
 	1, // 3: api.subscription.v1.SubscriptionService.GetUserSubscription:input_type -> api.subscription.v1.GetUserSubscriptionRequest
 	3, // 4: api.subscription.v1.SubscriptionService.SubscribePlan:input_type -> api.subscription.v1.SubscribePlanRequest
 	5, // 5: api.subscription.v1.SubscriptionService.ListUserSubscriptions:input_type -> api.subscription.v1.ListUserSubscriptionsRequest
-	2, // 6: api.subscription.v1.SubscriptionService.GetUserSubscription:output_type -> api.subscription.v1.GetUserSubscriptionResponse
-	4, // 7: api.subscription.v1.SubscriptionService.SubscribePlan:output_type -> api.subscription.v1.SubscribePlanResponse
-	6, // 8: api.subscription.v1.SubscriptionService.ListUserSubscriptions:output_type -> api.subscription.v1.ListUserSubscriptionsResponse
+	2, // 6: api.subscription.v1.SubscriptionService.GetUserSubscription:output_type -> api.subscription.v1.GetUserSubscriptionReply
+	4, // 7: api.subscription.v1.SubscriptionService.SubscribePlan:output_type -> api.subscription.v1.SubscribePlanReply
+	6, // 8: api.subscription.v1.SubscriptionService.ListUserSubscriptions:output_type -> api.subscription.v1.ListUserSubscriptionsReply
 	6, // [6:9] is the sub-list for method output_type
 	3, // [3:6] is the sub-list for method input_type
 	3, // [3:3] is the sub-list for extension type_name

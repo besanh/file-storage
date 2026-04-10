@@ -91,7 +91,7 @@ func (x *CreateShareLinkRequest) GetExpiresAt() string {
 	return ""
 }
 
-type CreateShareLinkResponse struct {
+type CreateShareLinkReply struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	LinkToken     string                 `protobuf:"bytes,1,opt,name=link_token,json=linkToken,proto3" json:"link_token,omitempty"`
 	ShareUrl      string                 `protobuf:"bytes,2,opt,name=share_url,json=shareUrl,proto3" json:"share_url,omitempty"` // Helpful for the frontend (e.g. "https://socialfi.com/shared/xyz")
@@ -99,20 +99,20 @@ type CreateShareLinkResponse struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *CreateShareLinkResponse) Reset() {
-	*x = CreateShareLinkResponse{}
+func (x *CreateShareLinkReply) Reset() {
+	*x = CreateShareLinkReply{}
 	mi := &file_share_v1_share_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *CreateShareLinkResponse) String() string {
+func (x *CreateShareLinkReply) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*CreateShareLinkResponse) ProtoMessage() {}
+func (*CreateShareLinkReply) ProtoMessage() {}
 
-func (x *CreateShareLinkResponse) ProtoReflect() protoreflect.Message {
+func (x *CreateShareLinkReply) ProtoReflect() protoreflect.Message {
 	mi := &file_share_v1_share_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -124,19 +124,19 @@ func (x *CreateShareLinkResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use CreateShareLinkResponse.ProtoReflect.Descriptor instead.
-func (*CreateShareLinkResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use CreateShareLinkReply.ProtoReflect.Descriptor instead.
+func (*CreateShareLinkReply) Descriptor() ([]byte, []int) {
 	return file_share_v1_share_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *CreateShareLinkResponse) GetLinkToken() string {
+func (x *CreateShareLinkReply) GetLinkToken() string {
 	if x != nil {
 		return x.LinkToken
 	}
 	return ""
 }
 
-func (x *CreateShareLinkResponse) GetShareUrl() string {
+func (x *CreateShareLinkReply) GetShareUrl() string {
 	if x != nil {
 		return x.ShareUrl
 	}
@@ -188,7 +188,7 @@ func (x *ResolveShareLinkRequest) GetLinkToken() string {
 	return ""
 }
 
-type ResolveShareLinkResponse struct {
+type ResolveShareLinkReply struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
 	ResourceId      string                 `protobuf:"bytes,1,opt,name=resource_id,json=resourceId,proto3" json:"resource_id,omitempty"`
 	ResourceType    string                 `protobuf:"bytes,2,opt,name=resource_type,json=resourceType,proto3" json:"resource_type,omitempty"`
@@ -199,20 +199,20 @@ type ResolveShareLinkResponse struct {
 	sizeCache       protoimpl.SizeCache
 }
 
-func (x *ResolveShareLinkResponse) Reset() {
-	*x = ResolveShareLinkResponse{}
+func (x *ResolveShareLinkReply) Reset() {
+	*x = ResolveShareLinkReply{}
 	mi := &file_share_v1_share_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ResolveShareLinkResponse) String() string {
+func (x *ResolveShareLinkReply) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ResolveShareLinkResponse) ProtoMessage() {}
+func (*ResolveShareLinkReply) ProtoMessage() {}
 
-func (x *ResolveShareLinkResponse) ProtoReflect() protoreflect.Message {
+func (x *ResolveShareLinkReply) ProtoReflect() protoreflect.Message {
 	mi := &file_share_v1_share_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -224,40 +224,40 @@ func (x *ResolveShareLinkResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ResolveShareLinkResponse.ProtoReflect.Descriptor instead.
-func (*ResolveShareLinkResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use ResolveShareLinkReply.ProtoReflect.Descriptor instead.
+func (*ResolveShareLinkReply) Descriptor() ([]byte, []int) {
 	return file_share_v1_share_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *ResolveShareLinkResponse) GetResourceId() string {
+func (x *ResolveShareLinkReply) GetResourceId() string {
 	if x != nil {
 		return x.ResourceId
 	}
 	return ""
 }
 
-func (x *ResolveShareLinkResponse) GetResourceType() string {
+func (x *ResolveShareLinkReply) GetResourceType() string {
 	if x != nil {
 		return x.ResourceType
 	}
 	return ""
 }
 
-func (x *ResolveShareLinkResponse) GetPermissionLevel() string {
+func (x *ResolveShareLinkReply) GetPermissionLevel() string {
 	if x != nil {
 		return x.PermissionLevel
 	}
 	return ""
 }
 
-func (x *ResolveShareLinkResponse) GetExpiresAt() string {
+func (x *ResolveShareLinkReply) GetExpiresAt() string {
 	if x != nil {
 		return x.ExpiresAt
 	}
 	return ""
 }
 
-func (x *ResolveShareLinkResponse) GetCreatorId() string {
+func (x *ResolveShareLinkReply) GetCreatorId() string {
 	if x != nil {
 		return x.CreatorId
 	}
@@ -385,27 +385,27 @@ func (x *ListShareLinksByCreatorRequest) GetOffset() int32 {
 	return 0
 }
 
-type ListShareLinksByCreatorResponse struct {
+type ListShareLinksByCreatorReply struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Links         []*ShareLinkInfo       `protobuf:"bytes,1,rep,name=links,proto3" json:"links,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ListShareLinksByCreatorResponse) Reset() {
-	*x = ListShareLinksByCreatorResponse{}
+func (x *ListShareLinksByCreatorReply) Reset() {
+	*x = ListShareLinksByCreatorReply{}
 	mi := &file_share_v1_share_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ListShareLinksByCreatorResponse) String() string {
+func (x *ListShareLinksByCreatorReply) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ListShareLinksByCreatorResponse) ProtoMessage() {}
+func (*ListShareLinksByCreatorReply) ProtoMessage() {}
 
-func (x *ListShareLinksByCreatorResponse) ProtoReflect() protoreflect.Message {
+func (x *ListShareLinksByCreatorReply) ProtoReflect() protoreflect.Message {
 	mi := &file_share_v1_share_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -417,12 +417,12 @@ func (x *ListShareLinksByCreatorResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ListShareLinksByCreatorResponse.ProtoReflect.Descriptor instead.
-func (*ListShareLinksByCreatorResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use ListShareLinksByCreatorReply.ProtoReflect.Descriptor instead.
+func (*ListShareLinksByCreatorReply) Descriptor() ([]byte, []int) {
 	return file_share_v1_share_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *ListShareLinksByCreatorResponse) GetLinks() []*ShareLinkInfo {
+func (x *ListShareLinksByCreatorReply) GetLinks() []*ShareLinkInfo {
 	if x != nil {
 		return x.Links
 	}
@@ -489,27 +489,27 @@ func (x *ListShareLinksByResourceRequest) GetOffset() int32 {
 	return 0
 }
 
-type ListShareLinksByResourceResponse struct {
+type ListShareLinksByResourceReply struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Links         []*ShareLinkInfo       `protobuf:"bytes,1,rep,name=links,proto3" json:"links,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ListShareLinksByResourceResponse) Reset() {
-	*x = ListShareLinksByResourceResponse{}
+func (x *ListShareLinksByResourceReply) Reset() {
+	*x = ListShareLinksByResourceReply{}
 	mi := &file_share_v1_share_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ListShareLinksByResourceResponse) String() string {
+func (x *ListShareLinksByResourceReply) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ListShareLinksByResourceResponse) ProtoMessage() {}
+func (*ListShareLinksByResourceReply) ProtoMessage() {}
 
-func (x *ListShareLinksByResourceResponse) ProtoReflect() protoreflect.Message {
+func (x *ListShareLinksByResourceReply) ProtoReflect() protoreflect.Message {
 	mi := &file_share_v1_share_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -521,12 +521,12 @@ func (x *ListShareLinksByResourceResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ListShareLinksByResourceResponse.ProtoReflect.Descriptor instead.
-func (*ListShareLinksByResourceResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use ListShareLinksByResourceReply.ProtoReflect.Descriptor instead.
+func (*ListShareLinksByResourceReply) Descriptor() ([]byte, []int) {
 	return file_share_v1_share_proto_rawDescGZIP(), []int{8}
 }
 
-func (x *ListShareLinksByResourceResponse) GetLinks() []*ShareLinkInfo {
+func (x *ListShareLinksByResourceReply) GetLinks() []*ShareLinkInfo {
 	if x != nil {
 		return x.Links
 	}
@@ -586,27 +586,27 @@ func (x *UpdateShareLinkRequest) GetNewPermission() string {
 	return ""
 }
 
-type UpdateShareLinkResponse struct {
+type UpdateShareLinkReply struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *UpdateShareLinkResponse) Reset() {
-	*x = UpdateShareLinkResponse{}
+func (x *UpdateShareLinkReply) Reset() {
+	*x = UpdateShareLinkReply{}
 	mi := &file_share_v1_share_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *UpdateShareLinkResponse) String() string {
+func (x *UpdateShareLinkReply) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UpdateShareLinkResponse) ProtoMessage() {}
+func (*UpdateShareLinkReply) ProtoMessage() {}
 
-func (x *UpdateShareLinkResponse) ProtoReflect() protoreflect.Message {
+func (x *UpdateShareLinkReply) ProtoReflect() protoreflect.Message {
 	mi := &file_share_v1_share_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -618,12 +618,12 @@ func (x *UpdateShareLinkResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UpdateShareLinkResponse.ProtoReflect.Descriptor instead.
-func (*UpdateShareLinkResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateShareLinkReply.ProtoReflect.Descriptor instead.
+func (*UpdateShareLinkReply) Descriptor() ([]byte, []int) {
 	return file_share_v1_share_proto_rawDescGZIP(), []int{10}
 }
 
-func (x *UpdateShareLinkResponse) GetSuccess() bool {
+func (x *UpdateShareLinkReply) GetSuccess() bool {
 	if x != nil {
 		return x.Success
 	}
@@ -674,27 +674,27 @@ func (x *RevokeShareLinkRequest) GetLinkToken() string {
 	return ""
 }
 
-type RevokeShareLinkResponse struct {
+type RevokeShareLinkReply struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *RevokeShareLinkResponse) Reset() {
-	*x = RevokeShareLinkResponse{}
+func (x *RevokeShareLinkReply) Reset() {
+	*x = RevokeShareLinkReply{}
 	mi := &file_share_v1_share_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *RevokeShareLinkResponse) String() string {
+func (x *RevokeShareLinkReply) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*RevokeShareLinkResponse) ProtoMessage() {}
+func (*RevokeShareLinkReply) ProtoMessage() {}
 
-func (x *RevokeShareLinkResponse) ProtoReflect() protoreflect.Message {
+func (x *RevokeShareLinkReply) ProtoReflect() protoreflect.Message {
 	mi := &file_share_v1_share_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -706,12 +706,12 @@ func (x *RevokeShareLinkResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use RevokeShareLinkResponse.ProtoReflect.Descriptor instead.
-func (*RevokeShareLinkResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use RevokeShareLinkReply.ProtoReflect.Descriptor instead.
+func (*RevokeShareLinkReply) Descriptor() ([]byte, []int) {
 	return file_share_v1_share_proto_rawDescGZIP(), []int{12}
 }
 
-func (x *RevokeShareLinkResponse) GetSuccess() bool {
+func (x *RevokeShareLinkReply) GetSuccess() bool {
 	if x != nil {
 		return x.Success
 	}
@@ -729,15 +729,15 @@ const file_share_v1_share_proto_rawDesc = "" +
 	"\rresource_type\x18\x02 \x01(\tR\fresourceType\x12)\n" +
 	"\x10permission_level\x18\x03 \x01(\tR\x0fpermissionLevel\x12\x1d\n" +
 	"\n" +
-	"expires_at\x18\x04 \x01(\tR\texpiresAt\"U\n" +
-	"\x17CreateShareLinkResponse\x12\x1d\n" +
+	"expires_at\x18\x04 \x01(\tR\texpiresAt\"R\n" +
+	"\x14CreateShareLinkReply\x12\x1d\n" +
 	"\n" +
 	"link_token\x18\x01 \x01(\tR\tlinkToken\x12\x1b\n" +
 	"\tshare_url\x18\x02 \x01(\tR\bshareUrl\"8\n" +
 	"\x17ResolveShareLinkRequest\x12\x1d\n" +
 	"\n" +
-	"link_token\x18\x01 \x01(\tR\tlinkToken\"\xc9\x01\n" +
-	"\x18ResolveShareLinkResponse\x12\x1f\n" +
+	"link_token\x18\x01 \x01(\tR\tlinkToken\"\xc6\x01\n" +
+	"\x15ResolveShareLinkReply\x12\x1f\n" +
 	"\vresource_id\x18\x01 \x01(\tR\n" +
 	"resourceId\x12#\n" +
 	"\rresource_type\x18\x02 \x01(\tR\fresourceType\x12)\n" +
@@ -755,35 +755,35 @@ const file_share_v1_share_proto_rawDesc = "" +
 	"\tshare_url\x18\x04 \x01(\tR\bshareUrl\"N\n" +
 	"\x1eListShareLinksByCreatorRequest\x12\x14\n" +
 	"\x05limit\x18\x01 \x01(\x05R\x05limit\x12\x16\n" +
-	"\x06offset\x18\x02 \x01(\x05R\x06offset\"T\n" +
-	"\x1fListShareLinksByCreatorResponse\x121\n" +
+	"\x06offset\x18\x02 \x01(\x05R\x06offset\"Q\n" +
+	"\x1cListShareLinksByCreatorReply\x121\n" +
 	"\x05links\x18\x01 \x03(\v2\x1b.api.share.v1.ShareLinkInfoR\x05links\"p\n" +
 	"\x1fListShareLinksByResourceRequest\x12\x1f\n" +
 	"\vresource_id\x18\x01 \x01(\tR\n" +
 	"resourceId\x12\x14\n" +
 	"\x05limit\x18\x02 \x01(\x05R\x05limit\x12\x16\n" +
-	"\x06offset\x18\x03 \x01(\x05R\x06offset\"U\n" +
-	" ListShareLinksByResourceResponse\x121\n" +
+	"\x06offset\x18\x03 \x01(\x05R\x06offset\"R\n" +
+	"\x1dListShareLinksByResourceReply\x121\n" +
 	"\x05links\x18\x01 \x03(\v2\x1b.api.share.v1.ShareLinkInfoR\x05links\"^\n" +
 	"\x16UpdateShareLinkRequest\x12\x1d\n" +
 	"\n" +
 	"link_token\x18\x01 \x01(\tR\tlinkToken\x12%\n" +
-	"\x0enew_permission\x18\x02 \x01(\tR\rnewPermission\"3\n" +
-	"\x17UpdateShareLinkResponse\x12\x18\n" +
+	"\x0enew_permission\x18\x02 \x01(\tR\rnewPermission\"0\n" +
+	"\x14UpdateShareLinkReply\x12\x18\n" +
 	"\asuccess\x18\x01 \x01(\bR\asuccess\"7\n" +
 	"\x16RevokeShareLinkRequest\x12\x1d\n" +
 	"\n" +
-	"link_token\x18\x01 \x01(\tR\tlinkToken\"3\n" +
-	"\x17RevokeShareLinkResponse\x12\x18\n" +
-	"\asuccess\x18\x01 \x01(\bR\asuccess2\xc4\x06\n" +
-	"\fShareService\x12u\n" +
-	"\x0fCreateShareLink\x12$.api.share.v1.CreateShareLinkRequest\x1a%.api.share.v1.CreateShareLinkResponse\"\x15\x82\xd3\xe4\x93\x02\x0f:\x01*\"\n" +
-	"/v1/shares\x12\x82\x01\n" +
-	"\x10ResolveShareLink\x12%.api.share.v1.ResolveShareLinkRequest\x1a&.api.share.v1.ResolveShareLinkResponse\"\x1f\x82\xd3\xe4\x93\x02\x19\x12\x17/v1/shares/{link_token}\x12\x8d\x01\n" +
-	"\x17ListShareLinksByCreator\x12,.api.share.v1.ListShareLinksByCreatorRequest\x1a-.api.share.v1.ListShareLinksByCreatorResponse\"\x15\x82\xd3\xe4\x93\x02\x0f\x12\r/v1/shares/me\x12\xa1\x01\n" +
-	"\x18ListShareLinksByResource\x12-.api.share.v1.ListShareLinksByResourceRequest\x1a..api.share.v1.ListShareLinksByResourceResponse\"&\x82\xd3\xe4\x93\x02 \x12\x1e/v1/files/{resource_id}/shares\x12\x82\x01\n" +
-	"\x0fUpdateShareLink\x12$.api.share.v1.UpdateShareLinkRequest\x1a%.api.share.v1.UpdateShareLinkResponse\"\"\x82\xd3\xe4\x93\x02\x1c:\x01*2\x17/v1/shares/{link_token}\x12\x7f\n" +
-	"\x0fRevokeShareLink\x12$.api.share.v1.RevokeShareLinkRequest\x1a%.api.share.v1.RevokeShareLinkResponse\"\x1f\x82\xd3\xe4\x93\x02\x19*\x17/v1/shares/{link_token}B\x16Z\x14file/api/share/v1;v1b\x06proto3"
+	"link_token\x18\x01 \x01(\tR\tlinkToken\"0\n" +
+	"\x14RevokeShareLinkReply\x12\x18\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess2\xb0\x06\n" +
+	"\fShareService\x12r\n" +
+	"\x0fCreateShareLink\x12$.api.share.v1.CreateShareLinkRequest\x1a\".api.share.v1.CreateShareLinkReply\"\x15\x82\xd3\xe4\x93\x02\x0f:\x01*\"\n" +
+	"/v1/shares\x12\x7f\n" +
+	"\x10ResolveShareLink\x12%.api.share.v1.ResolveShareLinkRequest\x1a#.api.share.v1.ResolveShareLinkReply\"\x1f\x82\xd3\xe4\x93\x02\x19\x12\x17/v1/shares/{link_token}\x12\x8a\x01\n" +
+	"\x17ListShareLinksByCreator\x12,.api.share.v1.ListShareLinksByCreatorRequest\x1a*.api.share.v1.ListShareLinksByCreatorReply\"\x15\x82\xd3\xe4\x93\x02\x0f\x12\r/v1/shares/me\x12\x9e\x01\n" +
+	"\x18ListShareLinksByResource\x12-.api.share.v1.ListShareLinksByResourceRequest\x1a+.api.share.v1.ListShareLinksByResourceReply\"&\x82\xd3\xe4\x93\x02 \x12\x1e/v1/files/{resource_id}/shares\x12\x7f\n" +
+	"\x0fUpdateShareLink\x12$.api.share.v1.UpdateShareLinkRequest\x1a\".api.share.v1.UpdateShareLinkReply\"\"\x82\xd3\xe4\x93\x02\x1c:\x01*2\x17/v1/shares/{link_token}\x12|\n" +
+	"\x0fRevokeShareLink\x12$.api.share.v1.RevokeShareLinkRequest\x1a\".api.share.v1.RevokeShareLinkReply\"\x1f\x82\xd3\xe4\x93\x02\x19*\x17/v1/shares/{link_token}B\x16Z\x14file/api/share/v1;v1b\x06proto3"
 
 var (
 	file_share_v1_share_proto_rawDescOnce sync.Once
@@ -799,35 +799,35 @@ func file_share_v1_share_proto_rawDescGZIP() []byte {
 
 var file_share_v1_share_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
 var file_share_v1_share_proto_goTypes = []any{
-	(*CreateShareLinkRequest)(nil),           // 0: api.share.v1.CreateShareLinkRequest
-	(*CreateShareLinkResponse)(nil),          // 1: api.share.v1.CreateShareLinkResponse
-	(*ResolveShareLinkRequest)(nil),          // 2: api.share.v1.ResolveShareLinkRequest
-	(*ResolveShareLinkResponse)(nil),         // 3: api.share.v1.ResolveShareLinkResponse
-	(*ShareLinkInfo)(nil),                    // 4: api.share.v1.ShareLinkInfo
-	(*ListShareLinksByCreatorRequest)(nil),   // 5: api.share.v1.ListShareLinksByCreatorRequest
-	(*ListShareLinksByCreatorResponse)(nil),  // 6: api.share.v1.ListShareLinksByCreatorResponse
-	(*ListShareLinksByResourceRequest)(nil),  // 7: api.share.v1.ListShareLinksByResourceRequest
-	(*ListShareLinksByResourceResponse)(nil), // 8: api.share.v1.ListShareLinksByResourceResponse
-	(*UpdateShareLinkRequest)(nil),           // 9: api.share.v1.UpdateShareLinkRequest
-	(*UpdateShareLinkResponse)(nil),          // 10: api.share.v1.UpdateShareLinkResponse
-	(*RevokeShareLinkRequest)(nil),           // 11: api.share.v1.RevokeShareLinkRequest
-	(*RevokeShareLinkResponse)(nil),          // 12: api.share.v1.RevokeShareLinkResponse
+	(*CreateShareLinkRequest)(nil),          // 0: api.share.v1.CreateShareLinkRequest
+	(*CreateShareLinkReply)(nil),            // 1: api.share.v1.CreateShareLinkReply
+	(*ResolveShareLinkRequest)(nil),         // 2: api.share.v1.ResolveShareLinkRequest
+	(*ResolveShareLinkReply)(nil),           // 3: api.share.v1.ResolveShareLinkReply
+	(*ShareLinkInfo)(nil),                   // 4: api.share.v1.ShareLinkInfo
+	(*ListShareLinksByCreatorRequest)(nil),  // 5: api.share.v1.ListShareLinksByCreatorRequest
+	(*ListShareLinksByCreatorReply)(nil),    // 6: api.share.v1.ListShareLinksByCreatorReply
+	(*ListShareLinksByResourceRequest)(nil), // 7: api.share.v1.ListShareLinksByResourceRequest
+	(*ListShareLinksByResourceReply)(nil),   // 8: api.share.v1.ListShareLinksByResourceReply
+	(*UpdateShareLinkRequest)(nil),          // 9: api.share.v1.UpdateShareLinkRequest
+	(*UpdateShareLinkReply)(nil),            // 10: api.share.v1.UpdateShareLinkReply
+	(*RevokeShareLinkRequest)(nil),          // 11: api.share.v1.RevokeShareLinkRequest
+	(*RevokeShareLinkReply)(nil),            // 12: api.share.v1.RevokeShareLinkReply
 }
 var file_share_v1_share_proto_depIdxs = []int32{
-	4,  // 0: api.share.v1.ListShareLinksByCreatorResponse.links:type_name -> api.share.v1.ShareLinkInfo
-	4,  // 1: api.share.v1.ListShareLinksByResourceResponse.links:type_name -> api.share.v1.ShareLinkInfo
+	4,  // 0: api.share.v1.ListShareLinksByCreatorReply.links:type_name -> api.share.v1.ShareLinkInfo
+	4,  // 1: api.share.v1.ListShareLinksByResourceReply.links:type_name -> api.share.v1.ShareLinkInfo
 	0,  // 2: api.share.v1.ShareService.CreateShareLink:input_type -> api.share.v1.CreateShareLinkRequest
 	2,  // 3: api.share.v1.ShareService.ResolveShareLink:input_type -> api.share.v1.ResolveShareLinkRequest
 	5,  // 4: api.share.v1.ShareService.ListShareLinksByCreator:input_type -> api.share.v1.ListShareLinksByCreatorRequest
 	7,  // 5: api.share.v1.ShareService.ListShareLinksByResource:input_type -> api.share.v1.ListShareLinksByResourceRequest
 	9,  // 6: api.share.v1.ShareService.UpdateShareLink:input_type -> api.share.v1.UpdateShareLinkRequest
 	11, // 7: api.share.v1.ShareService.RevokeShareLink:input_type -> api.share.v1.RevokeShareLinkRequest
-	1,  // 8: api.share.v1.ShareService.CreateShareLink:output_type -> api.share.v1.CreateShareLinkResponse
-	3,  // 9: api.share.v1.ShareService.ResolveShareLink:output_type -> api.share.v1.ResolveShareLinkResponse
-	6,  // 10: api.share.v1.ShareService.ListShareLinksByCreator:output_type -> api.share.v1.ListShareLinksByCreatorResponse
-	8,  // 11: api.share.v1.ShareService.ListShareLinksByResource:output_type -> api.share.v1.ListShareLinksByResourceResponse
-	10, // 12: api.share.v1.ShareService.UpdateShareLink:output_type -> api.share.v1.UpdateShareLinkResponse
-	12, // 13: api.share.v1.ShareService.RevokeShareLink:output_type -> api.share.v1.RevokeShareLinkResponse
+	1,  // 8: api.share.v1.ShareService.CreateShareLink:output_type -> api.share.v1.CreateShareLinkReply
+	3,  // 9: api.share.v1.ShareService.ResolveShareLink:output_type -> api.share.v1.ResolveShareLinkReply
+	6,  // 10: api.share.v1.ShareService.ListShareLinksByCreator:output_type -> api.share.v1.ListShareLinksByCreatorReply
+	8,  // 11: api.share.v1.ShareService.ListShareLinksByResource:output_type -> api.share.v1.ListShareLinksByResourceReply
+	10, // 12: api.share.v1.ShareService.UpdateShareLink:output_type -> api.share.v1.UpdateShareLinkReply
+	12, // 13: api.share.v1.ShareService.RevokeShareLink:output_type -> api.share.v1.RevokeShareLinkReply
 	8,  // [8:14] is the sub-list for method output_type
 	2,  // [2:8] is the sub-list for method input_type
 	2,  // [2:2] is the sub-list for extension type_name

@@ -38,3 +38,21 @@ func (r *fileRepo) InsertFile(ctx context.Context, file *db.InsertFileParams) (*
 func (r *fileRepo) GetUserStorageUsed(ctx context.Context, ownerID uuid.UUID) (int64, error) {
 	return r.data.Queries(ctx).GetUserStorageUsed(ctx, ownerID)
 }
+
+func (r *fileRepo) GetRecentFiles(ctx context.Context, ownerID uuid.UUID, limit int32) ([]*db.FileNode, error) {
+	nodes, err := r.data.Queries(ctx).GetRecentFiles(ctx, db.GetRecentFilesParams{
+		OwnerID: ownerID,
+		Limit:   limit,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	res := make([]*db.FileNode, 0, len(nodes))
+	for _, n := range nodes {
+		// Use a local copy to avoid pointing to the same loop variable
+		node := n
+		res = append(res, &node)
+	}
+	return res, nil
+}

@@ -23,7 +23,7 @@ func NewPlanService(uc *biz.PlanUseCase, logger log.Logger) *PlanService {
 	}
 }
 
-func (s *PlanService) GetPlan(ctx context.Context, req *pb.GetPlanRequest) (*pb.GetPlanResponse, error) {
+func (s *PlanService) GetPlan(ctx context.Context, req *pb.GetPlanRequest) (*pb.GetPlanReply, error) {
 	id, err := uuid.Parse(req.Id)
 	if err != nil {
 		return nil, err
@@ -32,10 +32,10 @@ func (s *PlanService) GetPlan(ctx context.Context, req *pb.GetPlanRequest) (*pb.
 	if err != nil {
 		return nil, err
 	}
-	return &pb.GetPlanResponse{Plan: mapBizPlanToPb(p)}, nil
+	return &pb.GetPlanReply{Plan: mapBizPlanToPb(p)}, nil
 }
 
-func (s *PlanService) ListPlans(ctx context.Context, req *pb.ListPlansRequest) (*pb.ListPlansResponse, error) {
+func (s *PlanService) ListPlans(ctx context.Context, req *pb.ListPlansRequest) (*pb.ListPlansReply, error) {
 	ps, err := s.uc.ListPlans(ctx)
 	if err != nil {
 		return nil, err
@@ -44,10 +44,10 @@ func (s *PlanService) ListPlans(ctx context.Context, req *pb.ListPlansRequest) (
 	for _, p := range ps {
 		res = append(res, mapBizPlanToPb(p))
 	}
-	return &pb.ListPlansResponse{Plans: res}, nil
+	return &pb.ListPlansReply{Plans: res}, nil
 }
 
-func (s *PlanService) CreatePlan(ctx context.Context, req *pb.CreatePlanRequest) (*pb.CreatePlanResponse, error) {
+func (s *PlanService) CreatePlan(ctx context.Context, req *pb.CreatePlanRequest) (*pb.CreatePlanReply, error) {
 	p, err := s.uc.CreatePlan(ctx, &biz.Plan{
 		Name:          req.Name,
 		StorageQuota:  req.StorageQuota,
@@ -59,10 +59,10 @@ func (s *PlanService) CreatePlan(ctx context.Context, req *pb.CreatePlanRequest)
 	if err != nil {
 		return nil, err
 	}
-	return &pb.CreatePlanResponse{Plan: mapBizPlanToPb(p)}, nil
+	return &pb.CreatePlanReply{Plan: mapBizPlanToPb(p)}, nil
 }
 
-func (s *PlanService) UpdatePlan(ctx context.Context, req *pb.UpdatePlanRequest) (*pb.UpdatePlanResponse, error) {
+func (s *PlanService) UpdatePlan(ctx context.Context, req *pb.UpdatePlanRequest) (*pb.UpdatePlanReply, error) {
 	id, err := uuid.Parse(req.Id)
 	if err != nil {
 		return nil, err
@@ -79,10 +79,10 @@ func (s *PlanService) UpdatePlan(ctx context.Context, req *pb.UpdatePlanRequest)
 	if err != nil {
 		return nil, err
 	}
-	return &pb.UpdatePlanResponse{Plan: mapBizPlanToPb(p)}, nil
+	return &pb.UpdatePlanReply{Plan: mapBizPlanToPb(p)}, nil
 }
 
-func (s *PlanService) DeletePlan(ctx context.Context, req *pb.DeletePlanRequest) (*pb.DeletePlanResponse, error) {
+func (s *PlanService) DeletePlan(ctx context.Context, req *pb.DeletePlanRequest) (*pb.DeletePlanReply, error) {
 	id, err := uuid.Parse(req.Id)
 	if err != nil {
 		return nil, err
@@ -91,7 +91,7 @@ func (s *PlanService) DeletePlan(ctx context.Context, req *pb.DeletePlanRequest)
 	if err != nil {
 		return nil, err
 	}
-	return &pb.DeletePlanResponse{Success: true}, nil
+	return &pb.DeletePlanReply{Success: true}, nil
 }
 
 func mapBizPlanToPb(p *biz.Plan) *pb.Plan {

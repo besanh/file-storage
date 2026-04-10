@@ -34,11 +34,11 @@ const (
 // PLAN SERVICE
 // =====================================================================
 type PlanServiceClient interface {
-	GetPlan(ctx context.Context, in *GetPlanRequest, opts ...grpc.CallOption) (*GetPlanResponse, error)
-	ListPlans(ctx context.Context, in *ListPlansRequest, opts ...grpc.CallOption) (*ListPlansResponse, error)
-	CreatePlan(ctx context.Context, in *CreatePlanRequest, opts ...grpc.CallOption) (*CreatePlanResponse, error)
-	UpdatePlan(ctx context.Context, in *UpdatePlanRequest, opts ...grpc.CallOption) (*UpdatePlanResponse, error)
-	DeletePlan(ctx context.Context, in *DeletePlanRequest, opts ...grpc.CallOption) (*DeletePlanResponse, error)
+	GetPlan(ctx context.Context, in *GetPlanRequest, opts ...grpc.CallOption) (*GetPlanReply, error)
+	ListPlans(ctx context.Context, in *ListPlansRequest, opts ...grpc.CallOption) (*ListPlansReply, error)
+	CreatePlan(ctx context.Context, in *CreatePlanRequest, opts ...grpc.CallOption) (*CreatePlanReply, error)
+	UpdatePlan(ctx context.Context, in *UpdatePlanRequest, opts ...grpc.CallOption) (*UpdatePlanReply, error)
+	DeletePlan(ctx context.Context, in *DeletePlanRequest, opts ...grpc.CallOption) (*DeletePlanReply, error)
 }
 
 type planServiceClient struct {
@@ -49,9 +49,9 @@ func NewPlanServiceClient(cc grpc.ClientConnInterface) PlanServiceClient {
 	return &planServiceClient{cc}
 }
 
-func (c *planServiceClient) GetPlan(ctx context.Context, in *GetPlanRequest, opts ...grpc.CallOption) (*GetPlanResponse, error) {
+func (c *planServiceClient) GetPlan(ctx context.Context, in *GetPlanRequest, opts ...grpc.CallOption) (*GetPlanReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetPlanResponse)
+	out := new(GetPlanReply)
 	err := c.cc.Invoke(ctx, PlanService_GetPlan_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -59,9 +59,9 @@ func (c *planServiceClient) GetPlan(ctx context.Context, in *GetPlanRequest, opt
 	return out, nil
 }
 
-func (c *planServiceClient) ListPlans(ctx context.Context, in *ListPlansRequest, opts ...grpc.CallOption) (*ListPlansResponse, error) {
+func (c *planServiceClient) ListPlans(ctx context.Context, in *ListPlansRequest, opts ...grpc.CallOption) (*ListPlansReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListPlansResponse)
+	out := new(ListPlansReply)
 	err := c.cc.Invoke(ctx, PlanService_ListPlans_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -69,9 +69,9 @@ func (c *planServiceClient) ListPlans(ctx context.Context, in *ListPlansRequest,
 	return out, nil
 }
 
-func (c *planServiceClient) CreatePlan(ctx context.Context, in *CreatePlanRequest, opts ...grpc.CallOption) (*CreatePlanResponse, error) {
+func (c *planServiceClient) CreatePlan(ctx context.Context, in *CreatePlanRequest, opts ...grpc.CallOption) (*CreatePlanReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CreatePlanResponse)
+	out := new(CreatePlanReply)
 	err := c.cc.Invoke(ctx, PlanService_CreatePlan_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -79,9 +79,9 @@ func (c *planServiceClient) CreatePlan(ctx context.Context, in *CreatePlanReques
 	return out, nil
 }
 
-func (c *planServiceClient) UpdatePlan(ctx context.Context, in *UpdatePlanRequest, opts ...grpc.CallOption) (*UpdatePlanResponse, error) {
+func (c *planServiceClient) UpdatePlan(ctx context.Context, in *UpdatePlanRequest, opts ...grpc.CallOption) (*UpdatePlanReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(UpdatePlanResponse)
+	out := new(UpdatePlanReply)
 	err := c.cc.Invoke(ctx, PlanService_UpdatePlan_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -89,9 +89,9 @@ func (c *planServiceClient) UpdatePlan(ctx context.Context, in *UpdatePlanReques
 	return out, nil
 }
 
-func (c *planServiceClient) DeletePlan(ctx context.Context, in *DeletePlanRequest, opts ...grpc.CallOption) (*DeletePlanResponse, error) {
+func (c *planServiceClient) DeletePlan(ctx context.Context, in *DeletePlanRequest, opts ...grpc.CallOption) (*DeletePlanReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(DeletePlanResponse)
+	out := new(DeletePlanReply)
 	err := c.cc.Invoke(ctx, PlanService_DeletePlan_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -107,11 +107,11 @@ func (c *planServiceClient) DeletePlan(ctx context.Context, in *DeletePlanReques
 // PLAN SERVICE
 // =====================================================================
 type PlanServiceServer interface {
-	GetPlan(context.Context, *GetPlanRequest) (*GetPlanResponse, error)
-	ListPlans(context.Context, *ListPlansRequest) (*ListPlansResponse, error)
-	CreatePlan(context.Context, *CreatePlanRequest) (*CreatePlanResponse, error)
-	UpdatePlan(context.Context, *UpdatePlanRequest) (*UpdatePlanResponse, error)
-	DeletePlan(context.Context, *DeletePlanRequest) (*DeletePlanResponse, error)
+	GetPlan(context.Context, *GetPlanRequest) (*GetPlanReply, error)
+	ListPlans(context.Context, *ListPlansRequest) (*ListPlansReply, error)
+	CreatePlan(context.Context, *CreatePlanRequest) (*CreatePlanReply, error)
+	UpdatePlan(context.Context, *UpdatePlanRequest) (*UpdatePlanReply, error)
+	DeletePlan(context.Context, *DeletePlanRequest) (*DeletePlanReply, error)
 	mustEmbedUnimplementedPlanServiceServer()
 }
 
@@ -122,19 +122,19 @@ type PlanServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedPlanServiceServer struct{}
 
-func (UnimplementedPlanServiceServer) GetPlan(context.Context, *GetPlanRequest) (*GetPlanResponse, error) {
+func (UnimplementedPlanServiceServer) GetPlan(context.Context, *GetPlanRequest) (*GetPlanReply, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetPlan not implemented")
 }
-func (UnimplementedPlanServiceServer) ListPlans(context.Context, *ListPlansRequest) (*ListPlansResponse, error) {
+func (UnimplementedPlanServiceServer) ListPlans(context.Context, *ListPlansRequest) (*ListPlansReply, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListPlans not implemented")
 }
-func (UnimplementedPlanServiceServer) CreatePlan(context.Context, *CreatePlanRequest) (*CreatePlanResponse, error) {
+func (UnimplementedPlanServiceServer) CreatePlan(context.Context, *CreatePlanRequest) (*CreatePlanReply, error) {
 	return nil, status.Error(codes.Unimplemented, "method CreatePlan not implemented")
 }
-func (UnimplementedPlanServiceServer) UpdatePlan(context.Context, *UpdatePlanRequest) (*UpdatePlanResponse, error) {
+func (UnimplementedPlanServiceServer) UpdatePlan(context.Context, *UpdatePlanRequest) (*UpdatePlanReply, error) {
 	return nil, status.Error(codes.Unimplemented, "method UpdatePlan not implemented")
 }
-func (UnimplementedPlanServiceServer) DeletePlan(context.Context, *DeletePlanRequest) (*DeletePlanResponse, error) {
+func (UnimplementedPlanServiceServer) DeletePlan(context.Context, *DeletePlanRequest) (*DeletePlanReply, error) {
 	return nil, status.Error(codes.Unimplemented, "method DeletePlan not implemented")
 }
 func (UnimplementedPlanServiceServer) mustEmbedUnimplementedPlanServiceServer() {}

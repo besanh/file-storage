@@ -12,7 +12,7 @@ import "google/api/annotations.proto";
 // =====================================================================
 service ShareService {
     // 1. CREATE: Called by the owner to generate a link
-    rpc CreateShareLink (CreateShareLinkRequest) returns (CreateShareLinkResponse) {
+    rpc CreateShareLink (CreateShareLinkRequest) returns (CreateShareLinkReply) {
         option (google.api.http) = {
             post: "/v1/shares"
             body: "*"
@@ -20,28 +20,28 @@ service ShareService {
     }
 
     // 2. RESOLVE: Called by the visitor when they click the URL (The Missing Endpoint)
-    rpc ResolveShareLink (ResolveShareLinkRequest) returns (ResolveShareLinkResponse) {
+    rpc ResolveShareLink (ResolveShareLinkRequest) returns (ResolveShareLinkReply) {
         option (google.api.http) = {
             get: "/v1/shares/{link_token}"
         };
     }
 
     // 3. LIST (GLOBAL): Called by the owner for their "My Links" dashboard
-    rpc ListShareLinksByCreator (ListShareLinksByCreatorRequest) returns (ListShareLinksByCreatorResponse) {
+    rpc ListShareLinksByCreator (ListShareLinksByCreatorRequest) returns (ListShareLinksByCreatorReply) {
         option (google.api.http) = {
             get: "/v1/shares/me"
         };
     }
 
     // 4. LIST (LOCAL): Called by the owner to see who has access to a specific file/folder
-    rpc ListShareLinksByResource (ListShareLinksByResourceRequest) returns (ListShareLinksByResourceResponse) {
+    rpc ListShareLinksByResource (ListShareLinksByResourceRequest) returns (ListShareLinksByResourceReply) {
         option (google.api.http) = {
             get: "/v1/files/{resource_id}/shares"
         };
     }
 
     // 5. UPDATE: Called by the owner to change "viewer" to "editor"
-    rpc UpdateShareLink (UpdateShareLinkRequest) returns (UpdateShareLinkResponse) {
+    rpc UpdateShareLink (UpdateShareLinkRequest) returns (UpdateShareLinkReply) {
         option (google.api.http) = {
             patch: "/v1/shares/{link_token}"
             body: "*"
@@ -49,7 +49,7 @@ service ShareService {
     }
 
     // 6. DELETE: Called by the owner to kill the link
-    rpc RevokeShareLink (RevokeShareLinkRequest) returns (RevokeShareLinkResponse) {
+    rpc RevokeShareLink (RevokeShareLinkRequest) returns (RevokeShareLinkReply) {
         option (google.api.http) = {
             delete: "/v1/shares/{link_token}"
         };
@@ -68,7 +68,7 @@ message CreateShareLinkRequest {
     string expires_at = 4;       // Optional ISO8601 string
 }
 
-message CreateShareLinkResponse {
+message CreateShareLinkReply {
     string link_token = 1;
     string share_url = 2;        // Helpful for the frontend (e.g. "https://socialfi.com/shared/xyz")
 }
@@ -78,7 +78,7 @@ message ResolveShareLinkRequest {
     string link_token = 1;       // Extracted from URL
 }
 
-message ResolveShareLinkResponse {
+message ResolveShareLinkReply {
     string resource_id = 1;
     string resource_type = 2;
     string permission_level = 3;
@@ -99,7 +99,7 @@ message ListShareLinksByCreatorRequest {
     int32 offset = 2;
 }
 
-message ListShareLinksByCreatorResponse {
+message ListShareLinksByCreatorReply {
     repeated ShareLinkInfo links = 1;
 }
 
@@ -109,7 +109,7 @@ message ListShareLinksByResourceRequest {
     int32 offset = 3;
 }
 
-message ListShareLinksByResourceResponse {
+message ListShareLinksByResourceReply {
     repeated ShareLinkInfo links = 1;
 }
 
@@ -119,7 +119,7 @@ message UpdateShareLinkRequest {
     string new_permission = 2;   // e.g., "editor"
 }
 
-message UpdateShareLinkResponse {
+message UpdateShareLinkReply {
     bool success = 1;
 }
 
@@ -127,6 +127,6 @@ message RevokeShareLinkRequest {
     string link_token = 1;       // Extracted from URL
 }
 
-message RevokeShareLinkResponse {
+message RevokeShareLinkReply {
     bool success = 1;
 }
