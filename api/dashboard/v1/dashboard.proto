@@ -38,8 +38,17 @@ message GetDashboardSummaryReply {
         bool is_folder = 7;
     }
 
+    message DashboardReport {
+        int64 new_files_count = 1;
+        int64 new_storage_used = 2;
+    }
+
     string welcome_message = 1;
     StorageBreakdown storage = 2;
     repeated RecentActivity recent_activity = 3;
     string active_plan_name = 4;
+    int64 total_files = 5;
+    int64 total_folders = 6;
+    int64 total_shared = 7;
+    DashboardReport report = 8;
 }

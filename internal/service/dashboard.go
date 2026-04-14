@@ -2,9 +2,11 @@ package service
 
 import (
 	"context"
+	"encoding/json"
 	pb "file/api/dashboard/v1"
 	"file/internal/biz"
 	"fmt"
+	"net/http"
 	"time"
 
 	"github.com/go-kratos/kratos/v2/log"
@@ -43,6 +45,13 @@ func (s *DashboardService) GetDashboardSummary(ctx context.Context, req *pb.GetD
 		},
 		RecentActivity: mapRecentActivityToPb(summary.RecentFiles),
 		ActivePlanName: summary.ActivePlanName,
+		TotalFiles:     summary.TotalFiles,
+		TotalFolders:   summary.TotalFolders,
+		TotalShared:    summary.TotalShared,
+		Report: &pb.GetDashboardSummaryReply_DashboardReport{
+			NewFilesCount:  summary.Report.NewFilesCount,
+			NewStorageUsed: summary.Report.NewStorageUsed,
+		},
 	}, nil
 }
 
@@ -73,4 +82,58 @@ func formatByteSize(b int64) string {
 		exp++
 	}
 	return fmt.Sprintf("%.2f %cB", float64(b)/float64(div), "KMGTPE"[exp])
+}
+
+func (s *DashboardService) StreamDashboardUpdates(w http.ResponseWriter, r *http.Request) {
+	flusher, ok := w.(http.Flusher)
+	if !ok {
+		http.Error(w, "Streaming unsupported!", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "text/event-stream")
+	w.Header().Set("Cache-Control", "no-cache")
+	w.Header().Set("Connection", "keep-alive")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+
+	ctx := r.Context()
+	eventCh, cleanup, err := s.uc.Subscribe(ctx)
+	if err != nil {
+		s.log.Errorf("failed to subscribe to dashboard updates: %v", err)
+		http.Error(w, err.Error(), http.StatusUnauthorized)
+		return
+	}
+	defer cleanup()
+
+	// Send initial summary
+	s.sendSummary(ctx, w, flusher)
+
+	ticker := time.NewTicker(30 * time.Second) // Heartbeat
+	defer ticker.Stop()
+
+	for {
+		select {
+		case <-ctx.Done():
+			return
+		case <-ticker.C:
+			fmt.Fprintf(w, ": heartbeat\n\n")
+			flusher.Flush()
+		case <-eventCh:
+			s.sendSummary(ctx, w, flusher)
+		}
+	}
+}
+
+func (s *DashboardService) sendSummary(ctx context.Context, w http.ResponseWriter, flusher http.Flusher) {
+	summary, err := s.GetDashboardSummary(ctx, &pb.GetDashboardSummaryRequest{})
+	if err != nil {
+		s.log.Errorf("failed to get dashboard summary for SSE: %v", err)
+		return
+	}
+
+	fmt.Fprintf(w, "data: ")
+	data, _ := json.Marshal(summary)
+	w.Write(data)
+	fmt.Fprintf(w, "\n\n")
+	flusher.Flush()
 }

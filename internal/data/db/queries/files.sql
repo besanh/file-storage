@@ -52,3 +52,21 @@ SELECT *
 FROM file_nodes
 WHERE id = $1
 AND status = 'active';
+
+-- name: GetUserFileCount :one
+SELECT COUNT(*)::bigint FROM file_nodes
+WHERE owner_id = $1 AND is_folder = FALSE AND status = 'active';
+
+-- name: GetUserFolderCount :one
+SELECT COUNT(*)::bigint FROM file_nodes
+WHERE owner_id = $1 AND is_folder = TRUE AND status = 'active';
+
+-- name: GetRecentFilesReport :one
+SELECT 
+    COUNT(*)::bigint AS new_files_count,
+    COALESCE(SUM(file_size), 0)::bigint AS new_storage_used
+FROM file_nodes
+WHERE owner_id = $1 
+AND is_folder = FALSE 
+AND status = 'active'
+AND created_at > (now() - interval '7 days');

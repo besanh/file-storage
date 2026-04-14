@@ -55,5 +55,9 @@ func NewHTTPServer(c *conf.Server, d *conf.Data, greeterService *service.Greeter
 	planV1.RegisterPlanServiceHTTPServer(srv, planService)
 	subV1.RegisterSubscriptionServiceHTTPServer(srv, subService)
 	dashboardV1.RegisterDashboardServiceHTTPServer(srv, dashService)
+
+	// Custom route for SSE
+	srv.HandleFunc("/v1/dashboard/updates", dashService.StreamDashboardUpdates)
+
 	return srv
 }

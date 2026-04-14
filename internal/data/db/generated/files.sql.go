@@ -103,6 +103,53 @@ func (q *Queries) GetRecentFiles(ctx context.Context, arg GetRecentFilesParams) 
 	return items, nil
 }
 
+const getRecentFilesReport = `-- name: GetRecentFilesReport :one
+SELECT 
+    COUNT(*)::bigint AS new_files_count,
+    COALESCE(SUM(file_size), 0)::bigint AS new_storage_used
+FROM file_nodes
+WHERE owner_id = $1 
+AND is_folder = FALSE 
+AND status = 'active'
+AND created_at > (now() - interval '7 days')
+`
+
+type GetRecentFilesReportRow struct {
+	NewFilesCount  int64 `json:"new_files_count"`
+	NewStorageUsed int64 `json:"new_storage_used"`
+}
+
+func (q *Queries) GetRecentFilesReport(ctx context.Context, ownerID uuid.UUID) (GetRecentFilesReportRow, error) {
+	row := q.db.QueryRowContext(ctx, getRecentFilesReport, ownerID)
+	var i GetRecentFilesReportRow
+	err := row.Scan(&i.NewFilesCount, &i.NewStorageUsed)
+	return i, err
+}
+
+const getUserFileCount = `-- name: GetUserFileCount :one
+SELECT COUNT(*)::bigint FROM file_nodes
+WHERE owner_id = $1 AND is_folder = FALSE AND status = 'active'
+`
+
+func (q *Queries) GetUserFileCount(ctx context.Context, ownerID uuid.UUID) (int64, error) {
+	row := q.db.QueryRowContext(ctx, getUserFileCount, ownerID)
+	var column_1 int64
+	err := row.Scan(&column_1)
+	return column_1, err
+}
+
+const getUserFolderCount = `-- name: GetUserFolderCount :one
+SELECT COUNT(*)::bigint FROM file_nodes
+WHERE owner_id = $1 AND is_folder = TRUE AND status = 'active'
+`
+
+func (q *Queries) GetUserFolderCount(ctx context.Context, ownerID uuid.UUID) (int64, error) {
+	row := q.db.QueryRowContext(ctx, getUserFolderCount, ownerID)
+	var column_1 int64
+	err := row.Scan(&column_1)
+	return column_1, err
+}
+
 const getUserStorageBreakdown = `-- name: GetUserStorageBreakdown :one
 SELECT 
     COALESCE(SUM(CASE WHEN file_type = 'photo' THEN file_size ELSE 0 END), 0)::bigint AS photos,

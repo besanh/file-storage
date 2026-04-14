@@ -47,7 +47,8 @@ func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*
 		cleanup()
 		return nil, nil, err
 	}
-	fileUsecase := biz.NewFileUsecase(fileRepo, physicalFileRepo, authRepo, subscriptionRepo, planRepo, transaction, storageProvider, logger)
+	eventBus := biz.NewEventBus()
+	fileUsecase := biz.NewFileUsecase(fileRepo, physicalFileRepo, authRepo, subscriptionRepo, planRepo, transaction, storageProvider, eventBus, logger)
 	fileService := service.NewFileService(fileUsecase)
 	shareRepo := data.NewShareRepo(dataData, logger)
 	shareUseCase := biz.NewShareUseCase(shareRepo, logger, authRepo, transaction, confData)
@@ -57,7 +58,7 @@ func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*
 	subscriptionUseCase := biz.NewSubscriptionUseCase(subscriptionRepo, planRepo, logger)
 	subscriptionService := service.NewSubscriptionService(subscriptionUseCase, logger)
 	userRepo := data.NewUserRepo(dataData, logger)
-	dashboardUsecase := biz.NewDashboardUsecase(fileRepo, subscriptionRepo, planRepo, userRepo, authRepo, logger)
+	dashboardUsecase := biz.NewDashboardUsecase(fileRepo, shareRepo, subscriptionRepo, planRepo, userRepo, authRepo, eventBus, logger)
 	dashboardService := service.NewDashboardService(dashboardUsecase, logger)
 	publicPEM, err := util.NewPublicPEM(confData)
 	if err != nil {

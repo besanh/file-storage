@@ -11,4 +11,4 @@ var (
 )
 
 // ProviderSet is biz providers.
-var ProviderSet = wire.NewSet(NewGreeterUsecase, NewFileUsecase, NewPublicKey, NewPhysicalFileUsecase, NewShareUseCase, NewPlanUseCase, NewSubscriptionUseCase, NewDashboardUsecase)
+var ProviderSet = wire.NewSet(NewGreeterUsecase, NewFileUsecase, NewPublicKey, NewPhysicalFileUsecase, NewShareUseCase, NewPlanUseCase, NewSubscriptionUseCase, NewDashboardUsecase, NewEventBus)

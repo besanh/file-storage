@@ -20,6 +20,7 @@ type ShareRepo interface {
 	ListShareLinksByCreator(ctx context.Context, creator string, limit, offset int32) ([]*db.ShareLink, error)
 	ListShareLinksByResource(ctx context.Context, resourceID uuid.UUID, limit, offset int32) ([]*db.ShareLink, error)
 	UpdateShareLink(ctx context.Context, token string, permissionLevel string) error
+	GetUserShareLinkCount(ctx context.Context, creator string) (int64, error)
 }
 
 type ShareUseCase struct {

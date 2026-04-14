@@ -67,3 +67,19 @@ func (r *fileRepo) GetFile(ctx context.Context, id uuid.UUID) (*db.FileNode, err
 	}
 	return &resp, nil
 }
+
+func (r *fileRepo) GetUserFileCount(ctx context.Context, ownerID uuid.UUID) (int64, error) {
+	return r.data.Queries(ctx).GetUserFileCount(ctx, ownerID)
+}
+
+func (r *fileRepo) GetUserFolderCount(ctx context.Context, ownerID uuid.UUID) (int64, error) {
+	return r.data.Queries(ctx).GetUserFolderCount(ctx, ownerID)
+}
+
+func (r *fileRepo) GetRecentFilesReport(ctx context.Context, ownerID uuid.UUID) (int64, int64, error) {
+	row, err := r.data.Queries(ctx).GetRecentFilesReport(ctx, ownerID)
+	if err != nil {
+		return 0, 0, err
+	}
+	return row.NewFilesCount, row.NewStorageUsed, nil
+}

@@ -33,3 +33,7 @@ LIMIT $2 OFFSET $3;
 UPDATE share_links
 SET permission_level = $2
 WHERE link_token = $1;
+
+-- name: GetUserShareLinkCount :one
+SELECT COUNT(*)::bigint FROM share_links
+WHERE created_by = $1;

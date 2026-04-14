@@ -64,6 +64,10 @@ type GetDashboardSummaryReply struct {
 	Storage        *GetDashboardSummaryReply_StorageBreakdown `protobuf:"bytes,2,opt,name=storage,proto3" json:"storage,omitempty"`
 	RecentActivity []*GetDashboardSummaryReply_RecentActivity `protobuf:"bytes,3,rep,name=recent_activity,json=recentActivity,proto3" json:"recent_activity,omitempty"`
 	ActivePlanName string                                     `protobuf:"bytes,4,opt,name=active_plan_name,json=activePlanName,proto3" json:"active_plan_name,omitempty"`
+	TotalFiles     int64                                      `protobuf:"varint,5,opt,name=total_files,json=totalFiles,proto3" json:"total_files,omitempty"`
+	TotalFolders   int64                                      `protobuf:"varint,6,opt,name=total_folders,json=totalFolders,proto3" json:"total_folders,omitempty"`
+	TotalShared    int64                                      `protobuf:"varint,7,opt,name=total_shared,json=totalShared,proto3" json:"total_shared,omitempty"`
+	Report         *GetDashboardSummaryReply_DashboardReport  `protobuf:"bytes,8,opt,name=report,proto3" json:"report,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -124,6 +128,34 @@ func (x *GetDashboardSummaryReply) GetActivePlanName() string {
 		return x.ActivePlanName
 	}
 	return ""
+}
+
+func (x *GetDashboardSummaryReply) GetTotalFiles() int64 {
+	if x != nil {
+		return x.TotalFiles
+	}
+	return 0
+}
+
+func (x *GetDashboardSummaryReply) GetTotalFolders() int64 {
+	if x != nil {
+		return x.TotalFolders
+	}
+	return 0
+}
+
+func (x *GetDashboardSummaryReply) GetTotalShared() int64 {
+	if x != nil {
+		return x.TotalShared
+	}
+	return 0
+}
+
+func (x *GetDashboardSummaryReply) GetReport() *GetDashboardSummaryReply_DashboardReport {
+	if x != nil {
+		return x.Report
+	}
+	return nil
 }
 
 type GetDashboardSummaryReply_StorageBreakdown struct {
@@ -318,17 +350,74 @@ func (x *GetDashboardSummaryReply_RecentActivity) GetIsFolder() bool {
 	return false
 }
 
+type GetDashboardSummaryReply_DashboardReport struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	NewFilesCount  int64                  `protobuf:"varint,1,opt,name=new_files_count,json=newFilesCount,proto3" json:"new_files_count,omitempty"`
+	NewStorageUsed int64                  `protobuf:"varint,2,opt,name=new_storage_used,json=newStorageUsed,proto3" json:"new_storage_used,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *GetDashboardSummaryReply_DashboardReport) Reset() {
+	*x = GetDashboardSummaryReply_DashboardReport{}
+	mi := &file_dashboard_v1_dashboard_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetDashboardSummaryReply_DashboardReport) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetDashboardSummaryReply_DashboardReport) ProtoMessage() {}
+
+func (x *GetDashboardSummaryReply_DashboardReport) ProtoReflect() protoreflect.Message {
+	mi := &file_dashboard_v1_dashboard_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetDashboardSummaryReply_DashboardReport.ProtoReflect.Descriptor instead.
+func (*GetDashboardSummaryReply_DashboardReport) Descriptor() ([]byte, []int) {
+	return file_dashboard_v1_dashboard_proto_rawDescGZIP(), []int{1, 2}
+}
+
+func (x *GetDashboardSummaryReply_DashboardReport) GetNewFilesCount() int64 {
+	if x != nil {
+		return x.NewFilesCount
+	}
+	return 0
+}
+
+func (x *GetDashboardSummaryReply_DashboardReport) GetNewStorageUsed() int64 {
+	if x != nil {
+		return x.NewStorageUsed
+	}
+	return 0
+}
+
 var File_dashboard_v1_dashboard_proto protoreflect.FileDescriptor
 
 const file_dashboard_v1_dashboard_proto_rawDesc = "" +
 	"\n" +
 	"\x1cdashboard/v1/dashboard.proto\x12\fdashboard.v1\x1a\x1cgoogle/api/annotations.proto\"\x1c\n" +
-	"\x1aGetDashboardSummaryRequest\"\xb1\x05\n" +
+	"\x1aGetDashboardSummaryRequest\"\xcf\a\n" +
 	"\x18GetDashboardSummaryReply\x12'\n" +
 	"\x0fwelcome_message\x18\x01 \x01(\tR\x0ewelcomeMessage\x12Q\n" +
 	"\astorage\x18\x02 \x01(\v27.dashboard.v1.GetDashboardSummaryReply.StorageBreakdownR\astorage\x12^\n" +
 	"\x0frecent_activity\x18\x03 \x03(\v25.dashboard.v1.GetDashboardSummaryReply.RecentActivityR\x0erecentActivity\x12(\n" +
-	"\x10active_plan_name\x18\x04 \x01(\tR\x0eactivePlanName\x1a\xd4\x01\n" +
+	"\x10active_plan_name\x18\x04 \x01(\tR\x0eactivePlanName\x12\x1f\n" +
+	"\vtotal_files\x18\x05 \x01(\x03R\n" +
+	"totalFiles\x12#\n" +
+	"\rtotal_folders\x18\x06 \x01(\x03R\ftotalFolders\x12!\n" +
+	"\ftotal_shared\x18\a \x01(\x03R\vtotalShared\x12N\n" +
+	"\x06report\x18\b \x01(\v26.dashboard.v1.GetDashboardSummaryReply.DashboardReportR\x06report\x1a\xd4\x01\n" +
 	"\x10StorageBreakdown\x12\x16\n" +
 	"\x06photos\x18\x01 \x01(\x03R\x06photos\x12\x16\n" +
 	"\x06videos\x18\x02 \x01(\x03R\x06videos\x12\x1c\n" +
@@ -345,7 +434,10 @@ const file_dashboard_v1_dashboard_proto_rawDesc = "" +
 	"\x04icon\x18\x04 \x01(\tR\x04icon\x12\x12\n" +
 	"\x04size\x18\x05 \x01(\tR\x04size\x12(\n" +
 	"\x10last_accessed_at\x18\x06 \x01(\tR\x0elastAccessedAt\x12\x1b\n" +
-	"\tis_folder\x18\a \x01(\bR\bisFolder2\x9b\x01\n" +
+	"\tis_folder\x18\a \x01(\bR\bisFolder\x1ac\n" +
+	"\x0fDashboardReport\x12&\n" +
+	"\x0fnew_files_count\x18\x01 \x01(\x03R\rnewFilesCount\x12(\n" +
+	"\x10new_storage_used\x18\x02 \x01(\x03R\x0enewStorageUsed2\x9b\x01\n" +
 	"\x10DashboardService\x12\x86\x01\n" +
 	"\x13GetDashboardSummary\x12(.dashboard.v1.GetDashboardSummaryRequest\x1a&.dashboard.v1.GetDashboardSummaryReply\"\x1d\x82\xd3\xe4\x93\x02\x17\x12\x15/v1/dashboard/summaryB\x1aZ\x18file/api/dashboard/v1;v1b\x06proto3"
 
@@ -361,23 +453,25 @@ func file_dashboard_v1_dashboard_proto_rawDescGZIP() []byte {
 	return file_dashboard_v1_dashboard_proto_rawDescData
 }
 
-var file_dashboard_v1_dashboard_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_dashboard_v1_dashboard_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_dashboard_v1_dashboard_proto_goTypes = []any{
 	(*GetDashboardSummaryRequest)(nil),                // 0: dashboard.v1.GetDashboardSummaryRequest
 	(*GetDashboardSummaryReply)(nil),                  // 1: dashboard.v1.GetDashboardSummaryReply
 	(*GetDashboardSummaryReply_StorageBreakdown)(nil), // 2: dashboard.v1.GetDashboardSummaryReply.StorageBreakdown
 	(*GetDashboardSummaryReply_RecentActivity)(nil),   // 3: dashboard.v1.GetDashboardSummaryReply.RecentActivity
+	(*GetDashboardSummaryReply_DashboardReport)(nil),  // 4: dashboard.v1.GetDashboardSummaryReply.DashboardReport
 }
 var file_dashboard_v1_dashboard_proto_depIdxs = []int32{
 	2, // 0: dashboard.v1.GetDashboardSummaryReply.storage:type_name -> dashboard.v1.GetDashboardSummaryReply.StorageBreakdown
 	3, // 1: dashboard.v1.GetDashboardSummaryReply.recent_activity:type_name -> dashboard.v1.GetDashboardSummaryReply.RecentActivity
-	0, // 2: dashboard.v1.DashboardService.GetDashboardSummary:input_type -> dashboard.v1.GetDashboardSummaryRequest
-	1, // 3: dashboard.v1.DashboardService.GetDashboardSummary:output_type -> dashboard.v1.GetDashboardSummaryReply
-	3, // [3:4] is the sub-list for method output_type
-	2, // [2:3] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	4, // 2: dashboard.v1.GetDashboardSummaryReply.report:type_name -> dashboard.v1.GetDashboardSummaryReply.DashboardReport
+	0, // 3: dashboard.v1.DashboardService.GetDashboardSummary:input_type -> dashboard.v1.GetDashboardSummaryRequest
+	1, // 4: dashboard.v1.DashboardService.GetDashboardSummary:output_type -> dashboard.v1.GetDashboardSummaryReply
+	4, // [4:5] is the sub-list for method output_type
+	3, // [3:4] is the sub-list for method input_type
+	3, // [3:3] is the sub-list for extension type_name
+	3, // [3:3] is the sub-list for extension extendee
+	0, // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_dashboard_v1_dashboard_proto_init() }
@@ -391,7 +485,7 @@ func file_dashboard_v1_dashboard_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_dashboard_v1_dashboard_proto_rawDesc), len(file_dashboard_v1_dashboard_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

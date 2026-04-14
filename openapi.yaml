@@ -705,6 +705,21 @@ components:
                         $ref: '#/components/schemas/dashboard.v1.GetDashboardSummaryReply_RecentActivity'
                 activePlanName:
                     type: string
+                totalFiles:
+                    type: string
+                totalFolders:
+                    type: string
+                totalShared:
+                    type: string
+                report:
+                    $ref: '#/components/schemas/dashboard.v1.GetDashboardSummaryReply_DashboardReport'
+        dashboard.v1.GetDashboardSummaryReply_DashboardReport:
+            type: object
+            properties:
+                newFilesCount:
+                    type: string
+                newStorageUsed:
+                    type: string
         dashboard.v1.GetDashboardSummaryReply_RecentActivity:
             type: object
             properties:

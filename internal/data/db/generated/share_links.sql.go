@@ -77,6 +77,18 @@ func (q *Queries) GetShareLinkByToken(ctx context.Context, linkToken string) (Sh
 	return i, err
 }
 
+const getUserShareLinkCount = `-- name: GetUserShareLinkCount :one
+SELECT COUNT(*)::bigint FROM share_links
+WHERE created_by = $1
+`
+
+func (q *Queries) GetUserShareLinkCount(ctx context.Context, createdBy string) (int64, error) {
+	row := q.db.QueryRowContext(ctx, getUserShareLinkCount, createdBy)
+	var column_1 int64
+	err := row.Scan(&column_1)
+	return column_1, err
+}
+
 const listShareLinksByCreator = `-- name: ListShareLinksByCreator :many
 SELECT link_token, resource_id, resource_type, created_by, permission_level, expires_at, created_at FROM share_links
 WHERE created_by = $1

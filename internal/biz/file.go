@@ -17,6 +17,9 @@ type FileRepo interface {
 	GetUserStorageUsed(ctx context.Context, ownerID uuid.UUID) (int64, error)
 	GetRecentFiles(ctx context.Context, ownerID uuid.UUID, limit int32) ([]*db.FileNode, error)
 	GetFile(ctx context.Context, id uuid.UUID) (*db.FileNode, error)
+	GetUserFileCount(ctx context.Context, ownerID uuid.UUID) (int64, error)
+	GetUserFolderCount(ctx context.Context, ownerID uuid.UUID) (int64, error)
+	GetRecentFilesReport(ctx context.Context, ownerID uuid.UUID) (int64, int64, error)
 }
 
 type FileUsecase struct {
@@ -27,10 +30,11 @@ type FileUsecase struct {
 	planRepo         PlanRepo
 	tm               Transaction
 	storageProvider  StorageProvider
+	eventBus         *EventBus
 	log              *log.Helper
 }
 
-func NewFileUsecase(fileRepo FileRepo, physicalFileRepo PhysicalFileRepo, authRepo AuthRepo, subRepo SubscriptionRepo, planRepo PlanRepo, tm Transaction, storageProvider StorageProvider, logger log.Logger) *FileUsecase {
+func NewFileUsecase(fileRepo FileRepo, physicalFileRepo PhysicalFileRepo, authRepo AuthRepo, subRepo SubscriptionRepo, planRepo PlanRepo, tm Transaction, storageProvider StorageProvider, eb *EventBus, logger log.Logger) *FileUsecase {
 	return &FileUsecase{
 		fileRepo:         fileRepo,
 		physicalFileRepo: physicalFileRepo,
@@ -39,6 +43,7 @@ func NewFileUsecase(fileRepo FileRepo, physicalFileRepo PhysicalFileRepo, authRe
 		planRepo:         planRepo,
 		tm:               tm,
 		storageProvider:  storageProvider,
+		eventBus:         eb,
 		log:              log.NewHelper(logger),
 	}
 }
@@ -240,6 +245,9 @@ func (uc *FileUsecase) CreateFile(ctx context.Context, input CreateFileRequest) 
 		}
 		return CreateFileResponse{}, err
 	}
+
+	// Trigger Dashboard Update via SSE
+	uc.eventBus.TriggerDashboardUpdate(ownerID)
 
 	return CreateFileResponse{
 		ID: fileID,

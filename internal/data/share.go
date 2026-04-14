@@ -100,3 +100,7 @@ func (r *shareRepo) UpdateShareLink(ctx context.Context, token string, permissio
 		PermissionLevel: permissionLevel,
 	})
 }
+
+func (r *shareRepo) GetUserShareLinkCount(ctx context.Context, creator string) (int64, error) {
+	return r.data.Queries(ctx).GetUserShareLinkCount(ctx, creator)
+}

@@ -10,22 +10,26 @@ import (
 )
 
 type DashboardUsecase struct {
-	fileRepo FileRepo
-	subRepo  SubscriptionRepo
-	planRepo PlanRepo
-	userRepo UserRepo
-	authRepo AuthRepo
-	log      *log.Helper
+	fileRepo  FileRepo
+	shareRepo ShareRepo
+	subRepo   SubscriptionRepo
+	planRepo  PlanRepo
+	userRepo  UserRepo
+	authRepo  AuthRepo
+	eventBus  *EventBus
+	log       *log.Helper
 }
 
-func NewDashboardUsecase(fileRepo FileRepo, subRepo SubscriptionRepo, planRepo PlanRepo, userRepo UserRepo, authRepo AuthRepo, logger log.Logger) *DashboardUsecase {
+func NewDashboardUsecase(fileRepo FileRepo, shareRepo ShareRepo, subRepo SubscriptionRepo, planRepo PlanRepo, userRepo UserRepo, authRepo AuthRepo, eb *EventBus, logger log.Logger) *DashboardUsecase {
 	return &DashboardUsecase{
-		fileRepo: fileRepo,
-		subRepo:  subRepo,
-		planRepo: planRepo,
-		userRepo: userRepo,
-		authRepo: authRepo,
-		log:      log.NewHelper(logger),
+		fileRepo:  fileRepo,
+		shareRepo: shareRepo,
+		subRepo:   subRepo,
+		planRepo:  planRepo,
+		userRepo:  userRepo,
+		authRepo:  authRepo,
+		eventBus:  eb,
+		log:       log.NewHelper(logger),
 	}
 }
 
@@ -65,6 +69,12 @@ func (uc *DashboardUsecase) GetSummary(ctx context.Context) (*DashboardSummary, 
 		uc.log.Errorf("failed to get recent files: %v", err)
 	}
 
+	// 4. Fetch New Dashboard Metrics
+	totalFiles, _ := uc.fileRepo.GetUserFileCount(ctx, userID)
+	totalFolders, _ := uc.fileRepo.GetUserFolderCount(ctx, userID)
+	totalShared, _ := uc.shareRepo.GetUserShareLinkCount(ctx, userID.String())
+	newFiles, newStorage, _ := uc.fileRepo.GetRecentFilesReport(ctx, userID)
+
 	// Use the user's email from the Auth Service for identification.
 	userName := "User"
 	if profile, err := uc.authRepo.GetUserProfile(ctx, userID.String()); err == nil && profile != nil {
@@ -85,6 +95,13 @@ func (uc *DashboardUsecase) GetSummary(ctx context.Context) (*DashboardSummary, 
 		},
 		RecentFiles:    mapFileNodesToBiz(recentNodes),
 		ActivePlanName: activePlanName,
+		TotalFiles:     totalFiles,
+		TotalFolders:   totalFolders,
+		TotalShared:    totalShared,
+		Report: &DashboardReport{
+			NewFilesCount:  newFiles,
+			NewStorageUsed: newStorage,
+		},
 	}, nil
 }
 
@@ -103,4 +120,23 @@ func mapFileNodesToBiz(nodes []*db.FileNode) []*FileNode {
 		})
 	}
 	return res
+}
+
+func (uc *DashboardUsecase) Subscribe(ctx context.Context) (chan *Event, func(), error) {
+	_, actorID, err := GetActorInfo(ctx)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	userID, err := uuid.Parse(actorID)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	ch := uc.eventBus.Subscribe(userID)
+	cleanup := func() {
+		uc.eventBus.Unsubscribe(userID, ch)
+	}
+
+	return ch, cleanup, nil
 }
