@@ -46,3 +46,9 @@ WHERE owner_id = $1
 AND status = 'active'
 ORDER BY recent_accessed_at DESC NULLS LAST, created_at DESC
 LIMIT $2;
+
+-- name: GetFile :one
+SELECT *
+FROM file_nodes
+WHERE id = $1
+AND status = 'active';

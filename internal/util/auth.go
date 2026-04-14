@@ -11,6 +11,14 @@ import (
 
 // CertDir returns the absolute path to the cert directory.
 func CertDir() string {
+	// Check if the cert directory is directly available in the current working directory (e.g. inside Docker /app)
+	if stat, err := os.Stat("cert"); err == nil && stat.IsDir() {
+		if absPath, err := filepath.Abs("cert"); err == nil {
+			return absPath
+		}
+		return "cert"
+	}
+
 	_, filename, _, _ := runtime.Caller(0)
 	// internal/data → server root → cert/
 	root := filepath.Join(filepath.Dir(filename), "..", "..")

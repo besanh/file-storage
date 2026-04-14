@@ -72,7 +72,72 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/file.v1.CreateFileResponse'
+                                $ref: '#/components/schemas/file.v1.CreateFileReply'
+    /v1/files/upload-url:
+        get:
+            tags:
+                - FileService
+            operationId: FileService_GetUploadUrl
+            parameters:
+                - name: name
+                  in: query
+                  schema:
+                    type: string
+                - name: fileSize
+                  in: query
+                  schema:
+                    type: string
+                - name: fileMimeType
+                  in: query
+                  schema:
+                    type: string
+                - name: fileHash
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/file.v1.GetUploadUrlReply'
+    /v1/files/{id}:
+        get:
+            tags:
+                - FileService
+            operationId: FileService_GetFile
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/file.v1.GetFileReply'
+    /v1/files/{id}/download-url:
+        get:
+            tags:
+                - FileService
+            operationId: FileService_GetDownloadUrl
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/file.v1.GetDownloadUrlReply'
     /v1/files/{resourceId}/shares:
         get:
             tags:
@@ -676,6 +741,11 @@ components:
                     type: string
                 quota:
                     type: string
+        file.v1.CreateFileReply:
+            type: object
+            properties:
+                id:
+                    type: string
         file.v1.CreateFileRequest:
             type: object
             properties:
@@ -699,10 +769,34 @@ components:
                     type: string
                 isFolder:
                     type: boolean
-        file.v1.CreateFileResponse:
+        file.v1.GetDownloadUrlReply:
+            type: object
+            properties:
+                downloadUrl:
+                    type: string
+        file.v1.GetFileReply:
             type: object
             properties:
                 id:
+                    type: string
+                name:
+                    type: string
+                fileSize:
+                    type: string
+                fileMimeType:
+                    type: string
+                isFolder:
+                    type: boolean
+                createdAt:
+                    type: string
+                updatedAt:
+                    type: string
+        file.v1.GetUploadUrlReply:
+            type: object
+            properties:
+                uploadUrl:
+                    type: string
+                fileId:
                     type: string
         helloworld.v1.HelloReply:
             type: object

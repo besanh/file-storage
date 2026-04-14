@@ -7,10 +7,25 @@ import "google/api/annotations.proto";
 option go_package = "file/api/file/v1";
 
 service FileService {
-    rpc CreateFile(CreateFileRequest) returns (CreateFileResponse) {
+    rpc CreateFile(CreateFileRequest) returns (CreateFileReply) {
         option (google.api.http) = {
             post: "/v1/files/create"
             body: "*"
+        };
+    }
+    rpc GetUploadUrl(GetUploadUrlRequest) returns (GetUploadUrlReply) {
+        option (google.api.http) = {
+            get: "/v1/files/upload-url"
+        };
+    }
+    rpc GetDownloadUrl(GetDownloadUrlRequest) returns (GetDownloadUrlReply) {
+        option (google.api.http) = {
+            get: "/v1/files/{id}/download-url"
+        };
+    }
+    rpc GetFile(GetFileRequest) returns (GetFileReply) {
+        option (google.api.http) = {
+            get: "/v1/files/{id}"
         };
     }
 }
@@ -28,6 +43,40 @@ message CreateFileRequest {
     bool is_folder = 10;
 }
 
-message CreateFileResponse {
+message CreateFileReply {
     string id = 1;
+}
+
+message GetUploadUrlRequest {
+    string name = 1;
+    int64 file_size = 2;
+    string file_mime_type = 3;
+    string file_hash = 4;
+}
+
+message GetUploadUrlReply {
+    string upload_url = 1;
+    string file_id = 2;
+}
+
+message GetDownloadUrlRequest {
+    string id = 1;
+}
+
+message GetDownloadUrlReply {
+    string download_url = 1;
+}
+
+message GetFileRequest {
+    string id = 1;
+}
+
+message GetFileReply {
+    string id = 1;
+    string name = 2;
+    int64 file_size = 3;
+    string file_mime_type = 4;
+    bool is_folder = 5;
+    string created_at = 6;
+    string updated_at = 7;
 }

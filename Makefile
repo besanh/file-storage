@@ -89,7 +89,6 @@ help:
 
 .DEFAULT_GOAL := help
 
-
 # sqlc
 sqlc:
 	$(SQLC) generate
@@ -100,17 +99,12 @@ sqlc-check:
 sqlc-install:
 	go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
 
-.PHONY: migrate
 migrate: timescale
-	@$(DOCKER_COMPOSE_BIN) up migrate
+	@$(DOCKER_COMPOSE_BIN) up migrate -d
 
 redo-migrate: timescale
 	@$(DOCKER_COMPOSE_BIN) run --rm migrate -path /migrations/sql drop
 	@$(DOCKER_COMPOSE_BIN) up migrate
-
-.PHONY: timescale
-timescale:
-	@$(DOCKER_COMPOSE_BIN) up timescale -d
 
 # Docker login using environment variables
 .PHONY: docker-login
@@ -124,16 +118,26 @@ docker-login:
 		exit 1; \
 	fi
 	@echo "$(DOCKER_PASSWORD)" | docker login \
-		--username $(DOCKER_USERNAME) \
-		--password-stdin
 
 .PHONY: docker-build
 docker-build: 
 	@$(DOCKER) build --rm --force-rm -t $(IMAGE_NAME):$(IMAGE_TAG) .
 	-@$(DOCKER) images -f "dangling=true" -q | xargs -r $(DOCKER) rmi
 
+.PHONY: docker-push
 docker-push: docker-build docker-login
 	@$(DOCKER) push $(IMAGE_NAME):$(IMAGE_TAG)
+
+.PHONY: docker-build-migrate
+docker-build-migrate: 
+	@$(DOCKER) build -f migrate.Dockerfile --rm --force-rm -t $(IMAGE_NAME)-migrate:$(IMAGE_TAG) .
+
+.PHONY: docker-push-migrate
+docker-push-migrate: docker-build-migrate docker-login
+	@$(DOCKER) push $(IMAGE_NAME)-migrate:$(IMAGE_TAG)
+
+.PHONY: docker-push-all
+docker-push-all: docker-push docker-push-migrate
 
 .PHONY: swagger
 swagger:

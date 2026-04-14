@@ -56,3 +56,14 @@ func (r *fileRepo) GetRecentFiles(ctx context.Context, ownerID uuid.UUID, limit 
 	}
 	return res, nil
 }
+
+func (r *fileRepo) GetFile(ctx context.Context, id uuid.UUID) (*db.FileNode, error) {
+	resp, err := r.data.Queries(ctx).GetFile(ctx, id)
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}

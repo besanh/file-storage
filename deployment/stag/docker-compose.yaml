@@ -4,26 +4,48 @@ services:
     image: timescale/timescaledb-ha:pg18.1-ts2.24.0
     command: >
       postgres -c wal_level=logical -c max_replication_slots=10 -c max_wal_senders=10
-    env_file:
-      - ./stag.env
+    environment:
+      POSTGRES_USER: "anhle"
+      POSTGRES_PASSWORD: "anhle"
+      POSTGRES_DB: "file_storage"
+      TZ: "UTC"
     ports:
       - "54321:5432"
     volumes:
-      - ./tmp/postgres_data:/home/postgres/pgdata/data
+      - postgres_data:/home/postgres/pgdata/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U anhle -d file_storage"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     networks:
       - file-storage-network
 
   migrate:
-    build:
-      context: .
-      dockerfile: migrate.Dockerfile
-    env_file:
-      - ./stag.env
-    volumes:
-      - ./internal/data/db/migrations/sql:/migrations/sql
+    image: anhle3532/file-storage-migrate:stag-latest
+    environment:
+      - DB_URL=postgres://anhle:anhle@timescale:5432/file_storage?sslmode=disable
     command: ["-path", "/migrations/sql", "up"]
     depends_on:
-      - timescale
+      timescale:
+        condition: service_healthy
+    networks:
+      - file-storage-network
+
+  api:
+    container_name: file-storage-api
+    image: anhle3532/file-storage:stag-latest
+    env_file:
+      - ./stag.env
+    ports:
+      - "8001:8001" # REST
+      - "9001:9001" # gRPC
+    restart: unless-stopped
+    depends_on:
+      timescale:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
     networks:
       - file-storage-network
 
@@ -53,3 +75,6 @@ services:
 networks:
   file-storage-network:
     driver: bridge
+
+volumes:
+  postgres_data:

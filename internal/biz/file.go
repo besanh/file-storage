@@ -6,6 +6,7 @@ import (
 	"file/internal/common"
 	db "file/internal/data/db/generated"
 	"fmt"
+	"time"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/uuid"
@@ -15,6 +16,7 @@ type FileRepo interface {
 	InsertFile(ctx context.Context, file *db.InsertFileParams) (*db.FileNode, error)
 	GetUserStorageUsed(ctx context.Context, ownerID uuid.UUID) (int64, error)
 	GetRecentFiles(ctx context.Context, ownerID uuid.UUID, limit int32) ([]*db.FileNode, error)
+	GetFile(ctx context.Context, id uuid.UUID) (*db.FileNode, error)
 }
 
 type FileUsecase struct {
@@ -24,10 +26,11 @@ type FileUsecase struct {
 	subRepo          SubscriptionRepo
 	planRepo         PlanRepo
 	tm               Transaction
+	storageProvider  StorageProvider
 	log              *log.Helper
 }
 
-func NewFileUsecase(fileRepo FileRepo, physicalFileRepo PhysicalFileRepo, authRepo AuthRepo, subRepo SubscriptionRepo, planRepo PlanRepo, tm Transaction, logger log.Logger) *FileUsecase {
+func NewFileUsecase(fileRepo FileRepo, physicalFileRepo PhysicalFileRepo, authRepo AuthRepo, subRepo SubscriptionRepo, planRepo PlanRepo, tm Transaction, storageProvider StorageProvider, logger log.Logger) *FileUsecase {
 	return &FileUsecase{
 		fileRepo:         fileRepo,
 		physicalFileRepo: physicalFileRepo,
@@ -35,6 +38,7 @@ func NewFileUsecase(fileRepo FileRepo, physicalFileRepo PhysicalFileRepo, authRe
 		subRepo:          subRepo,
 		planRepo:         planRepo,
 		tm:               tm,
+		storageProvider:  storageProvider,
 		log:              log.NewHelper(logger),
 	}
 }
@@ -239,5 +243,85 @@ func (uc *FileUsecase) CreateFile(ctx context.Context, input CreateFileRequest) 
 
 	return CreateFileResponse{
 		ID: fileID,
+	}, nil
+}
+
+func (uc *FileUsecase) GetUploadUrl(ctx context.Context, req GetUploadUrlRequest) (GetUploadUrlResponse, error) {
+	// Check if file already exists physically (deduplication)
+	if req.FileHash != "" {
+		psFile, err := uc.physicalFileRepo.GetPhysicalFileByHash(ctx, req.FileHash)
+		if err != nil {
+			return GetUploadUrlResponse{}, err
+		}
+		if psFile != nil {
+			// Already exists, no need to upload again
+			return GetUploadUrlResponse{
+				UploadUrl: "",
+				FileID:    psFile.ID,
+			}, nil
+		}
+	}
+
+	// Generate a new physical file ID if not found by hash
+	// Use hash as key if provided, otherwise a new UUID
+	key := req.FileHash
+	if key == "" {
+		key = uuid.New().String()
+	}
+
+	// 1 hour expiry
+	url, err := uc.storageProvider.GetUploadUrl(ctx, key, req.FileMimeType, time.Hour)
+	if err != nil {
+		return GetUploadUrlResponse{}, err
+	}
+
+	return GetUploadUrlResponse{
+		UploadUrl: url,
+		// If we use hash as key, we don't have a DB ID yet until CreateFile
+		// Wait, CreateFile needs to know which PhysicalFile to link to.
+		// Usually we return a "key" or "session id"
+	}, nil
+}
+
+func (uc *FileUsecase) GetDownloadUrl(ctx context.Context, id uuid.UUID) (string, error) {
+	file, err := uc.fileRepo.GetFile(ctx, id)
+	if err != nil {
+		return "", err
+	}
+	if file == nil {
+		return "", fmt.Errorf("file not found")
+	}
+
+	key := id.String()
+	if file.PhysicalFileID.Valid {
+		key = file.PhysicalFileID.UUID.String()
+	}
+
+	url, err := uc.storageProvider.GetDownloadUrl(ctx, key, file.Name, time.Hour)
+	if err != nil {
+		return "", err
+	}
+
+	return url, nil
+}
+
+func (uc *FileUsecase) GetFile(ctx context.Context, id uuid.UUID) (*FileNode, error) {
+	file, err := uc.fileRepo.GetFile(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	if file == nil {
+		return nil, fmt.Errorf("file not found")
+	}
+
+	return &FileNode{
+		ID:           file.ID,
+		Name:         file.Name,
+		IsFolder:     file.IsFolder,
+		FileSize:     file.FileSize.Int64,
+		FileType:     file.FileType.String,
+		FileExt:      file.FileExt.String,
+		MimeType:     file.FileMimeType.String,
+		LastAccessed: file.CreatedAt.Time, // Or use RecentAccessedAt if preferred
 	}, nil
 }

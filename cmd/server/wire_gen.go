@@ -42,7 +42,12 @@ func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*
 	subscriptionRepo := data.NewSubscriptionRepo(dataData, logger)
 	planRepo := data.NewPlanRepo(dataData, logger)
 	transaction := data.NewTransactionManager(dataData)
-	fileUsecase := biz.NewFileUsecase(fileRepo, physicalFileRepo, authRepo, subscriptionRepo, planRepo, transaction, logger)
+	storageProvider, err := data.NewS3StorageProvider(confData, logger)
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
+	fileUsecase := biz.NewFileUsecase(fileRepo, physicalFileRepo, authRepo, subscriptionRepo, planRepo, transaction, storageProvider, logger)
 	fileService := service.NewFileService(fileUsecase)
 	shareRepo := data.NewShareRepo(dataData, logger)
 	shareUseCase := biz.NewShareUseCase(shareRepo, logger, authRepo, transaction, confData)

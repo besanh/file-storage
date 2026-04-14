@@ -42,3 +42,15 @@ type FileNode struct {
 	MimeType     string
 	LastAccessed time.Time
 }
+
+type GetUploadUrlRequest struct {
+	Name         string
+	FileSize     int64
+	FileMimeType string
+	FileHash     string
+}
+
+type GetUploadUrlResponse struct {
+	UploadUrl string
+	FileID    uuid.UUID
+}

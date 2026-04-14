@@ -63,4 +63,14 @@ message Data {
     string base_url = 1;
   }
   Sharing sharing = 6;
+  message S3 {
+    string endpoint = 1;
+    string access_key = 2;
+    string secret_key = 3;
+    string bucket = 4;
+    bool use_ssl = 5;
+    string region = 6;
+    bool public_access = 7;
+  }
+  S3 s3 = 7;
 }

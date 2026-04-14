@@ -1,9 +1,12 @@
-FROM golang:1.26.1 AS builder
+FROM --platform=$BUILDPLATFORM golang:1.26.1 AS builder
+
+ARG TARGETOS
+ARG TARGETARCH
 
 COPY . /src
 WORKDIR /src
 
-RUN GOPROXY=https://goproxy.cn make build
+RUN CGO_ENABLED=0 GOOS=${TARGETOS:-linux} GOARCH=${TARGETARCH:-amd64} GOPROXY=https://goproxy.cn make build
 
 FROM debian:stable-slim
 
@@ -16,11 +19,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get autoremove -y && apt-get autoclean -y
 
 COPY --from=builder /src/bin /app
+COPY configs /app/configs
+COPY cert /app/cert
 
 WORKDIR /app
 
 EXPOSE 8001
 EXPOSE 9001
-VOLUME /data/conf
-
-CMD ["./server", "-conf", "/data/conf"]
+CMD ["./server", "-conf", "configs"]

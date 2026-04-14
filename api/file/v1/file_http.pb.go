@@ -20,14 +20,23 @@ var _ = binding.EncodeURL
 const _ = http.SupportPackageIsVersion1
 
 const OperationFileServiceCreateFile = "/file.v1.FileService/CreateFile"
+const OperationFileServiceGetDownloadUrl = "/file.v1.FileService/GetDownloadUrl"
+const OperationFileServiceGetFile = "/file.v1.FileService/GetFile"
+const OperationFileServiceGetUploadUrl = "/file.v1.FileService/GetUploadUrl"
 
 type FileServiceHTTPServer interface {
-	CreateFile(context.Context, *CreateFileRequest) (*CreateFileResponse, error)
+	CreateFile(context.Context, *CreateFileRequest) (*CreateFileReply, error)
+	GetDownloadUrl(context.Context, *GetDownloadUrlRequest) (*GetDownloadUrlReply, error)
+	GetFile(context.Context, *GetFileRequest) (*GetFileReply, error)
+	GetUploadUrl(context.Context, *GetUploadUrlRequest) (*GetUploadUrlReply, error)
 }
 
 func RegisterFileServiceHTTPServer(s *http.Server, srv FileServiceHTTPServer) {
 	r := s.Route("/")
 	r.POST("/v1/files/create", _FileService_CreateFile0_HTTP_Handler(srv))
+	r.GET("/v1/files/upload-url", _FileService_GetUploadUrl0_HTTP_Handler(srv))
+	r.GET("/v1/files/{id}/download-url", _FileService_GetDownloadUrl0_HTTP_Handler(srv))
+	r.GET("/v1/files/{id}", _FileService_GetFile0_HTTP_Handler(srv))
 }
 
 func _FileService_CreateFile0_HTTP_Handler(srv FileServiceHTTPServer) func(ctx http.Context) error {
@@ -47,13 +56,79 @@ func _FileService_CreateFile0_HTTP_Handler(srv FileServiceHTTPServer) func(ctx h
 		if err != nil {
 			return err
 		}
-		reply := out.(*CreateFileResponse)
+		reply := out.(*CreateFileReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _FileService_GetUploadUrl0_HTTP_Handler(srv FileServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetUploadUrlRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationFileServiceGetUploadUrl)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetUploadUrl(ctx, req.(*GetUploadUrlRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetUploadUrlReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _FileService_GetDownloadUrl0_HTTP_Handler(srv FileServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetDownloadUrlRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationFileServiceGetDownloadUrl)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetDownloadUrl(ctx, req.(*GetDownloadUrlRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetDownloadUrlReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _FileService_GetFile0_HTTP_Handler(srv FileServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetFileRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationFileServiceGetFile)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetFile(ctx, req.(*GetFileRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetFileReply)
 		return ctx.Result(200, reply)
 	}
 }
 
 type FileServiceHTTPClient interface {
-	CreateFile(ctx context.Context, req *CreateFileRequest, opts ...http.CallOption) (rsp *CreateFileResponse, err error)
+	CreateFile(ctx context.Context, req *CreateFileRequest, opts ...http.CallOption) (rsp *CreateFileReply, err error)
+	GetDownloadUrl(ctx context.Context, req *GetDownloadUrlRequest, opts ...http.CallOption) (rsp *GetDownloadUrlReply, err error)
+	GetFile(ctx context.Context, req *GetFileRequest, opts ...http.CallOption) (rsp *GetFileReply, err error)
+	GetUploadUrl(ctx context.Context, req *GetUploadUrlRequest, opts ...http.CallOption) (rsp *GetUploadUrlReply, err error)
 }
 
 type FileServiceHTTPClientImpl struct {
@@ -64,13 +139,52 @@ func NewFileServiceHTTPClient(client *http.Client) FileServiceHTTPClient {
 	return &FileServiceHTTPClientImpl{client}
 }
 
-func (c *FileServiceHTTPClientImpl) CreateFile(ctx context.Context, in *CreateFileRequest, opts ...http.CallOption) (*CreateFileResponse, error) {
-	var out CreateFileResponse
+func (c *FileServiceHTTPClientImpl) CreateFile(ctx context.Context, in *CreateFileRequest, opts ...http.CallOption) (*CreateFileReply, error) {
+	var out CreateFileReply
 	pattern := "/v1/files/create"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationFileServiceCreateFile))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *FileServiceHTTPClientImpl) GetDownloadUrl(ctx context.Context, in *GetDownloadUrlRequest, opts ...http.CallOption) (*GetDownloadUrlReply, error) {
+	var out GetDownloadUrlReply
+	pattern := "/v1/files/{id}/download-url"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationFileServiceGetDownloadUrl))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *FileServiceHTTPClientImpl) GetFile(ctx context.Context, in *GetFileRequest, opts ...http.CallOption) (*GetFileReply, error) {
+	var out GetFileReply
+	pattern := "/v1/files/{id}"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationFileServiceGetFile))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *FileServiceHTTPClientImpl) GetUploadUrl(ctx context.Context, in *GetUploadUrlRequest, opts ...http.CallOption) (*GetUploadUrlReply, error) {
+	var out GetUploadUrlReply
+	pattern := "/v1/files/upload-url"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationFileServiceGetUploadUrl))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

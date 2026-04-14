@@ -12,6 +12,40 @@ import (
 	"github.com/google/uuid"
 )
 
+const getFile = `-- name: GetFile :one
+SELECT id, owner_id, parent_id, physical_file_id, name, is_folder, file_hash, file_size, file_type, file_ext, file_mime_type, file_video_resolution, recent_accessed_at, favorite, deleted_at, deleted_by, status, created_at, updated_at
+FROM file_nodes
+WHERE id = $1
+AND status = 'active'
+`
+
+func (q *Queries) GetFile(ctx context.Context, id uuid.UUID) (FileNode, error) {
+	row := q.db.QueryRowContext(ctx, getFile, id)
+	var i FileNode
+	err := row.Scan(
+		&i.ID,
+		&i.OwnerID,
+		&i.ParentID,
+		&i.PhysicalFileID,
+		&i.Name,
+		&i.IsFolder,
+		&i.FileHash,
+		&i.FileSize,
+		&i.FileType,
+		&i.FileExt,
+		&i.FileMimeType,
+		&i.FileVideoResolution,
+		&i.RecentAccessedAt,
+		&i.Favorite,
+		&i.DeletedAt,
+		&i.DeletedBy,
+		&i.Status,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
 const getRecentFiles = `-- name: GetRecentFiles :many
 SELECT id, owner_id, parent_id, physical_file_id, name, is_folder, file_hash, file_size, file_type, file_ext, file_mime_type, file_video_resolution, recent_accessed_at, favorite, deleted_at, deleted_by, status, created_at, updated_at
 FROM file_nodes
